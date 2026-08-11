@@ -1,0 +1,72 @@
+erDiagram
+    RECORRIDO_PARADA{
+        int id_recorrido_parada PK
+        int id_recorrido FK
+        int id_parada FK
+        int orden
+    }
+    
+    PARADA_ATRACTIVO{
+        int id_parada_atractivo PK
+        int id_parada FK
+        int id_atractivo FK
+
+    }
+    
+    ATRACTIVO{
+        int id_atractivo PK
+        str nombre
+        int calificacion
+    }
+    
+    PARADA{
+        int id_parada PK
+        str nombre
+        str direccion
+        str descripcion
+        str foto
+    }
+
+    RECORRIDO{
+        int id_recorrido PK
+        str color
+        int frecuencia
+        time hora_inicio
+        time hora_finalizacion
+        int duracion_aproximada
+    }
+
+    VIAJE{
+        int id_viaje PK
+        datetime fecha_hora_inicio_programada
+        datetime fecha_hora_inicio_real
+        datetime fecha_hora_fin_real
+        int id_bus FK
+        int legajo_chofer FK
+        int id_recorrido FK
+    }
+
+    AUTOBUS{
+        int id_bus PK
+        str patente
+        int numero_unidad
+        date fecha_compra
+        str estado
+    }
+    
+    CHOFER{
+        int legajo PK
+        str nombre
+        str apellido
+    }
+
+
+%%RELACIONES:
+
+RECORRIDO ||--o{ RECORRIDO_PARADA : "posee"
+PARADA ||--o{ RECORRIDO_PARADA : "pertenece"
+PARADA ||--o{ PARADA_ATRACTIVO : "tiene"
+ATRACTIVO ||--o{ PARADA_ATRACTIVO : "se encuentra cerca de"
+RECORRIDO ||--o{ VIAJE : "se realiza en"
+AUTOBUS ||--o{ VIAJE : "realiza"
+CHOFER ||--o{ VIAJE : "conduce"
