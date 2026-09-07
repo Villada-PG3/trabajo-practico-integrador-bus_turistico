@@ -1,0 +1,107 @@
+classDiagram
+
+    class RECORRIDO_PARADA {
+        int id_recorrido_parada
+        int id_recorrido
+        int id_parada
+        int orden
+        +asignarParada()
+        +cambiarOrden()
+    }
+
+    class PARADA_ATRACTIVO {
+        int id_parada_atractivo
+        int id_parada
+        int id_atractivo
+        +asociarAtractivo()
+        +desasociarAtractivo()
+    }
+
+    class ATRACTIVO {
+        int id_atractivo
+        String nombre
+        int calificacion
+        +actualizarCalificacion()
+        +obtenerCalificacion()
+    }
+
+    class PARADA {
+        int id_parada
+        String nombre
+        String direccion
+        String descripcion
+        String foto
+        +actualizarInformacion()
+        +obtenerAtractivos()
+    }
+
+    class RECORRIDO {
+        int id_recorrido
+        String color
+        int frecuencia
+        Time hora_inicio
+        Time hora_finalizacion
+        int duracion_aproximada
+        +agregarParada()
+        +quitarParada()
+        +obtenerParadas()
+        +calcularDuracion()
+    }
+
+    class VIAJE {
+        int id_viaje
+        DateTime fecha_hora_inicio_programada
+        DateTime fecha_hora_inicio_real
+        DateTime fecha_hora_fin_real
+        int id_bus
+        int legajo_chofer
+        int id_recorrido
+        +iniciarViaje()
+        +finalizarViaje()
+        +calcularDuracion()
+        +calcularDemora()
+    }
+
+    class AUTOBUS {
+        int id_bus
+        String patente
+        int numero_unidad
+        Date fecha_compra
+        String estado
+        +actualizarEstado()
+        +estaDisponible()
+        +asignarViaje()
+    }
+
+    class CHOFER {
+        int legajo
+        String nombre
+        String apellido
+        +iniciarViaje()
+        +finalizarViaje()
+        +obtenerDatos()
+    }
+
+    class REPARACION {
+        int id_reparacion
+        int id_bus
+        String descripcion
+        DateTime fecha_inicio
+        DateTime fecha_fin
+        +iniciarReparacion()
+        +finalizarReparacion()
+        +estaActiva()
+    }
+
+
+    RECORRIDO "1" --> "0..*" RECORRIDO_PARADA : posee
+    PARADA "1" --> "0..*" PARADA_ATRACTIVO : tiene
+    
+    PARADA "1" --> "0..*" RECORRIDO_PARADA : pertenece
+    ATRACTIVO "1" --> "0..*" PARADA_ATRACTIVO : se encuentra cerca de
+
+    RECORRIDO "1" --> "0..*" VIAJE : se realiza en
+    CHOFER "1" --> "0..*" VIAJE : conduce
+    AUTOBUS "1" --> "0..*" VIAJE : realiza
+
+    AUTOBUS "1" --> "0..*" REPARACION : requiere
