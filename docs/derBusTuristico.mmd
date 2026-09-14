@@ -61,6 +61,13 @@ erDiagram
         str apellido
     }
 
+    REPARACION {
+        int id_reparacion PK
+        int id_bus FK
+        str descripcion
+        datetime fecha_inicio
+        datetime fecha_fin
+    }
 
 %%RELACIONES:
 
@@ -71,3 +78,4 @@ ATRACTIVO ||--o{ PARADA_ATRACTIVO : "se encuentra cerca de"
 RECORRIDO ||--o{ VIAJE : "se realiza en"
 AUTOBUS ||--o{ VIAJE : "realiza"
 CHOFER ||--o{ VIAJE : "conduce"
+AUTOBUS ||--o{ REPARACION : "requiere"
