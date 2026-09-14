@@ -41,6 +41,7 @@ erDiagram
         datetime fecha_hora_inicio_programada
         datetime fecha_hora_inicio_real
         datetime fecha_hora_fin_real
+        int duracion_total
         int id_bus FK
         int legajo_chofer FK
         int id_recorrido FK
@@ -51,7 +52,7 @@ erDiagram
         str patente
         int numero_unidad
         date fecha_compra
-        str estado
+        bool estado
     }
     
     CHOFER{
@@ -64,8 +65,8 @@ erDiagram
 %%RELACIONES:
 
 RECORRIDO ||--o{ RECORRIDO_PARADA : "posee"
-PARADA ||--o{ RECORRIDO_PARADA : "pertenece"
 PARADA ||--o{ PARADA_ATRACTIVO : "tiene"
+PARADA ||--o{ RECORRIDO_PARADA : "pertenece"
 ATRACTIVO ||--o{ PARADA_ATRACTIVO : "se encuentra cerca de"
 RECORRIDO ||--o{ VIAJE : "se realiza en"
 AUTOBUS ||--o{ VIAJE : "realiza"
