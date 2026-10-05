@@ -1,0 +1,258 @@
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Turístico - Inicio</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --bg-light: #f8fafc;
+            --text-dark: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        .navbar {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 5rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .btn-admin-access {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--secondary);
+        }
+
+        .btn-admin-access:hover {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: #ffffff;
+            color: var(--primary);
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background-color: #f8fafc;
+        }
+
+        /* --- CONTENIDOS / SECCIONES --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card-link:hover {
+            text-decoration: underline;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary);
+            font-size: 0.875rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación Pública -->
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand">
+            🚌 Bus Turístico
+        </a>
+        <ul class="navbar-nav">
+            <li><a href="{% url 'recorridos_list' %}" class="nav-link">Recorridos</a></li>
+            <li><a href="{% url 'paradas_list' %}" class="nav-link">Paradas</a></li>
+            <li><a href="{% url 'atractivos_list' %}" class="nav-link">Atractivos</a></li>
+            <li><a href="{% url 'admin_login' %}" class="nav-link btn-admin-access">Acceso Admin</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header Principal (Hero) -->
+    <header class="hero">
+        <h1>Conocé la Ciudad en Bus</h1>
+        <p>Descubrí los mejores recorridos, paradas estratégicas y puntos de interés de forma práctica y accesible.</p>
+        <a href="{% url 'recorridos_list' %}" class="btn-primary">Ver recorridos disponibles</a>
+    </header>
+
+    <!-- Contenido Principal: Opciones Rápidas -->
+    <main class="container">
+        <h2 class="section-title">¿Qué querés explorar hoy?</h2>
+        
+        <div class="grid-options">
+            
+            <!-- Opción 1: Recorridos -->
+            <div class="card">
+                <div class="card-icon">🗺️</div>
+                <h3>Recorridos</h3>
+                <p>Consultá las distintas rutas disponibles, sus duraciones y la frecuencia de los buses.</p>
+                <a href="{% url 'recorridos_list' %}" class="card-link">Explorar rutas &rarr;</a>
+            </div>
+
+            <!-- Opción 2: Paradas -->
+            <div class="card">
+                <div class="card-icon">📍</div>
+                <h3>Paradas</h3>
+                <p>Encontrá las paradas más cercanas y verificá qué líneas o recorridos pasan por ellas.</p>
+                <a href="{% url 'paradas_list' %}" class="card-link">Buscar paradas &rarr;</a>
+            </div>
+
+            <!-- Opción 3: Atractivos Turísticos -->
+            <div class="card">
+                <div class="card-icon">🏛️</div>
+                <h3>Atractivos Turísticos</h3>
+                <p>Descubrí museos, monumentos y lugares icónicos accesibles desde nuestros recorridos.</p>
+                <a href="{% url 'atractivos_list' %}" class="card-link">Ver atractivos &rarr;</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2026 Bus Turístico - Sistema de Consulta de Recorridos y Servicios</p>
+    </footer>
+
+</body>
+</html>
