@@ -1,0 +1,68 @@
+<style>
+    .navbar {
+        background-color: var(--card-bg, #ffffff);
+        border-bottom: 1px solid var(--border, #e2e8f0);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .navbar-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary, #2563eb);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .navbar-nav {
+        display: flex;
+        list-style: none;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .nav-link {
+        text-decoration: none;
+        color: var(--text-dark, #0f172a);
+        font-weight: 5rem;
+        transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+        color: var(--primary, #2563eb);
+    }
+
+    .btn-admin-access {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        background-color: transparent;
+        border: 1px solid var(--border, #e2e8f0);
+        border-radius: 6px;
+        color: var(--secondary, #64748b);
+    }
+
+    .btn-admin-access:hover {
+        background-color: #f1f5f9;
+        color: var(--text-dark, #0f172a);
+    }
+</style>
+
+<!-- Navegación Pública -->
+<nav class="navbar">
+    <a href="{% url 'home' %}" class="navbar-brand">
+        🚌 Bus Turístico
+    </a>
+    <ul class="navbar-nav">
+        <li><a href="{% url 'recorridos_list' %}" class="nav-link">Recorridos</a></li>
+        <li><a href="{% url 'paradas_list' %}" class="nav-link">Paradas</a></li>
+        <li><a href="{% url 'atractivos_list' %}" class="nav-link">Atractivos</a></li>
+        <li><a href="{% url 'admin_login' %}" class="nav-link btn-admin-access">Acceso Admin</a></li>
+    </ul>
+</nav>
