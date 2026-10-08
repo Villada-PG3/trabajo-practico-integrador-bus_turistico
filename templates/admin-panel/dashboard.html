@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bus Turístico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <!-- Barra Superior -->
+    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-md">
+        <h1 class="font-bold text-emerald-400 text-lg">Panel de Control (Dueño)</h1>
+        <div class="flex items-center gap-4">
+            <span class="text-sm text-slate-300">Hola, <strong>{{ user.username }}</strong></span>
+            <a href="{% url 'admin_logout' %}" class="bg-red-600 hover:bg-red-500 text-xs text-white px-3 py-1.5 rounded font-medium transition">
+                Cerrar Sesión
+            </a>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="p-8 max-w-5xl mx-auto">
+        <div class="bg-white p-6 rounded-xl shadow border border-slate-200">
+            <h2 class="text-2xl font-bold mb-2 text-slate-800">¡Sesión Iniciada Correctamente!</h2>
+            <p class="text-slate-600 mb-6">Desde aquí podrás gestionar la flota de colectivos, choferes, talleres y horarios de viajes.</p>
+            <a href="{% url 'home' %}" class="text-emerald-600 hover:underline text-sm font-medium">
+                ← Ir al sitio público
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
