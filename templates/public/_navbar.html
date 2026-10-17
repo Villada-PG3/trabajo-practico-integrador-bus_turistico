@@ -1,0 +1,31 @@
+{# Partial: se incluye desde base.html. El guion bajo indica que es un fragmento. #}
+{% with url_actual=request.resolver_match.url_name %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-bus sticky-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'home' %}">🚌 Bus Turístico</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarPublic" aria-controls="navbarPublic"
+                aria-expanded="false" aria-label="Mostrar menú">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarPublic">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                <li class="nav-item">
+                    <a class="nav-link {% if url_actual == 'recorridos_list' %}active fw-semibold{% endif %}" href="{% url 'recorridos_list' %}">Recorridos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if url_actual == 'paradas_list' %}active fw-semibold{% endif %}" href="{% url 'paradas_list' %}">Paradas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if url_actual == 'atractivos_list' %}active fw-semibold{% endif %}" href="{% url 'atractivos_list' %}">Atractivos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'admin_login' %}">Acceso Admin</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endwith %}

@@ -1,34 +1,77 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Bus Turístico</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-100 text-slate-800">
+{% extends "base.html" %}
 
-    <!-- Barra Superior -->
-    <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 class="font-bold text-emerald-400 text-lg">Panel de Control (Dueño)</h1>
-        <div class="flex items-center gap-4">
-            <span class="text-sm text-slate-300">Hola, <strong>{{ user.username }}</strong></span>
-            <a href="{% url 'admin_logout' %}" class="bg-red-600 hover:bg-red-500 text-xs text-white px-3 py-1.5 rounded font-medium transition">
-                Cerrar Sesión
+{% block title %}Dashboard - Bus Turístico{% endblock %}
+
+{# El panel usa su propia barra superior en lugar de la navbar pública #}
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <span class="navbar-brand fw-bold text-success">🚌 Panel de Control</span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-light small">Hola, <strong>{{ user.username }}</strong></span>
+            <a href="{% url 'home' %}" class="btn btn-outline-light btn-sm">Sitio público</a>
+            <form method="post" action="{% url 'admin_logout' %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="h3 mb-1">¡Sesión iniciada correctamente!</h1>
+    <p class="text-secondary mb-4">Desde aquí podés gestionar la flota, los choferes, los recorridos, los viajes y las reparaciones.</p>
+
+    <div class="row g-4">
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'admin:recorridos_autobus_changelist' %}" class="text-decoration-none">
+                <div class="card card-hover h-100 text-center"><div class="card-body">
+                    <div class="display-6">🚌</div>
+                    <div class="display-6 fw-bold text-dark">{{ total_buses }}</div>
+                    <div class="text-secondary">Autobuses</div>
+                </div></div>
             </a>
         </div>
-    </nav>
-
-    <!-- Contenido Principal -->
-    <div class="p-8 max-w-5xl mx-auto">
-        <div class="bg-white p-6 rounded-xl shadow border border-slate-200">
-            <h2 class="text-2xl font-bold mb-2 text-slate-800">¡Sesión Iniciada Correctamente!</h2>
-            <p class="text-slate-600 mb-6">Desde aquí podrás gestionar la flota de colectivos, choferes, talleres y horarios de viajes.</p>
-            <a href="{% url 'home' %}" class="text-emerald-600 hover:underline text-sm font-medium">
-                ← Ir al sitio público
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'admin:recorridos_chofer_changelist' %}" class="text-decoration-none">
+                <div class="card card-hover h-100 text-center"><div class="card-body">
+                    <div class="display-6">🧑‍✈️</div>
+                    <div class="display-6 fw-bold text-dark">{{ total_choferes }}</div>
+                    <div class="text-secondary">Choferes</div>
+                </div></div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'admin:recorridos_recorrido_changelist' %}" class="text-decoration-none">
+                <div class="card card-hover h-100 text-center"><div class="card-body">
+                    <div class="display-6">🗺️</div>
+                    <div class="display-6 fw-bold text-dark">{{ total_recorridos }}</div>
+                    <div class="text-secondary">Recorridos</div>
+                </div></div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'admin:recorridos_viaje_changelist' %}" class="text-decoration-none">
+                <div class="card card-hover h-100 text-center"><div class="card-body">
+                    <div class="display-6">🕒</div>
+                    <div class="display-6 fw-bold text-dark">{{ total_viajes }}</div>
+                    <div class="text-secondary">Viajes</div>
+                </div></div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'admin:recorridos_reparacion_changelist' %}" class="text-decoration-none">
+                <div class="card card-hover h-100 text-center"><div class="card-body">
+                    <div class="display-6">🔧</div>
+                    <div class="display-6 fw-bold text-dark">{{ reparaciones_abiertas }}</div>
+                    <div class="text-secondary">Reparaciones en curso</div>
+                </div></div>
             </a>
         </div>
     </div>
+</div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}
