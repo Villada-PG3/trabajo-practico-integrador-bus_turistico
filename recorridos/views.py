@@ -2,6 +2,20 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import Recorrido
+from django.views.generic import ListView
+
+class RecorridoListView(ListView):
+    model = Recorrido
+    template_name = 'public/recorridos_list.html'
+    context_object_name = 'recorridos'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(nombre__icontains=query)
+        return queryset
 
 def home(request):
     return render(request, 'public/home.html')
