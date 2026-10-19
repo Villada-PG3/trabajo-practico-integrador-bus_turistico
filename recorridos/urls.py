@@ -8,6 +8,7 @@ urlpatterns = [
     path('recorridos/', RecorridoListView.as_view(), name='recorridos_list'),
     path('paradas/', views.paradas_list, name='paradas_list'),
     path('atractivos/', views.atractivos_list, name='atractivos_list'),
+    path('nosotros/', views.nosotros, name='nosotros'),
 
     # Panel Administrativo
     path('admin-panel/login/', views.admin_login, name='admin_login'),

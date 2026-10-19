@@ -13,6 +13,9 @@
         <div class="collapse navbar-collapse" id="navbarPublic">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item">
+                    <a class="nav-link {% if url_actual == 'nosotros' %}active fw-semibold{% endif %}" href="{% url 'nosotros' %}">Nosotros</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {% if url_actual == 'recorridos_list' %}active fw-semibold{% endif %}" href="{% url 'recorridos_list' %}">Recorridos</a>
                 </li>
                 <li class="nav-item">

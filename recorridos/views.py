@@ -58,3 +58,6 @@ def paradas_list(request):
 
 def atractivos_list(request):
     return render(request, 'public/home.html') # Temporal
+
+def nosotros(request):
+    return render(request, 'public/nosotros.html') # Temporal
