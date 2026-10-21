@@ -2,8 +2,27 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Recorrido
-from django.views.generic import ListView
+from .models import Recorrido, Parada
+from django.views.generic import ListView, DetailView
+
+class ParadaListView(ListView):
+    model = Parada
+    template_name = 'public/paradas_list.html'
+    context_object_name = 'paradas'
+    paginate_by = 6  # Paginación nativa de Django
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(nombre__icontains=query) | queryset.filter(direccion__icontains=query)
+        return queryset
+
+# Detalle de una Parada específica (Muestra foto, descripción y atractivos cercanos)
+class ParadaDetailView(DetailView):
+    model = Parada
+    template_name = 'public/parada_detail.html'
+    context_object_name = 'parada'
 
 class RecorridoListView(ListView):
     model = Recorrido

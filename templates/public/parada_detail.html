@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ parada.nombre }} - Bus Turístico{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Migas de pan / Volver -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'paradas_list' %}">Paradas</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ parada.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-lg overflow-hidden">
+        <div class="row g-0">
+            <!-- Imagen Representativa -->
+            <div class="col-lg-6">
+                {% if parada.imagen %}
+                    <img src="{{ parada.imagen.url }}" class="img-fluid h-100 w-100" alt="{{ parada.nombre }}" style="object-fit: cover; min-height: 350px;">
+                {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100" style="min-height: 350px;">
+                        <span class="display-1">📍</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Información General -->
+            <div class="col-lg-6 p-4 p-md-5 d-flex flex-column justify-content-between bg-white">
+                <div>
+                    <h2 class="fw-bold text-uppercase text-bus mb-2">{{ parada.nombre }}</h2>
+                    <p class="text-secondary font-monospace mb-4">📍 {{ parada.direccion }}</p>
+
+                    <h5 class="fw-bold text-dark">Información del lugar</h5>
+                    <p class="text-muted leading-relaxed">
+                        {{ parada.descripcion }}
+                    </p>
+                </div>
+
+                <!-- Atractivos Cercanos -->
+                <div class="mt-4 pt-3 border-top">
+                    <h6 class="fw-bold text-dark mb-3">🏛️ Atractivos cercanos a esta parada:</h6>
+                    <ul class="list-group list-group-flush small">
+                        {% for atractivo in parada.atractivos.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
+                                <span>• <strong>{{ atractivo.nombre }}</strong></span>
+                                <span class="text-warning">
+                                    ★ {{ atractivo.calificacion_estrellas|default:"5.0" }}
+                                </span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item px-0 text-muted fst-italic bg-transparent">
+                                No se registraron atractivos específicos cercanos a esta parada.
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
