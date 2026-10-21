@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Atractivos Turísticos - Bus Turístico{% endblock %}
+
+{% block content %}
+<div class="bg-bus text-white py-5 mb-4 shadow-sm">
+    <div class="container text-center">
+        <h1 class="fw-bold display-5">Atractivos Turísticos</h1>
+        <p class="lead mb-0">Descubrí museos, monumentos, parques y sitios icónicos accesibles desde nuestro bus.</p>
+    </div>
+</div>
+
+<div class="container my-4">
+    <!-- Buscador -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <form method="GET" class="row g-2 align-items-center">
+                        <div class="col-sm-9">
+                            <input type="text" name="q" class="form-control" placeholder="Buscar atractivo por nombre o descripción (ej. MALBA, Planetario)..." value="{{ request.GET.q|default:'' }}">
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary w-100 fw-semibold">Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grilla de Atractivos -->
+    <div class="row g-4">
+        {% for atractivo in atractivos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm card-hover">
+                    {% if atractivo.imagen %}
+                        <img src="{{ atractivo.imagen.url }}" class="card-img-top" alt="{{ atractivo.nombre }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="fs-1">🏛️</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold text-dark mb-0">{{ atractivo.nombre }}</h5>
+                            <span class="badge bg-warning text-dark fs-6 shadow-sm">
+                                ★ {{ atractivo.calificacion_estrellas|default:"5.0" }}
+                            </span>
+                        </div>
+
+                        <p class="card-text text-secondary small mb-3">
+                            {{ atractivo.descripcion|truncatewords:18|default:"Punto turístico de gran interés cultural e histórico." }}
+                        </p>
+
+                        <div class="mt-auto">
+                            <a href="{% url 'atractivo_detail' atractivo.pk %}" class="btn btn-outline-primary w-100 fw-semibold">
+                                Ver Atractivo y Paradas &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="p-5 bg-white rounded shadow-sm">
+                    <span class="display-1 text-muted">🏛️</span>
+                    <h3 class="mt-3 fw-bold">No se encontraron atractivos</h3>
+                    <p class="text-secondary">Aún no hay puntos de interés cargados o la búsqueda no arrojó resultados.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

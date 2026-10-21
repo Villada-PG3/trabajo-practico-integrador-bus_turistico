@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ atractivo.nombre }} - Bus Turístico{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Migas de pan / Navegación -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'atractivos_list' %}">Atractivos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ atractivo.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-lg overflow-hidden">
+        <div class="row g-0">
+            <!-- Foto o Ilustración Principal -->
+            <div class="col-lg-6">
+                {% if atractivo.imagen %}
+                    <img src="{{ atractivo.imagen.url }}" class="img-fluid h-100 w-100" alt="{{ atractivo.nombre }}" style="object-fit: cover; min-height: 350px;">
+                {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100" style="min-height: 350px;">
+                        <span class="display-1">🏛️</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Contenido Informativo -->
+            <div class="col-lg-6 p-4 p-md-5 d-flex flex-column justify-content-between bg-white">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="fw-bold text-uppercase text-bus mb-0">{{ atractivo.nombre }}</h2>
+                        <span class="badge bg-warning text-dark fs-5 shadow-sm">
+                            ★ {{ atractivo.calificacion_estrellas|default:"5.0" }}
+                        </span>
+                    </div>
+
+                    <h5 class="fw-bold text-dark mt-4">Sobre este punto de interés</h5>
+                    <p class="text-muted leading-relaxed">
+                        {{ atractivo.descripcion|default:"Información turística detallada sobre la relevancia histórica, cultural o de entretenimiento de este lugar." }}
+                    </p>
+                </div>
+
+                <!-- Paradas desde donde se puede llegar caminables -->
+                <div class="mt-4 pt-3 border-top">
+                    <h6 class="fw-bold text-dark mb-3">📍 Paradas de bus más cercanas:</h6>
+                    <div class="list-group list-group-flush">
+                        {% for parada in atractivo.paradas.all %}
+                            <a href="{% url 'parada_detail' parada.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 bg-transparent">
+                                <div>
+                                    <strong class="text-dark">• {{ parada.nombre }}</strong>
+                                    <span class="d-block text-muted small">📍 {{ parada.direccion }}</span>
+                                </div>
+                                <span class="btn btn-sm btn-outline-primary">Ver Parada</span>
+                            </a>
+                        {% empty %}
+                            <p class="text-muted fst-italic small mb-0">No hay paradas asociadas registradas directamente.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
