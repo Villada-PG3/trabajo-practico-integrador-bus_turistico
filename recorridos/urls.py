@@ -6,6 +6,7 @@ urlpatterns = [
     # Parte Pública
     path('', views.home, name='home'),
     path('recorridos/', RecorridoListView.as_view(), name='recorridos_list'),
+    path('recorridos/<int:pk>/', RecorridoDetailView.as_view(), name='recorrido_detail'),
     path('paradas/', ParadaListView.as_view(), name='paradas_list'),
     path('paradas/<int:pk>/', ParadaDetailView.as_view(), name='parada_detail'),
     path('atractivos/', views.atractivos_list, name='atractivos_list'),

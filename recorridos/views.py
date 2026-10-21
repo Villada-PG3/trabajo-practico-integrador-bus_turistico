@@ -36,6 +36,11 @@ class RecorridoListView(ListView):
             queryset = queryset.filter(nombre__icontains=query)
         return queryset
 
+class RecorridoDetailView(DetailView):
+    model = Recorrido
+    template_name = 'public/recorrido_detail.html'
+    context_object_name = 'recorrido'
+
 def home(request):
     return render(request, 'public/home.html')
 
