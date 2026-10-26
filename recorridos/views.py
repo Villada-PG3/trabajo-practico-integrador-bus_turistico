@@ -28,6 +28,7 @@ class RecorridoListView(ListView):
     model = Recorrido
     template_name = 'public/recorridos_list.html'
     context_object_name = 'recorridos'
+    ordering = ['id_recorrido']  # Se define el orden por defecto para evitar listas desordenadas
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -50,12 +51,13 @@ class ParadaListView(ListView):
     template_name = 'public/paradas_list.html'
     context_object_name = 'paradas'
     paginate_by = 6
+    ordering = ['id_parada']  
 
     def get_queryset(self):
         queryset = super().get_queryset()
         query = self.request.GET.get('q')
         if query:
-            queryset = queryset.filter(nombre__icontains=query) | queryset.filter(direccion__icontains=query)
+            queryset = queryset.filter(nombre_icontains=query) | queryset.filter(direccion_icontains=query)
         return queryset
 
 
@@ -72,12 +74,13 @@ class AtractivoListView(ListView):
     template_name = 'public/atractivos_list.html'
     context_object_name = 'atractivos'
     paginate_by = 6
+    ordering = ['id_atractivo']  # Soluciona UnorderedObjectListWarning al paginar
 
     def get_queryset(self):
         queryset = super().get_queryset()
         query = self.request.GET.get('q')
         if query:
-            queryset = queryset.filter(nombre__icontains=query) | queryset.filter(descripcion__icontains=query)
+            queryset = queryset.filter(nombre_icontains=query) | queryset.filter(descripcion_icontains=query)
         return queryset
 
 
