@@ -75,26 +75,26 @@ class Atractivo(models.Model):
 
 class RecorridoParada(models.Model):
     id_recorrido_parada = models.AutoField(primary_key=True)
-    id_recorrido = models.ForeignKey(Recorrido, on_delete=models.CASCADE, db_column="id_recorrido")
-    id_parada = models.ForeignKey(Parada, on_delete=models.CASCADE, db_column="id_parada")
+    recorrido = models.ForeignKey(Recorrido, on_delete=models.CASCADE, db_column="id_recorrido")
+    parada = models.ForeignKey(Parada, on_delete=models.CASCADE, db_column="id_parada")
     orden = models.IntegerField()
 
     def __str__(self):
-        return f"{self.id_recorrido} - {self.id_parada} (orden {self.orden})"
+        return f"{self.recorrido} - {self.parada} (Orden {self.orden})"
 
     class Meta:
         verbose_name = "Recorrido-Parada"
         verbose_name_plural = "Recorrido-Paradas"
-        ordering = ["id_recorrido", "orden"]
+        ordering = ["recorrido", "orden"]
 
 
 class ParadaAtractivo(models.Model):
     id_parada_atractivo = models.AutoField(primary_key=True)
-    id_parada = models.ForeignKey(Parada, on_delete=models.CASCADE, db_column="id_parada")
-    id_atractivo = models.ForeignKey(Atractivo, on_delete=models.CASCADE, db_column="id_atractivo")
+    parada = models.ForeignKey(Parada, on_delete=models.CASCADE, db_column="id_parada")
+    atractivo = models.ForeignKey(Atractivo, on_delete=models.CASCADE, db_column="id_atractivo")
 
     def __str__(self):
-        return f"{self.id_parada} - {self.id_atractivo}"
+        return f"{self.parada} - {self.atractivo}"
 
     class Meta:
         verbose_name = "Parada-Atractivo"
@@ -106,12 +106,12 @@ class Viaje(models.Model):
     fecha_hora_inicio_programada = models.DateTimeField()
     fecha_hora_inicio_real = models.DateTimeField(blank=True, null=True)
     fecha_hora_fin_real = models.DateTimeField(blank=True, null=True)
-    id_bus = models.ForeignKey(Autobus, on_delete=models.CASCADE, db_column="id_bus")
-    legajo_chofer = models.ForeignKey(Chofer, on_delete=models.CASCADE, db_column="legajo_chofer")
-    id_recorrido = models.ForeignKey(Recorrido, on_delete=models.CASCADE, db_column="id_recorrido")
+    bus = models.ForeignKey(Autobus, on_delete=models.CASCADE, db_column="id_bus")
+    chofer = models.ForeignKey(Chofer, on_delete=models.CASCADE, db_column="legajo_chofer")
+    recorrido = models.ForeignKey(Recorrido, on_delete=models.CASCADE, db_column="id_recorrido")
 
     def __str__(self):
-        return f"Viaje {self.id_viaje} - {self.id_recorrido}"
+        return f"Viaje {self.id_viaje} - {self.recorrido}"
 
     class Meta:
         verbose_name = "Viaje"
@@ -120,13 +120,13 @@ class Viaje(models.Model):
 
 class Reparacion(models.Model):
     id_reparacion = models.AutoField(primary_key=True)
-    id_bus = models.ForeignKey(Autobus, on_delete=models.CASCADE, db_column="id_bus", related_name="reparaciones")
+    bus = models.ForeignKey(Autobus, on_delete=models.CASCADE, db_column="id_bus", related_name="reparaciones")
     descripcion = models.TextField()
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return f"Reparación {self.id_reparacion} - {self.id_bus}"
+        return f"Reparación {self.id_reparacion} - {self.bus}"
 
     class Meta:
         verbose_name = "Reparación"
