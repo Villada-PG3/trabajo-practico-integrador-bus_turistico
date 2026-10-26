@@ -48,7 +48,7 @@
         {% for parada_asociada in recorrido.paradas_asociadas.all %}
             <a href="{% url 'parada_detail' parada_asociada.parada.pk %}" 
                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3 border-start border-4"
-               style="border-start-color: {{ recorrido.color_hex|default:'#2563eb' }} !important;">
+               style="border-left-color: {{ recorrido.color_hex|default:'#2563eb' }} !important;">
                 
                 <div class="d-flex align-items-center gap-3">
                     <span class="badge rounded-circle bg-dark text-white p-3 fs-6" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Página no encontrada - Bus Turístico{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="display-1 mb-2" aria-hidden="true">🚌</div>
+    <h1 class="display-1 fw-bold text-bus">404</h1>
+    <h2 class="h3 mb-3">¡Uy! Este bus no pasa por acá</h2>
+    <p class="text-secondary mx-auto mb-4" style="max-width: 520px;">
+        La página que buscás no existe, fue movida o el enlace es incorrecto.
+        Podés volver al inicio o explorar nuestros recorridos.
+    </p>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a href="{% url 'home' %}" class="btn btn-primary fw-semibold">Volver al inicio</a>
+        <a href="{% url 'recorridos_list' %}" class="btn btn-outline-primary fw-semibold">Ver recorridos</a>
+        <a href="{% url 'paradas_list' %}" class="btn btn-outline-primary fw-semibold">Ver paradas</a>
+    </div>
+</div>
+{% endblock %}
