@@ -12,24 +12,18 @@ from .views import (
 )
 
 urlpatterns = [
-    # Parte Pública (CBVs)
-    path('', HomeView.as_view(), name='home'),
-    path('nosotros/', NosotrosView.as_view(), name='nosotros'),
+    # Parte pública
+    path('', views.HomeView.as_view(), name='home'),
+    path('nosotros/', views.NosotrosView.as_view(), name='nosotros'),
+    path('recorridos/', views.RecorridoListView.as_view(), name='recorridos_list'),
+    path('recorridos/<int:pk>/', views.RecorridoDetailView.as_view(), name='recorrido_detail'),
+    path('paradas/', views.ParadaListView.as_view(), name='paradas_list'),
+    path('paradas/<int:pk>/', views.ParadaDetailView.as_view(), name='parada_detail'),
+    path('atractivos/', views.AtractivoListView.as_view(), name='atractivos_list'),
+    path('atractivos/<int:pk>/', views.AtractivoDetailView.as_view(), name='atractivo_detail'),
 
-    # Recorridos
-    path('recorridos/', RecorridoListView.as_view(), name='recorridos_list'),
-    path('recorridos/<int:pk>/', RecorridoDetailView.as_view(), name='recorrido_detail'),
-
-    # Paradas
-    path('paradas/', ParadaListView.as_view(), name='paradas_list'),
-    path('paradas/<int:pk>/', ParadaDetailView.as_view(), name='parada_detail'),
-
-    # Atractivos Turísticos
-    path('atractivos/', AtractivoListView.as_view(), name='atractivos_list'),
-    path('atractivos/<int:pk>/', AtractivoDetailView.as_view(), name='atractivo_detail'),
-
-    # Panel Administrativo
-    path('admin-panel/login/', views.admin_login, name='admin_login'),
-    path('admin-panel/dashboard/', views.admin_dashboard, name='admin_dashboard'),
-    path('admin-panel/logout/', views.admin_logout, name='admin_logout'),
+    # Panel administrativo
+    path('admin-panel/login/', views.PanelLoginView.as_view(), name='admin_login'),
+    path('admin-panel/dashboard/', views.DashboardView.as_view(), name='admin_dashboard'),
+    path('admin-panel/logout/', views.PanelLogoutView.as_view(), name='admin_logout'),
 ]

@@ -1,121 +1,164 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, TemplateView
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.core.exceptions import ValidationError
+from django.db.models import Prefetch, Q
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView, TemplateView
 
-# Importación de modelos del dominio
-from .models import Recorrido, Parada, Atractivo
-
-
-# --- VISTAS GENERALES Y ESTÁTICAS (CBV) ---
-
-class HomeView(TemplateView):
-    template_name = 'public/home.html'
-
-
-class NosotrosView(TemplateView):
-    """
-    Vista basada en clases para la sección Institucional / Nosotros.
-    Renderiza la plantilla creada por tu compañero en 'templates/public/nosotros.html'.
-    """
-    template_name = 'public/nosotros.html'
+from .models import (
+    Atractivo, Autobus, Chofer, Parada, Recorrido,
+    RecorridoParada, Reparacion, Viaje,
+)
 
 
-# --- MÓDULO DE RECORRIDOS (CBV) ---
-
-class RecorridoListView(ListView):
-    model = Recorrido
-    template_name = 'public/recorridos_list.html'
-    context_object_name = 'recorridos'
-    ordering = ['id_recorrido']  # Se define el orden por defecto para evitar listas desordenadas
+# ---------------------------------------------------------------
+# Mixins reutilizables (herencia / POO)
+# ---------------------------------------------------------------
+class BusquedaMixin:
+    """Filtra el queryset con el parámetro GET ?q=, buscando en `campos_busqueda`."""
+    campos_busqueda = ()
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q')
-        if query:
-            queryset = queryset.filter(nombre__icontains=query)
+        texto = self.request.GET.get("q", "").strip()
+        if texto and self.campos_busqueda:
+            filtro = Q()
+            for campo in self.campos_busqueda:
+                filtro |= Q(**{f"{campo}__icontains": texto})
+            queryset = queryset.filter(filtro).distinct()
         return queryset
+
+
+class StaffRequiredMixin(UserPassesTestMixin):
+    """Solo usuarios activos con is_staff acceden; el resto va al login del panel."""
+    login_url = reverse_lazy("admin_login")
+
+    def test_func(self):
+        usuario = self.request.user
+        return usuario.is_active and usuario.is_staff
+
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
+
+# ---------------------------------------------------------------
+# Parte pública
+# ---------------------------------------------------------------
+class HomeView(TemplateView):
+    template_name = "public/home.html"
+
+
+class NosotrosView(TemplateView):
+    template_name = "public/nosotros.html"
+
+
+def _paradas_ordenadas():
+    return Prefetch(
+        "paradas_asociadas",
+        queryset=RecorridoParada.objects.select_related("parada").order_by("orden"),
+    )
+
+
+class RecorridoListView(BusquedaMixin, ListView):
+    model = Recorrido
+    template_name = "public/recorridos_list.html"
+    context_object_name = "recorridos"
+    campos_busqueda = ("color", "descripcion", "paradas_asociadas__parada__nombre",
+                       "paradas_asociadas__parada__direccion")
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related(_paradas_ordenadas())
 
 
 class RecorridoDetailView(DetailView):
     model = Recorrido
-    template_name = 'public/recorrido_detail.html'
-    context_object_name = 'recorrido'
-
-
-# --- MÓDULO DE PARADAS (CBV) ---
-
-class ParadaListView(ListView):
-    model = Parada
-    template_name = 'public/paradas_list.html'
-    context_object_name = 'paradas'
-    paginate_by = 6
-    ordering = ['id_parada']  
+    template_name = "public/recorrido_detail.html"
+    context_object_name = "recorrido"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        query = self.request.GET.get('q')
-        if query:
-            queryset = queryset.filter(nombre_icontains=query) | queryset.filter(direccion_icontains=query)
-        return queryset
+        return super().get_queryset().prefetch_related(_paradas_ordenadas())
+
+
+class ParadaListView(BusquedaMixin, ListView):
+    model = Parada
+    template_name = "public/paradas_list.html"
+    context_object_name = "paradas"
+    campos_busqueda = ("nombre", "direccion", "descripcion")
 
 
 class ParadaDetailView(DetailView):
     model = Parada
-    template_name = 'public/parada_detail.html'
-    context_object_name = 'parada'
-
-
-# --- MÓDULO DE ATRACTIVOS TURÍSTICOS (CBV) ---
-
-class AtractivoListView(ListView):
-    model = Atractivo
-    template_name = 'public/atractivos_list.html'
-    context_object_name = 'atractivos'
-    paginate_by = 6
-    ordering = ['id_atractivo']  # Soluciona UnorderedObjectListWarning al paginar
+    template_name = "public/parada_detail.html"
+    context_object_name = "parada"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        query = self.request.GET.get('q')
-        if query:
-            queryset = queryset.filter(nombre_icontains=query) | queryset.filter(descripcion_icontains=query)
-        return queryset
+        return super().get_queryset().prefetch_related("atractivos")
+
+
+class AtractivoListView(BusquedaMixin, ListView):
+    model = Atractivo
+    template_name = "public/atractivos_list.html"
+    context_object_name = "atractivos"
+    campos_busqueda = ("nombre", "descripcion")
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-calificacion", "nombre")
 
 
 class AtractivoDetailView(DetailView):
     model = Atractivo
-    template_name = 'public/atractivo_detail.html'
-    context_object_name = 'atractivo'
+    template_name = "public/atractivo_detail.html"
+    context_object_name = "atractivo"
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related("paradas")
 
 
-# --- PANEL ADMINISTRATIVO (DUEÑO) ---
+# ---------------------------------------------------------------
+# Panel administrativo
+# ---------------------------------------------------------------
+class PanelAuthenticationForm(AuthenticationForm):
+    """Igual que el formulario de Django, pero solo deja entrar a usuarios is_staff."""
 
-def admin_login(request):
-    if request.user.is_authenticated:
-        return redirect('admin_dashboard')
-
-    if request.method == 'POST':
-        usuario = request.POST.get('username')
-        clave = request.POST.get('password')
-        
-        user = authenticate(request, username=usuario, password=clave)
-        
-        if user is not None:
-            login(request, user)
-            return redirect('admin_dashboard')
-        else:
-            messages.error(request, 'Usuario o contraseña incorrectos.')
-
-    return render(request, 'admin_panel/login.html')
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not user.is_staff:
+            raise ValidationError("Usuario o contraseña incorrectos.", code="no_staff")
 
 
-@login_required(login_url='admin_login')
-def admin_dashboard(request):
-    return render(request, 'admin_panel/dashboard.html')
+class PanelLoginView(LoginView):
+    template_name = "admin_panel/login.html"
+    authentication_form = PanelAuthenticationForm
+    next_page = reverse_lazy("admin_dashboard")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_staff:
+            return redirect("admin_dashboard")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Usuario o contraseña incorrectos.")
+        return super().form_invalid(form)
 
 
-def admin_logout(request):
-    logout(request)
-    return redirect('admin_login')
+class PanelLogoutView(LogoutView):
+    """Cierra sesión (solo por POST) y vuelve al login del panel."""
+    next_page = reverse_lazy("admin_login")
+
+
+class DashboardView(StaffRequiredMixin, TemplateView):
+    template_name = "admin_panel/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        contexto.update(
+            total_buses=Autobus.objects.count(),
+            total_choferes=Chofer.objects.count(),
+            total_recorridos=Recorrido.objects.count(),
+            total_viajes=Viaje.objects.count(),
+            reparaciones_abiertas=Reparacion.objects.filter(fecha_fin__isnull=True).count(),
+        )
+        return contexto
