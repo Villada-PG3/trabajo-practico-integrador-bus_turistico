@@ -10,12 +10,15 @@ erDiagram
         int id_parada_atractivo PK
         int id_parada FK
         int id_atractivo FK
+        int distancia_metros
 
     }
     
     ATRACTIVO{
         int id_atractivo PK
         str nombre
+        str descripcion
+        str imagen
         int calificacion
     }
     
@@ -42,6 +45,7 @@ erDiagram
         datetime fecha_hora_inicio_real
         datetime fecha_hora_fin_real
         int duracion_total
+        str estado
         int id_bus FK
         int legajo_chofer FK
         int id_recorrido FK
@@ -59,6 +63,8 @@ erDiagram
         int legajo PK
         str nombre
         str apellido
+        str dni
+        bool activo
     }
 
     REPARACION {
@@ -67,6 +73,7 @@ erDiagram
         str descripcion
         datetime fecha_inicio
         datetime fecha_fin
+        int costo
     }
 
 %%RELACIONES:

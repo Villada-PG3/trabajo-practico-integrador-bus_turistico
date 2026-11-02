@@ -8,6 +8,8 @@ class Chofer(models.Model):
     legajo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
+    dni = models.CharField(max_length=20, unique=True, null=True, blank=True, verbose_name="DNI / Cédula")
+    activo = models.BooleanField(default=True)
 
     @property
     def nombre_completo(self):
@@ -22,16 +24,24 @@ class Chofer(models.Model):
 
 
 class Autobus(models.Model):
+    ESTADOS = [
+        ("OPERATIVO", "Operativo"),
+        ("EN_REPARACION", "En Reparación"),
+        ("FUERA_DE_SERVICIO", "Fuera de Servicio"),
+    ]
+
     id_bus = models.AutoField(primary_key=True)
     patente = models.CharField(max_length=10)
     numero_unidad = models.IntegerField()
     fecha_compra = models.DateField()
-    estado = models.CharField(max_length=50)
+    estado = models.CharField(max_length=50, choices=ESTADOS, default="OPERATIVO")
 
     @property
     def en_reparacion(self):
         """True si el bus tiene alguna reparación sin fecha de fin."""
-        return bool(self.pk) and self.reparaciones.filter(fecha_fin__isnull=True).exists()
+        return self.estado == "EN_REPARACION" or (
+            bool(self.pk) and self.reparaciones.filter(fecha_fin__isnull=True).exists()
+        )
 
     def __str__(self):
         return f"Unidad {self.numero_unidad} ({self.patente})"
@@ -39,6 +49,7 @@ class Autobus(models.Model):
     class Meta:
         verbose_name = "Autobús"
         verbose_name_plural = "Autobuses"
+        ordering = ["numero_unidad"]
 
 
 class Recorrido(models.Model):
@@ -63,7 +74,11 @@ class Recorrido(models.Model):
     )
     hora_inicio = models.TimeField(help_text="Salida del primer bus desde la primera parada")
     hora_fin = models.TimeField(help_text="Llegada aproximada del último bus a la última parada")
-    duracion_aproximada = models.PositiveIntegerField(help_text="Duración del circuito completo, en minutos")
+    duracion_aproximada = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)],
+        help_text="Duración del circuito completo, en minutos")
+    paradas = models.ManyToManyField(
+        "Parada", through="RecorridoParada", related_name="recorridos")
 
     @property
     def nombre(self):
@@ -162,6 +177,11 @@ class ParadaAtractivo(models.Model):
     id_parada_atractivo = models.AutoField(primary_key=True)
     parada = models.ForeignKey(Parada, on_delete=models.CASCADE, db_column="id_parada")
     atractivo = models.ForeignKey(Atractivo, on_delete=models.CASCADE, db_column="id_atractivo")
+    distancia_metros = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)],
+        help_text="Distancia aproximada desde la parada hasta el atractivo, en metros",
+        null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.parada} - {self.atractivo}"
@@ -175,6 +195,13 @@ class ParadaAtractivo(models.Model):
 
 
 class Viaje(models.Model):
+    ESTADOS_VIAJE = [
+        ("PROGRAMADO", "Programado"),
+        ("EN_CURSO", "En curso"),
+        ("FINALIZADO", "Finalizado"),
+        ("CANCELADO", "Cancelado"),
+    ]
+
     id_viaje = models.AutoField(primary_key=True)
     fecha_hora_inicio_programada = models.DateTimeField()
     fecha_hora_inicio_real = models.DateTimeField(blank=True, null=True)
@@ -198,12 +225,13 @@ class Viaje(models.Model):
 
     @property
     def finalizado(self):
-        return self.fecha_hora_fin_real is not None
+        return self.estado == "FINALIZADO" or self.fecha_hora_fin_real is not None
 
     def iniciar(self):
         if self.fecha_hora_inicio_real:
             raise ValidationError("El viaje ya fue iniciado.")
         self.fecha_hora_inicio_real = timezone.now()
+        self.estado = "EN_CURSO"
         self.save(update_fields=["fecha_hora_inicio_real"])
 
     def finalizar(self):
@@ -212,7 +240,8 @@ class Viaje(models.Model):
         if self.fecha_hora_fin_real:
             raise ValidationError("El viaje ya fue finalizado.")
         self.fecha_hora_fin_real = timezone.now()
-        self.save(update_fields=["fecha_hora_fin_real"])
+        self.estado = "FINALIZADO"
+        self.save(update_fields=["fecha_hora_fin_real", "estado"])
 
     def clean(self):
         errores = {}
@@ -221,6 +250,8 @@ class Viaje(models.Model):
             errores["fecha_hora_fin_real"] = "El fin del viaje no puede ser anterior al inicio."
         if self._state.adding and self.bus_id and self.bus.en_reparacion:
             errores["bus"] = "Este autobús está en reparación y no puede asignarse a un viaje."
+        if self._state.adding and self.chofer_id and not self.chofer.activo:
+            errores["chofer"] = "Este chofer no está activo y no puede asignarse a un viaje."
         if errores:
             raise ValidationError(errores)
 
@@ -230,6 +261,7 @@ class Viaje(models.Model):
     class Meta:
         verbose_name = "Viaje"
         verbose_name_plural = "Viajes"
+        ordering = ["-fecha_hora_inicio_programada"]
 
 
 class Reparacion(models.Model):
@@ -238,6 +270,11 @@ class Reparacion(models.Model):
     descripcion = models.TextField()
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField(blank=True, null=True)
+    costo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    def clean(self):
+        if self.fecha_inicio and self.fecha_fin and self.fecha_fin < self.fecha_inicio:
+            raise ValidationError({"fecha_fin": "La fecha de fin no puede ser anterior a la fecha de inicio."})
 
     def __str__(self):
         return f"Reparación {self.id_reparacion} - {self.bus}"

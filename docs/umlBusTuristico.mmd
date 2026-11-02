@@ -13,6 +13,7 @@ classDiagram
         int id_parada_atractivo
         int id_parada
         int id_atractivo
+        int distancia_metros
         +asociarAtractivo()
         +desasociarAtractivo()
     }
@@ -20,6 +21,8 @@ classDiagram
     class ATRACTIVO {
         int id_atractivo
         String nombre
+        String descripcion
+        String imagen
         int calificacion
         +actualizarCalificacion()
         +obtenerCalificacion()
@@ -33,12 +36,13 @@ classDiagram
         String foto
         +actualizarInformacion()
         +obtenerAtractivos()
+        +cantidadAtractivos()
     }
 
     class RECORRIDO {
         int id_recorrido
         String color
-        int frecuencia
+        int frecuencia_minutos
         Time hora_inicio
         Time hora_finalizacion
         int duracion_aproximada
@@ -53,6 +57,7 @@ classDiagram
         DateTime fecha_hora_inicio_programada
         DateTime fecha_hora_inicio_real
         DateTime fecha_hora_fin_real
+        str estado
         int id_bus
         int legajo_chofer
         int id_recorrido
@@ -71,15 +76,19 @@ classDiagram
         +actualizarEstado()
         +estaDisponible()
         +asignarViaje()
+        +estaEnReparacion()
     }
 
     class CHOFER {
         int legajo
         String nombre
         String apellido
+        str dni
+        bool activo
         +iniciarViaje()
         +finalizarViaje()
         +obtenerDatos()
+        +esActivo()
     }
 
     class REPARACION {
@@ -88,6 +97,7 @@ classDiagram
         String descripcion
         DateTime fecha_inicio
         DateTime fecha_fin
+        int costo
         +iniciarReparacion()
         +finalizarReparacion()
         +estaActiva()
