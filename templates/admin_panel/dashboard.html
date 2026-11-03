@@ -3,7 +3,6 @@
 
 {% block title %}Dashboard - Bus Turístico{% endblock %}
 
-{# El panel usa su propia barra superior en lugar de la navbar pública #}
 {% block navbar %}
 <nav class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container">
@@ -35,7 +34,7 @@
 
     <div class="row g-4">
         <div class="col-6 col-lg-4">
-            <a href="{% url 'admin:recorridos_autobus_changelist' %}" class="text-decoration-none">
+            <a href="{% url 'autobus_list' %}" class="text-decoration-none">
                 <div class="card card-hover h-100 text-center"><div class="card-body">
                     <div class="display-6">🚌</div>
                     <div class="display-6 fw-bold text-dark">{{ total_buses }}</div>
