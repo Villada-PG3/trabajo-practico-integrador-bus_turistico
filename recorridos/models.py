@@ -248,8 +248,9 @@ class Viaje(models.Model):
         if self.fecha_hora_inicio_real and self.fecha_hora_fin_real \
                 and self.fecha_hora_fin_real < self.fecha_hora_inicio_real:
             errores["fecha_hora_fin_real"] = "El fin del viaje no puede ser anterior al inicio."
-        if self._state.adding and self.bus_id and self.bus.en_reparacion:
-            errores["bus"] = "Este autobús está en reparación y no puede asignarse a un viaje."
+        if self._state.adding and self.bus_id:
+            if self.bus.estado != "OPERATIVO" or self.bus.en_reparacion:
+                errores["bus"] = "El autobús no está disponible para realizar viajes."
         if self._state.adding and self.chofer_id and not self.chofer.activo:
             errores["chofer"] = "Este chofer no está activo y no puede asignarse a un viaje."
         if errores:
