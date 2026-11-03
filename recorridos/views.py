@@ -1,3 +1,4 @@
+
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -6,10 +7,9 @@ from django.core.exceptions import ValidationError
 from django.db.models import Prefetch, Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, TemplateView
-from django.views.generic import CreateView
-from .forms import AutobusForm
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
+from .forms import AutobusForm
 from .models import (
     Atractivo, Autobus, Chofer, Parada, Recorrido,
     RecorridoParada, Reparacion, Viaje,
@@ -17,25 +17,32 @@ from .models import (
 
 
 # ---------------------------------------------------------------
-# Mixins reutilizables (herencia / POO)
+# Mixins reutilizables
 # ---------------------------------------------------------------
+
 class BusquedaMixin:
-    """Filtra el queryset con el parámetro GET ?q=, buscando en `campos_busqueda`."""
+    """Filtra los resultados utilizando el parametro GET ?q=."""
+
     campos_busqueda = ()
 
     def get_queryset(self):
         queryset = super().get_queryset()
         texto = self.request.GET.get("q", "").strip()
+
         if texto and self.campos_busqueda:
             filtro = Q()
+
             for campo in self.campos_busqueda:
                 filtro |= Q(**{f"{campo}__icontains": texto})
+
             queryset = queryset.filter(filtro).distinct()
+
         return queryset
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
-    """Solo usuarios activos con is_staff acceden; el resto va al login del panel."""
+    """Permite acceder solamente al personal autorizado."""
+
     login_url = reverse_lazy("admin_login")
 
     def test_func(self):
@@ -47,8 +54,9 @@ class StaffRequiredMixin(UserPassesTestMixin):
 
 
 # ---------------------------------------------------------------
-# Parte pública
+# Parte publica
 # ---------------------------------------------------------------
+
 class HomeView(TemplateView):
     template_name = "public/home.html"
 
@@ -60,7 +68,9 @@ class NosotrosView(TemplateView):
 def _paradas_ordenadas():
     return Prefetch(
         "paradas_asociadas",
-        queryset=RecorridoParada.objects.select_related("parada").order_by("orden"),
+        queryset=RecorridoParada.objects.select_related(
+            "parada"
+        ).order_by("orden"),
     )
 
 
@@ -68,11 +78,17 @@ class RecorridoListView(BusquedaMixin, ListView):
     model = Recorrido
     template_name = "public/recorridos_list.html"
     context_object_name = "recorridos"
-    campos_busqueda = ("color", "descripcion", "paradas_asociadas__parada__nombre",
-                       "paradas_asociadas__parada__direccion")
+    campos_busqueda = (
+        "color",
+        "descripcion",
+        "paradas_asociadas__parada__nombre",
+        "paradas_asociadas__parada__direccion",
+    )
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related(_paradas_ordenadas())
+        return super().get_queryset().prefetch_related(
+            _paradas_ordenadas()
+        )
 
 
 class RecorridoDetailView(DetailView):
@@ -81,7 +97,9 @@ class RecorridoDetailView(DetailView):
     context_object_name = "recorrido"
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related(_paradas_ordenadas())
+        return super().get_queryset().prefetch_related(
+            _paradas_ordenadas()
+        )
 
 
 class ParadaListView(BusquedaMixin, ListView):
@@ -97,7 +115,9 @@ class ParadaDetailView(DetailView):
     context_object_name = "parada"
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related("atractivos")
+        return super().get_queryset().prefetch_related(
+            "atractivos"
+        )
 
 
 class AtractivoListView(BusquedaMixin, ListView):
@@ -107,7 +127,9 @@ class AtractivoListView(BusquedaMixin, ListView):
     campos_busqueda = ("nombre", "descripcion")
 
     def get_queryset(self):
-        return super().get_queryset().order_by("-calificacion", "nombre")
+        return super().get_queryset().order_by(
+            "-calificacion", "nombre"
+        )
 
 
 class AtractivoDetailView(DetailView):
@@ -116,19 +138,26 @@ class AtractivoDetailView(DetailView):
     context_object_name = "atractivo"
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related("paradas")
+        return super().get_queryset().prefetch_related(
+            "paradas"
+        )
 
 
 # ---------------------------------------------------------------
 # Panel administrativo
 # ---------------------------------------------------------------
+
 class PanelAuthenticationForm(AuthenticationForm):
-    """Igual que el formulario de Django, pero solo deja entrar a usuarios is_staff."""
+    """Permite iniciar sesion solamente a usuarios staff."""
 
     def confirm_login_allowed(self, user):
         super().confirm_login_allowed(user)
+
         if not user.is_staff:
-            raise ValidationError("Usuario o contraseña incorrectos.", code="no_staff")
+            raise ValidationError(
+                "Usuario o contraseña incorrectos.",
+                code="no_staff",
+            )
 
 
 class PanelLoginView(LoginView):
@@ -139,15 +168,18 @@ class PanelLoginView(LoginView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.is_staff:
             return redirect("admin_dashboard")
+
         return super().dispatch(request, *args, **kwargs)
 
     def form_invalid(self, form):
-        messages.error(self.request, "Usuario o contraseña incorrectos.")
+        messages.error(
+            self.request,
+            "Usuario o contraseña incorrectos."
+        )
         return super().form_invalid(form)
 
 
 class PanelLogoutView(LogoutView):
-    """Cierra sesión (solo por POST) y vuelve al login del panel."""
     next_page = reverse_lazy("admin_login")
 
 
@@ -156,14 +188,23 @@ class DashboardView(StaffRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
+
         contexto.update(
             total_buses=Autobus.objects.count(),
             total_choferes=Chofer.objects.count(),
             total_recorridos=Recorrido.objects.count(),
             total_viajes=Viaje.objects.count(),
-            reparaciones_abiertas=Reparacion.objects.filter(fecha_fin__isnull=True).count(),
+            reparaciones_abiertas=Reparacion.objects.filter(
+                fecha_fin__isnull=True
+            ).count(),
         )
+
         return contexto
+
+
+# ---------------------------------------------------------------
+# Gestion de autobuses
+# ---------------------------------------------------------------
 
 class AutobusCreateView(StaffRequiredMixin, CreateView):
     model = Autobus
@@ -177,3 +218,12 @@ class AutobusCreateView(StaffRequiredMixin, CreateView):
             "Autobús registrado correctamente."
         )
         return super().form_valid(form)
+
+
+class AutobusListView(StaffRequiredMixin, ListView):
+    model = Autobus
+    template_name = "admin_panel/autobus_list.html"
+    context_object_name = "autobuses"
+
+    def get_queryset(self):
+        return Autobus.objects.all().order_by("numero_unidad")
