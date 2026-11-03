@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Dashboard - Bus Turístico{% endblock %}
@@ -22,7 +23,15 @@
 {% block content %}
 <div class="container py-5">
     <h1 class="h3 mb-1">¡Sesión iniciada correctamente!</h1>
-    <p class="text-secondary mb-4">Desde aquí podés gestionar la flota, los choferes, los recorridos, los viajes y las reparaciones.</p>
+
+    <p class="text-secondary mb-4">
+        Desde aquí podés gestionar la flota, los choferes,
+        los recorridos, los viajes y las reparaciones.
+    </p>
+
+    <a href="{% url 'autobus_create' %}" class="btn btn-success mb-4">
+        + Registrar autobús
+    </a>
 
     <div class="row g-4">
         <div class="col-6 col-lg-4">
@@ -34,6 +43,7 @@
                 </div></div>
             </a>
         </div>
+
         <div class="col-6 col-lg-4">
             <a href="{% url 'admin:recorridos_chofer_changelist' %}" class="text-decoration-none">
                 <div class="card card-hover h-100 text-center"><div class="card-body">
@@ -43,6 +53,7 @@
                 </div></div>
             </a>
         </div>
+
         <div class="col-6 col-lg-4">
             <a href="{% url 'admin:recorridos_recorrido_changelist' %}" class="text-decoration-none">
                 <div class="card card-hover h-100 text-center"><div class="card-body">
@@ -52,6 +63,7 @@
                 </div></div>
             </a>
         </div>
+
         <div class="col-6 col-lg-4">
             <a href="{% url 'admin:recorridos_viaje_changelist' %}" class="text-decoration-none">
                 <div class="card card-hover h-100 text-center"><div class="card-body">
@@ -61,6 +73,7 @@
                 </div></div>
             </a>
         </div>
+
         <div class="col-6 col-lg-4">
             <a href="{% url 'admin:recorridos_reparacion_changelist' %}" class="text-decoration-none">
                 <div class="card card-hover h-100 text-center"><div class="card-body">

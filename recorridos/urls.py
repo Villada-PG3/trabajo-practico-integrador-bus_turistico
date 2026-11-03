@@ -1,11 +1,12 @@
+
 from django.urls import path
 from . import views
 from .views import (
     HomeView,
     NosotrosView,
-    RecorridoListView, 
-    RecorridoDetailView, 
-    ParadaListView, 
+    RecorridoListView,
+    RecorridoDetailView,
+    ParadaListView,
     ParadaDetailView,
     AtractivoListView,
     AtractivoDetailView,
@@ -26,4 +27,11 @@ urlpatterns = [
     path('admin-panel/login/', views.PanelLoginView.as_view(), name='admin_login'),
     path('admin-panel/dashboard/', views.DashboardView.as_view(), name='admin_dashboard'),
     path('admin-panel/logout/', views.PanelLogoutView.as_view(), name='admin_logout'),
+
+    # Gestión de autobuses
+    path(
+        'admin-panel/autobuses/nuevo/',
+        views.AutobusCreateView.as_view(),
+        name='autobus_create'
+    ),
 ]

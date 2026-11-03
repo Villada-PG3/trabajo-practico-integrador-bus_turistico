@@ -7,6 +7,8 @@ from django.db.models import Prefetch, Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import CreateView
+from .forms import AutobusForm
 
 from .models import (
     Atractivo, Autobus, Chofer, Parada, Recorrido,
@@ -162,3 +164,16 @@ class DashboardView(StaffRequiredMixin, TemplateView):
             reparaciones_abiertas=Reparacion.objects.filter(fecha_fin__isnull=True).count(),
         )
         return contexto
+
+class AutobusCreateView(StaffRequiredMixin, CreateView):
+    model = Autobus
+    form_class = AutobusForm
+    template_name = "admin_panel/autobus_form.html"
+    success_url = reverse_lazy("admin_dashboard")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Autobús registrado correctamente."
+        )
+        return super().form_valid(form)
