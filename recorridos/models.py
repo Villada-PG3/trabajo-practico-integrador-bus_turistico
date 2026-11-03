@@ -203,6 +203,12 @@ class Viaje(models.Model):
     ]
 
     id_viaje = models.AutoField(primary_key=True)
+
+    estado = models.CharField(
+        max_length=20,
+        choices=ESTADOS_VIAJE,
+        default="PROGRAMADO"
+    )
     fecha_hora_inicio_programada = models.DateTimeField()
     fecha_hora_inicio_real = models.DateTimeField(blank=True, null=True)
     fecha_hora_fin_real = models.DateTimeField(blank=True, null=True)
@@ -230,9 +236,11 @@ class Viaje(models.Model):
     def iniciar(self):
         if self.fecha_hora_inicio_real:
             raise ValidationError("El viaje ya fue iniciado.")
+
         self.fecha_hora_inicio_real = timezone.now()
         self.estado = "EN_CURSO"
-        self.save(update_fields=["fecha_hora_inicio_real"])
+
+        self.save(update_fields=["fecha_hora_inicio_real", "estado"])
 
     def finalizar(self):
         if not self.fecha_hora_inicio_real:
