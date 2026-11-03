@@ -42,6 +42,7 @@
                             <th>Patente</th>
                             <th>Fecha de compra</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
 
@@ -49,8 +50,13 @@
                         {% for autobus in autobuses %}
                         <tr>
                             <td>{{ autobus.numero_unidad }}</td>
+
                             <td>{{ autobus.patente }}</td>
-                            <td>{{ autobus.fecha_compra|date:"d/m/Y" }}</td>
+
+                            <td>
+                                {{ autobus.fecha_compra|date:"d/m/Y" }}
+                            </td>
+
                             <td>
                                 {% if autobus.estado == "OPERATIVO" %}
                                     <span class="badge bg-success">
@@ -66,10 +72,19 @@
                                     </span>
                                 {% endif %}
                             </td>
+
+                            <td>
+                                <a href="{% url 'autobus_update' autobus.pk %}"
+                                   class="btn btn-primary btn-sm">
+                                    Editar
+                                </a>
+                            </td>
                         </tr>
+
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="text-center text-secondary py-4">
+                            <td colspan="5"
+                                class="text-center text-secondary py-4">
                                 Todavía no hay autobuses registrados.
                             </td>
                         </tr>
