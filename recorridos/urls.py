@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 
@@ -71,5 +72,10 @@ urlpatterns = [
         'admin-panel/autobuses/',
         views.AutobusListView.as_view(),
         name='autobus_list'
+    ),
+    path(
+        'admin-panel/autobuses/<int:pk>/editar/',
+        views.AutobusUpdateView.as_view(),
+        name='autobus_update'
     ),
 ]

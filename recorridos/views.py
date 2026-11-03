@@ -7,7 +7,13 @@ from django.core.exceptions import ValidationError
 from django.db.models import Prefetch, Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, TemplateView
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DetailView,
+    ListView,
+    TemplateView,
+)
 
 from .forms import AutobusForm
 from .models import (
@@ -227,3 +233,18 @@ class AutobusListView(StaffRequiredMixin, ListView):
 
     def get_queryset(self):
         return Autobus.objects.all().order_by("numero_unidad")
+
+
+class AutobusUpdateView(StaffRequiredMixin, UpdateView):
+    model = Autobus
+    form_class = AutobusForm
+    template_name = "admin_panel/autobus_form.html"
+    pk_url_kwarg = "pk"
+    success_url = reverse_lazy("autobus_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Autobús actualizado correctamente."
+        )
+        return super().form_valid(form)
