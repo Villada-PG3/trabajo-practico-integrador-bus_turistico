@@ -16,12 +16,14 @@ from django.views.generic import (
     TemplateView,
 )
 
+from .forms_choferes import ChoferForm
 from .forms import AutobusForm
 from .forms_viajes import ViajeForm
 from .models import (
     Atractivo, Autobus, Chofer, Parada, Recorrido,
     RecorridoParada, Reparacion, Viaje,
 )
+
 
 
 # ---------------------------------------------------------------
@@ -317,5 +319,47 @@ class ViajeCreateView(StaffRequiredMixin, CreateView):
         messages.success(
             self.request,
             "Viaje programado correctamente."
+        )
+        return super().form_valid(form)
+
+
+
+# ---------------------------------------------------------------
+# Gestion de choferes
+# ---------------------------------------------------------------
+
+class ChoferListView(StaffRequiredMixin, ListView):
+    model = Chofer
+    template_name = "admin_panel/chofer_list.html"
+    context_object_name = "choferes"
+
+    def get_queryset(self):
+        return Chofer.objects.all().order_by("apellido", "nombre")
+
+
+class ChoferCreateView(StaffRequiredMixin, CreateView):
+    model = Chofer
+    form_class = ChoferForm
+    template_name = "admin_panel/chofer_form.html"
+    success_url = reverse_lazy("chofer_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Chofer registrado correctamente."
+        )
+        return super().form_valid(form)
+
+
+class ChoferUpdateView(StaffRequiredMixin, UpdateView):
+    model = Chofer
+    form_class = ChoferForm
+    template_name = "admin_panel/chofer_form.html"
+    success_url = reverse_lazy("chofer_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Chofer actualizado correctamente."
         )
         return super().form_valid(form)

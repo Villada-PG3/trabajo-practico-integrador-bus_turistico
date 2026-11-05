@@ -28,4 +28,9 @@ urlpatterns = [
     path('admin-panel/viajes/<int:pk>/iniciar/', views.ViajeIniciarView.as_view(), name='viaje_iniciar'),
     path('admin-panel/viajes/<int:pk>/finalizar/', views.ViajeFinalizarView.as_view(), name='viaje_finalizar'),
     path('admin-panel/viajes/nuevo/', views.ViajeCreateView.as_view(), name='viaje_create'),
+
+    # Gestion de choferes
+    path('admin-panel/choferes/', views.ChoferListView.as_view(), name='chofer_list'),
+    path('admin-panel/choferes/nuevo/', views.ChoferCreateView.as_view(), name='chofer_create'),
+    path('admin-panel/choferes/<int:pk>/editar/', views.ChoferUpdateView.as_view(), name='chofer_update'),
 ]
