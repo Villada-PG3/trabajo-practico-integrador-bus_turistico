@@ -16,6 +16,7 @@ from django.views.generic import (
     TemplateView,
 )
 
+from .forms_reparaciones import ReparacionForm
 from .forms_choferes import ChoferForm
 from .forms import AutobusForm
 from .forms_viajes import ViajeForm
@@ -23,7 +24,7 @@ from .models import (
     Atractivo, Autobus, Chofer, Parada, Recorrido,
     RecorridoParada, Reparacion, Viaje,
 )
-
+from django.utils import timezone
 
 
 # ---------------------------------------------------------------
@@ -363,3 +364,59 @@ class ChoferUpdateView(StaffRequiredMixin, UpdateView):
             "Chofer actualizado correctamente."
         )
         return super().form_valid(form)
+
+# ---------------------------------------------------------------
+# Gestion de reparaciones
+# ---------------------------------------------------------------
+
+class ReparacionListView(StaffRequiredMixin, ListView):
+    model = Reparacion
+    template_name = "admin_panel/reparacion_list.html"
+    context_object_name = "reparaciones"
+
+    def get_queryset(self):
+        return Reparacion.objects.select_related(
+            "bus"
+        ).order_by("-fecha_inicio")
+
+
+class ReparacionCreateView(StaffRequiredMixin, CreateView):
+    model = Reparacion
+    form_class = ReparacionForm
+    template_name = "admin_panel/reparacion_form.html"
+    success_url = reverse_lazy("reparacion_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Reparación registrada correctamente."
+        )
+        return super().form_valid(form)
+
+class ReparacionFinalizarView(StaffRequiredMixin, View):
+
+    def post(self, request, pk):
+        reparacion = get_object_or_404(Reparacion, pk=pk)
+
+        if reparacion.fecha_fin is not None:
+            messages.error(
+                request,
+                "Esta reparación ya está finalizada."
+            )
+
+        elif timezone.now() < reparacion.fecha_inicio:
+            messages.error(
+                request,
+                "No se puede finalizar una reparación antes de su inicio."
+            )
+
+        else:
+            reparacion.fecha_fin = timezone.now()
+            reparacion.save(update_fields=["fecha_fin"])
+
+            messages.success(
+                request,
+                "Reparación finalizada correctamente."
+            )
+
+        return redirect("reparacion_list")
