@@ -78,4 +78,21 @@ urlpatterns = [
         views.AutobusUpdateView.as_view(),
         name='autobus_update'
     ),
+
+    # Gestion de viajes
+    path(
+        'admin-panel/viajes/',
+        views.ViajeListView.as_view(),
+        name='viaje_list'
+    ),
+    path(
+        'admin-panel/viajes/<int:pk>/iniciar/',
+        views.ViajeIniciarView.as_view(),
+        name='viaje_iniciar'
+    ),
+    path(
+        'admin-panel/viajes/<int:pk>/finalizar/',
+        views.ViajeFinalizarView.as_view(),
+        name='viaje_finalizar'
+    ),
 ]

@@ -233,23 +233,67 @@ class Viaje(models.Model):
     def finalizado(self):
         return self.estado == "FINALIZADO" or self.fecha_hora_fin_real is not None
 
+
     def iniciar(self):
+        if self._state.adding:
+            raise ValidationError(
+                "El viaje debe estar registrado antes de iniciarse."
+            )
+
+        if self.estado != "PROGRAMADO":
+            raise ValidationError(
+                "Solo se pueden iniciar viajes programados."
+            )
+
         if self.fecha_hora_inicio_real:
-            raise ValidationError("El viaje ya fue iniciado.")
+            raise ValidationError(
+                "El viaje ya fue iniciado."
+            )
+
+        if self.bus.estado != "OPERATIVO" or self.bus.en_reparacion:
+            raise ValidationError(
+                "El autobús no está disponible para realizar el viaje."
+            )
+
+        if not self.chofer.activo:
+            raise ValidationError(
+                "El chofer asignado no está activo."
+            )
 
         self.fecha_hora_inicio_real = timezone.now()
         self.estado = "EN_CURSO"
 
         self.save(update_fields=["fecha_hora_inicio_real", "estado"])
 
+
+
     def finalizar(self):
+        if self._state.adding:
+            raise ValidationError(
+                "El viaje debe estar registrado antes de finalizarse."
+            )
+
+        if self.estado != "EN_CURSO":
+            raise ValidationError(
+                "Solo se pueden finalizar viajes en curso."
+            )
+
         if not self.fecha_hora_inicio_real:
-            raise ValidationError("El viaje todavía no fue iniciado.")
+            raise ValidationError(
+                "El viaje todavía no fue iniciado."
+            )
+
         if self.fecha_hora_fin_real:
-            raise ValidationError("El viaje ya fue finalizado.")
+            raise ValidationError(
+                "El viaje ya fue finalizado."
+            )
+
         self.fecha_hora_fin_real = timezone.now()
         self.estado = "FINALIZADO"
+
         self.save(update_fields=["fecha_hora_fin_real", "estado"])
+
+
 
     def clean(self):
         errores = {}
