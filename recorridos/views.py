@@ -17,6 +17,7 @@ from django.views.generic import (
 )
 
 from .forms import AutobusForm
+from .forms_viajes import ViajeForm
 from .models import (
     Atractivo, Autobus, Chofer, Parada, Recorrido,
     RecorridoParada, Reparacion, Viaje,
@@ -304,3 +305,17 @@ class ViajeFinalizarView(StaffRequiredMixin, View):
             )
 
         return redirect("viaje_list")
+
+
+class ViajeCreateView(StaffRequiredMixin, CreateView):
+    model = Viaje
+    form_class = ViajeForm
+    template_name = "admin_panel/viaje_form.html"
+    success_url = reverse_lazy("viaje_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Viaje programado correctamente."
+        )
+        return super().form_valid(form)
