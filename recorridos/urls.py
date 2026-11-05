@@ -33,4 +33,9 @@ urlpatterns = [
     path('admin-panel/choferes/', views.ChoferListView.as_view(), name='chofer_list'),
     path('admin-panel/choferes/nuevo/', views.ChoferCreateView.as_view(), name='chofer_create'),
     path('admin-panel/choferes/<int:pk>/editar/', views.ChoferUpdateView.as_view(), name='chofer_update'),
+
+    # Gestion de reparaciones
+    path('admin-panel/reparaciones/', views.ReparacionListView.as_view(), name='reparacion_list'),
+    path('admin-panel/reparaciones/nueva/', views.ReparacionCreateView.as_view(), name='reparacion_create'),
+    path('admin-panel/reparaciones/<int:pk>/finalizar/', views.ReparacionFinalizarView.as_view(), name='reparacion_finalizar'),
 ]
