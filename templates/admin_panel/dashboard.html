@@ -6,13 +6,29 @@
 {% block navbar %}
 <nav class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container">
-        <span class="navbar-brand fw-bold text-success">🚌 Panel de Control</span>
+        <span class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </span>
+
         <div class="d-flex align-items-center gap-3">
-            <span class="text-light small">Hola, <strong>{{ user.username }}</strong></span>
-            <a href="{% url 'home' %}" class="btn btn-outline-light btn-sm">Sitio público</a>
-            <form method="post" action="{% url 'admin_logout' %}" class="m-0">
+            <span class="text-light small">
+                Hola, <strong>{{ user.username }}</strong>
+            </span>
+
+            <a href="{% url 'home' %}"
+               class="btn btn-outline-light btn-sm">
+                Sitio público
+            </a>
+
+            <form method="post"
+                  action="{% url 'admin_logout' %}"
+                  class="m-0">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm">Cerrar sesión</button>
+
+                <button type="submit"
+                        class="btn btn-danger btn-sm">
+                    Cerrar sesión
+                </button>
             </form>
         </div>
     </div>
@@ -21,67 +37,100 @@
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="h3 mb-1">¡Sesión iniciada correctamente!</h1>
+
+    <h1 class="h3 mb-1">
+        ¡Sesión iniciada correctamente!
+    </h1>
 
     <p class="text-secondary mb-4">
         Desde aquí podés gestionar la flota, los choferes,
         los recorridos, los viajes y las reparaciones.
     </p>
 
-    <a href="{% url 'autobus_create' %}" class="btn btn-success mb-4">
+    <a href="{% url 'autobus_create' %}"
+       class="btn btn-success mb-4">
         + Registrar autobús
     </a>
 
     <div class="row g-4">
+
         <div class="col-6 col-lg-4">
-            <a href="{% url 'autobus_list' %}" class="text-decoration-none">
-                <div class="card card-hover h-100 text-center"><div class="card-body">
-                    <div class="display-6">🚌</div>
-                    <div class="display-6 fw-bold text-dark">{{ total_buses }}</div>
-                    <div class="text-secondary">Autobuses</div>
-                </div></div>
+            <a href="{% url 'autobus_list' %}"
+               class="text-decoration-none">
+                <div class="card card-hover h-100 text-center">
+                    <div class="card-body">
+                        <div class="display-6">🚌</div>
+                        <div class="display-6 fw-bold text-dark">
+                            {{ total_buses }}
+                        </div>
+                        <div class="text-secondary">Autobuses</div>
+                    </div>
+                </div>
             </a>
         </div>
 
         <div class="col-6 col-lg-4">
-            <a href="{% url 'admin:recorridos_chofer_changelist' %}" class="text-decoration-none">
-                <div class="card card-hover h-100 text-center"><div class="card-body">
-                    <div class="display-6">🧑‍✈️</div>
-                    <div class="display-6 fw-bold text-dark">{{ total_choferes }}</div>
-                    <div class="text-secondary">Choferes</div>
-                </div></div>
+            <a href="{% url 'admin:recorridos_chofer_changelist' %}"
+               class="text-decoration-none">
+                <div class="card card-hover h-100 text-center">
+                    <div class="card-body">
+                        <div class="display-6">🧑‍✈️</div>
+                        <div class="display-6 fw-bold text-dark">
+                            {{ total_choferes }}
+                        </div>
+                        <div class="text-secondary">Choferes</div>
+                    </div>
+                </div>
             </a>
         </div>
 
         <div class="col-6 col-lg-4">
-            <a href="{% url 'admin:recorridos_recorrido_changelist' %}" class="text-decoration-none">
-                <div class="card card-hover h-100 text-center"><div class="card-body">
-                    <div class="display-6">🗺️</div>
-                    <div class="display-6 fw-bold text-dark">{{ total_recorridos }}</div>
-                    <div class="text-secondary">Recorridos</div>
-                </div></div>
+            <a href="{% url 'admin:recorridos_recorrido_changelist' %}"
+               class="text-decoration-none">
+                <div class="card card-hover h-100 text-center">
+                    <div class="card-body">
+                        <div class="display-6">🗺️</div>
+                        <div class="display-6 fw-bold text-dark">
+                            {{ total_recorridos }}
+                        </div>
+                        <div class="text-secondary">Recorridos</div>
+                    </div>
+                </div>
             </a>
         </div>
 
         <div class="col-6 col-lg-4">
-            <a href="{% url 'admin:recorridos_viaje_changelist' %}" class="text-decoration-none">
-                <div class="card card-hover h-100 text-center"><div class="card-body">
-                    <div class="display-6">🕒</div>
-                    <div class="display-6 fw-bold text-dark">{{ total_viajes }}</div>
-                    <div class="text-secondary">Viajes</div>
-                </div></div>
+            <a href="{% url 'viaje_list' %}"
+               class="text-decoration-none">
+                <div class="card card-hover h-100 text-center">
+                    <div class="card-body">
+                        <div class="display-6">🕒</div>
+                        <div class="display-6 fw-bold text-dark">
+                            {{ total_viajes }}
+                        </div>
+                        <div class="text-secondary">Viajes</div>
+                    </div>
+                </div>
             </a>
         </div>
 
         <div class="col-6 col-lg-4">
-            <a href="{% url 'admin:recorridos_reparacion_changelist' %}" class="text-decoration-none">
-                <div class="card card-hover h-100 text-center"><div class="card-body">
-                    <div class="display-6">🔧</div>
-                    <div class="display-6 fw-bold text-dark">{{ reparaciones_abiertas }}</div>
-                    <div class="text-secondary">Reparaciones en curso</div>
-                </div></div>
+            <a href="{% url 'admin:recorridos_reparacion_changelist' %}"
+               class="text-decoration-none">
+                <div class="card card-hover h-100 text-center">
+                    <div class="card-body">
+                        <div class="display-6">🔧</div>
+                        <div class="display-6 fw-bold text-dark">
+                            {{ reparaciones_abiertas }}
+                        </div>
+                        <div class="text-secondary">
+                            Reparaciones en curso
+                        </div>
+                    </div>
+                </div>
             </a>
         </div>
+
     </div>
 </div>
 {% endblock %}

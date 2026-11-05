@@ -1,0 +1,133 @@
+
+{% extends "base.html" %}
+
+{% block title %}Gestión de Viajes{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver al panel
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <h1 class="h3 mb-2">Gestión de viajes</h1>
+
+    <p class="text-secondary mb-4">
+        Desde aquí podés consultar los viajes registrados,
+        iniciarlos y finalizarlos.
+    </p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Viaje</th>
+                            <th>Recorrido</th>
+                            <th>Autobús</th>
+                            <th>Chofer</th>
+                            <th>Inicio programado</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for viaje in viajes %}
+                        <tr>
+                            <td>{{ viaje.pk }}</td>
+
+                            <td>{{ viaje.recorrido }}</td>
+
+                            <td>{{ viaje.bus }}</td>
+
+                            <td>{{ viaje.chofer }}</td>
+
+                            <td>
+                                {{ viaje.fecha_hora_inicio_programada|date:"d/m/Y H:i" }}
+                            </td>
+
+                            <td>
+                                {% if viaje.estado == "PROGRAMADO" %}
+                                    <span class="badge bg-secondary">
+                                        Programado
+                                    </span>
+                                {% elif viaje.estado == "EN_CURSO" %}
+                                    <span class="badge bg-primary">
+                                        En curso
+                                    </span>
+                                {% elif viaje.estado == "FINALIZADO" %}
+                                    <span class="badge bg-success">
+                                        Finalizado
+                                    </span>
+                                {% elif viaje.estado == "CANCELADO" %}
+                                    <span class="badge bg-danger">
+                                        Cancelado
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if viaje.estado == "PROGRAMADO" %}
+                                    <form method="post"
+                                          action="{% url 'viaje_iniciar' viaje.pk %}">
+                                        {% csrf_token %}
+
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm">
+                                            Iniciar
+                                        </button>
+                                    </form>
+
+                                {% elif viaje.estado == "EN_CURSO" %}
+                                    <form method="post"
+                                          action="{% url 'viaje_finalizar' viaje.pk %}">
+                                        {% csrf_token %}
+
+                                        <button type="submit"
+                                                class="btn btn-primary btn-sm">
+                                            Finalizar
+                                        </button>
+                                    </form>
+
+                                {% else %}
+                                    <span class="text-secondary">
+                                        Sin acciones
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="7"
+                                class="text-center text-secondary py-4">
+                                Todavía no hay viajes registrados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

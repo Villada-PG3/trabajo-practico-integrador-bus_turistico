@@ -5,8 +5,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch, Q
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import (
     CreateView,
     UpdateView,
@@ -248,3 +249,58 @@ class AutobusUpdateView(StaffRequiredMixin, UpdateView):
             "Autobús actualizado correctamente."
         )
         return super().form_valid(form)
+
+
+# ---------------------------------------------------------------
+# Gestion de viajes
+# ---------------------------------------------------------------
+
+class ViajeListView(StaffRequiredMixin, ListView):
+    model = Viaje
+    template_name = "admin_panel/viaje_list.html"
+    context_object_name = "viajes"
+
+    def get_queryset(self):
+        return Viaje.objects.select_related(
+            "bus", "chofer", "recorrido"
+        ).order_by("-fecha_hora_inicio_programada")
+
+
+class ViajeIniciarView(StaffRequiredMixin, View):
+
+    def post(self, request, pk):
+        viaje = get_object_or_404(Viaje, pk=pk)
+
+        try:
+            viaje.iniciar()
+            messages.success(
+                request,
+                "El viaje se inició correctamente."
+            )
+        except ValidationError as error:
+            messages.error(
+                request,
+                "; ".join(error.messages)
+            )
+
+        return redirect("viaje_list")
+
+
+class ViajeFinalizarView(StaffRequiredMixin, View):
+
+    def post(self, request, pk):
+        viaje = get_object_or_404(Viaje, pk=pk)
+
+        try:
+            viaje.finalizar()
+            messages.success(
+                request,
+                "El viaje finalizó correctamente."
+            )
+        except ValidationError as error:
+            messages.error(
+                request,
+                "; ".join(error.messages)
+            )
+
+        return redirect("viaje_list")
