@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {% if object %}Editar recorrido{% else %}Registrar recorrido{% endif %}
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'recorrido_admin_list' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver al listado
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 750px;">
+
+    {% if object %}
+        <h1 class="h3 mb-2">Editar recorrido</h1>
+        <p class="text-secondary mb-4">
+            Modificá los datos del recorrido seleccionado.
+        </p>
+    {% else %}
+        <h1 class="h3 mb-2">Registrar nuevo recorrido</h1>
+        <p class="text-secondary mb-4">
+            Completá los datos para registrar un nuevo recorrido turístico.
+        </p>
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}"
+                               class="form-label">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="form-text">
+                                {{ field.help_text }}
+                            </div>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-success">
+                    {% if object %}
+                        Guardar cambios
+                    {% else %}
+                        Registrar recorrido
+                    {% endif %}
+                </button>
+
+                <a href="{% url 'recorrido_admin_list' %}"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
