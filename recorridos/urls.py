@@ -38,4 +38,9 @@ urlpatterns = [
     path('admin-panel/reparaciones/', views.ReparacionListView.as_view(), name='reparacion_list'),
     path('admin-panel/reparaciones/nueva/', views.ReparacionCreateView.as_view(), name='reparacion_create'),
     path('admin-panel/reparaciones/<int:pk>/finalizar/', views.ReparacionFinalizarView.as_view(), name='reparacion_finalizar'),
+
+    # Gestion de recorridos (panel administrativo)
+    path('admin-panel/recorridos/', views.RecorridoListAdminView.as_view(), name='recorrido_admin_list'),
+    path('admin-panel/recorridos/nuevo/', views.RecorridoCreateView.as_view(), name='recorrido_create'),
+    path('admin-panel/recorridos/<int:pk>/editar/', views.RecorridoUpdateView.as_view(), name='recorrido_update'),
 ]

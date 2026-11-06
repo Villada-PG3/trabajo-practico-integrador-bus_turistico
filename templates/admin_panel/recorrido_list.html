@@ -1,0 +1,114 @@
+
+{% extends "base.html" %}
+
+{% block title %}Gestión de recorridos{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver al panel
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-2">Gestión de recorridos</h1>
+            <p class="text-secondary mb-0">
+                Consultá, registrá y editá los recorridos turísticos.
+            </p>
+        </div>
+
+        <a href="{% url 'recorrido_create' %}"
+           class="btn btn-success">
+            + Registrar recorrido
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Color</th>
+                            <th>Descripción</th>
+                            <th>Frecuencia</th>
+                            <th>Horario</th>
+                            <th>Duración aproximada</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for recorrido in recorridos %}
+                            <tr>
+                                <td>
+                                    <span class="badge"
+                                          style="background-color: {{ recorrido.color_hex }};">
+                                        {{ recorrido.color }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ recorrido.descripcion|default:"Sin descripción"|truncatechars:70 }}
+                                </td>
+
+                                <td>
+                                    Cada {{ recorrido.frecuencia_minutos }} minutos
+                                </td>
+
+                                <td>
+                                    {{ recorrido.hora_inicio|time:"H:i" }}
+                                    -
+                                    {{ recorrido.hora_fin|time:"H:i" }}
+                                </td>
+
+                                <td>
+                                    {{ recorrido.duracion_aproximada }} minutos
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'recorrido_update' recorrido.pk %}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6"
+                                    class="text-center text-secondary py-4">
+                                    Todavía no hay recorridos registrados.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

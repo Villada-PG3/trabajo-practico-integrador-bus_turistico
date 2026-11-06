@@ -47,11 +47,6 @@
         los recorridos, los viajes y las reparaciones.
     </p>
 
-    <a href="{% url 'autobus_create' %}"
-       class="btn btn-success mb-4">
-        + Registrar autobús
-    </a>
-
     <div class="row g-4">
 
         <div class="col-6 col-lg-4">
@@ -85,7 +80,7 @@
         </div>
 
         <div class="col-6 col-lg-4">
-            <a href="{% url 'admin:recorridos_recorrido_changelist' %}"
+            <a href="{% url 'recorrido_admin_list' %}"
                class="text-decoration-none">
                 <div class="card card-hover h-100 text-center">
                     <div class="card-body">

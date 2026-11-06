@@ -16,6 +16,7 @@ from django.views.generic import (
     TemplateView,
 )
 
+from .forms_recorridos import RecorridoForm
 from .forms_reparaciones import ReparacionForm
 from .forms_choferes import ChoferForm
 from .forms import AutobusForm
@@ -420,3 +421,43 @@ class ReparacionFinalizarView(StaffRequiredMixin, View):
             )
 
         return redirect("reparacion_list")
+
+# ---------------------------------------------------------------
+# Gestion de recorridos (panel administrativo)
+# ---------------------------------------------------------------
+
+class RecorridoListAdminView(StaffRequiredMixin, ListView):
+    model = Recorrido
+    template_name = "admin_panel/recorrido_list.html"
+    context_object_name = "recorridos"
+
+    def get_queryset(self):
+        return Recorrido.objects.all().order_by("color")
+
+
+class RecorridoCreateView(StaffRequiredMixin, CreateView):
+    model = Recorrido
+    form_class = RecorridoForm
+    template_name = "admin_panel/recorrido_form.html"
+    success_url = reverse_lazy("recorrido_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Recorrido registrado correctamente."
+        )
+        return super().form_valid(form)
+
+
+class RecorridoUpdateView(StaffRequiredMixin, UpdateView):
+    model = Recorrido
+    form_class = RecorridoForm
+    template_name = "admin_panel/recorrido_form.html"
+    success_url = reverse_lazy("recorrido_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Recorrido actualizado correctamente."
+        )
+        return super().form_valid(form)
