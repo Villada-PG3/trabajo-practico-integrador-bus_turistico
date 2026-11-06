@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+
+{% block title %}Quitar parada del recorrido{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'recorrido_parada_list' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver al listado
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 650px;">
+
+    <h1 class="h3 mb-3">Quitar parada del recorrido</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <p>
+                ¿Estás seguro de que querés quitar
+                <strong>{{ object.parada.nombre }}</strong>
+                del recorrido
+                <strong>{{ object.recorrido.color }}</strong>?
+            </p>
+
+            <p class="text-secondary">
+                Esta acción solo elimina la asignación.
+                La parada seguirá registrada y podrá utilizarse
+                en otros recorridos.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button type="submit"
+                        class="btn btn-danger">
+                    Sí, quitar parada
+                </button>
+
+                <a href="{% url 'recorrido_parada_list' %}"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

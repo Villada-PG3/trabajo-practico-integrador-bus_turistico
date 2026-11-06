@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -11,11 +10,13 @@ from django.views import View
 from django.views.generic import (
     CreateView,
     UpdateView,
+    DeleteView,
     DetailView,
     ListView,
     TemplateView,
 )
 
+from .forms_paradas import ParadaForm, RecorridoParadaForm
 from .forms_recorridos import RecorridoForm
 from .forms_reparaciones import ReparacionForm
 from .forms_choferes import ChoferForm
@@ -209,6 +210,7 @@ class DashboardView(StaffRequiredMixin, TemplateView):
             reparaciones_abiertas=Reparacion.objects.filter(
                 fecha_fin__isnull=True
             ).count(),
+            total_paradas=Parada.objects.count(),
         )
 
         return contexto
@@ -459,5 +461,101 @@ class RecorridoUpdateView(StaffRequiredMixin, UpdateView):
         messages.success(
             self.request,
             "Recorrido actualizado correctamente."
+        )
+        return super().form_valid(form)
+
+
+# ---------------------------------------------------------------
+# Gestion de paradas (panel administrativo)
+# ---------------------------------------------------------------
+
+class ParadaListAdminView(StaffRequiredMixin, ListView):
+    model = Parada
+    template_name = "admin_panel/parada_list.html"
+    context_object_name = "paradas"
+
+    def get_queryset(self):
+        return Parada.objects.all().order_by("nombre")
+
+
+class ParadaCreateView(StaffRequiredMixin, CreateView):
+    model = Parada
+    form_class = ParadaForm
+    template_name = "admin_panel/parada_form.html"
+    success_url = reverse_lazy("parada_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Parada registrada correctamente."
+        )
+        return super().form_valid(form)
+
+
+class ParadaUpdateView(StaffRequiredMixin, UpdateView):
+    model = Parada
+    form_class = ParadaForm
+    template_name = "admin_panel/parada_form.html"
+    success_url = reverse_lazy("parada_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Parada actualizada correctamente."
+        )
+        return super().form_valid(form)
+
+
+class RecorridoParadaCreateView(StaffRequiredMixin, CreateView):
+    model = RecorridoParada
+    form_class = RecorridoParadaForm
+    template_name = "admin_panel/recorrido_parada_form.html"
+    success_url = reverse_lazy("recorrido_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Parada asignada al recorrido correctamente."
+        )
+        return super().form_valid(form)
+
+# ---------------------------------------------------------------
+# Administracion de paradas asignadas a recorridos
+# ---------------------------------------------------------------
+
+class RecorridoParadaListView(StaffRequiredMixin, ListView):
+    model = RecorridoParada
+    template_name = "admin_panel/recorrido_parada_list.html"
+    context_object_name = "asignaciones"
+
+    def get_queryset(self):
+        return RecorridoParada.objects.select_related(
+            "recorrido", "parada"
+        ).order_by("recorrido__color", "orden")
+
+
+class RecorridoParadaUpdateView(StaffRequiredMixin, UpdateView):
+    model = RecorridoParada
+    form_class = RecorridoParadaForm
+    template_name = "admin_panel/recorrido_parada_form.html"
+    success_url = reverse_lazy("recorrido_parada_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Asignación de parada actualizada correctamente."
+        )
+        return super().form_valid(form)
+
+
+class RecorridoParadaDeleteView(StaffRequiredMixin, DeleteView):
+    model = RecorridoParada
+    template_name = "admin_panel/recorrido_parada_confirm_delete.html"
+    success_url = reverse_lazy("recorrido_parada_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Parada quitada del recorrido correctamente."
         )
         return super().form_valid(form)

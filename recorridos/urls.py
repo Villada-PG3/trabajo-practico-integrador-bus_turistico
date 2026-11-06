@@ -43,4 +43,16 @@ urlpatterns = [
     path('admin-panel/recorridos/', views.RecorridoListAdminView.as_view(), name='recorrido_admin_list'),
     path('admin-panel/recorridos/nuevo/', views.RecorridoCreateView.as_view(), name='recorrido_create'),
     path('admin-panel/recorridos/<int:pk>/editar/', views.RecorridoUpdateView.as_view(), name='recorrido_update'),
+
+    # Gestion de paradas (panel administrativo)
+    path('admin-panel/paradas/', views.ParadaListAdminView.as_view(), name='parada_admin_list'),
+    path('admin-panel/paradas/nueva/', views.ParadaCreateView.as_view(), name='parada_create'),
+    path('admin-panel/paradas/<int:pk>/editar/', views.ParadaUpdateView.as_view(), name='parada_update'),
+    path('admin-panel/recorridos/asignar-parada/', views.RecorridoParadaCreateView.as_view(), name='recorrido_parada_create'),
+
+    # Administracion de paradas asignadas
+    path('admin-panel/recorridos/paradas/', views.RecorridoParadaListView.as_view(), name='recorrido_parada_list'),
+    path('admin-panel/recorridos/paradas/<int:pk>/editar/', views.RecorridoParadaUpdateView.as_view(), name='recorrido_parada_update'),
+    path('admin-panel/recorridos/paradas/<int:pk>/eliminar/', views.RecorridoParadaDeleteView.as_view(), name='recorrido_parada_delete'),
+
 ]
