@@ -1,0 +1,104 @@
+
+{% extends "base.html" %}
+
+{% block title %}Gestión de paradas{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver al panel
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-2">Gestión de paradas</h1>
+            <p class="text-secondary mb-0">
+                Consultá, registrá y editá las paradas turísticas.
+            </p>
+        </div>
+
+        <a href="{% url 'parada_create' %}"
+           class="btn btn-success">
+            + Registrar parada
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                            <th>Descripción</th>
+                            <th>Imagen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for parada in paradas %}
+                            <tr>
+                                <td>{{ parada.nombre }}</td>
+                                <td>{{ parada.direccion }}</td>
+                                <td>
+                                    {{ parada.descripcion|default:"Sin descripción"|truncatechars:60 }}
+                                </td>
+                                <td>
+                                    {% if parada.imagen %}
+                                        <a href="{{ parada.imagen.url }}"
+                                           target="_blank"
+                                           rel="noopener noreferrer">
+                                            Ver imagen
+                                        </a>
+                                    {% else %}
+                                        Sin imagen
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'parada_update' parada.pk %}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5"
+                                    class="text-center text-secondary py-4">
+                                    Todavía no hay paradas registradas.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

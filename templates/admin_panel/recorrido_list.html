@@ -30,10 +30,22 @@
             </p>
         </div>
 
-        <a href="{% url 'recorrido_create' %}"
-           class="btn btn-success">
-            + Registrar recorrido
-        </a>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'recorrido_parada_list' %}"
+               class="btn btn-outline-primary">
+                Administrar paradas
+            </a>
+
+            <a href="{% url 'recorrido_parada_create' %}"
+               class="btn btn-outline-success">
+                + Asignar parada
+            </a>
+
+            <a href="{% url 'recorrido_create' %}"
+               class="btn btn-success">
+                + Registrar recorrido
+            </a>
+        </div>
     </div>
 
     {% if messages %}
@@ -88,10 +100,17 @@
                                 </td>
 
                                 <td>
-                                    <a href="{% url 'recorrido_update' recorrido.pk %}"
-                                       class="btn btn-outline-primary btn-sm">
-                                        Editar
-                                    </a>
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'recorrido_update' recorrido.pk %}"
+                                           class="btn btn-outline-primary btn-sm">
+                                            Editar
+                                        </a>
+
+                                        <a href="{% url 'recorrido_detail' recorrido.pk %}"
+                                           class="btn btn-outline-secondary btn-sm">
+                                            Ver circuito
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}

@@ -44,7 +44,7 @@
 
     <p class="text-secondary mb-4">
         Desde aquí podés gestionar la flota, los choferes,
-        los recorridos, los viajes y las reparaciones.
+        los recorridos, las paradas, los viajes y las reparaciones.
     </p>
 
     <div class="row g-4">
@@ -89,6 +89,21 @@
                             {{ total_recorridos }}
                         </div>
                         <div class="text-secondary">Recorridos</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-6 col-lg-4">
+            <a href="{% url 'parada_admin_list' %}"
+               class="text-decoration-none">
+                <div class="card card-hover h-100 text-center">
+                    <div class="card-body">
+                        <div class="display-6">📍</div>
+                        <div class="display-6 fw-bold text-dark">
+                            {{ total_paradas }}
+                        </div>
+                        <div class="text-secondary">Paradas</div>
                     </div>
                 </div>
             </a>
