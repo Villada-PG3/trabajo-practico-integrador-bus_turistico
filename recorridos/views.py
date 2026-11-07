@@ -1,9 +1,12 @@
+import datetime
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import ValidationError
-from django.db.models import Prefetch, Q
+from django.db.models import (
+    Avg, Count, DurationField, ExpressionWrapper, F, Prefetch, Q,
+)
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -336,6 +339,95 @@ class ViajeTicketView(StaffRequiredMixin, DetailView):
             return redirect("viaje_list")
         return super().get(request, *args, **kwargs)
 
+class ReporteDiarioView(StaffRequiredMixin, TemplateView):
+    """
+    Reporte diario de viajes para el Gerente de Operaciones.
+
+    Muestra los viajes programados para el dia elegido (?fecha=AAAA-MM-DD,
+    por defecto hoy) con su duracion y la demora de inicio, y los
+    promedios diarios de ambos valores. Los promedios se calculan en la
+    base de datos con una sola consulta.
+    """
+    template_name = "admin_panel/reporte_diario.html"
+
+    def get_fecha(self):
+        texto = self.request.GET.get("fecha")
+        if texto:
+            try:
+                return datetime.date.fromisoformat(texto)
+            except ValueError:
+                messages.error(
+                    self.request,
+                    "La fecha ingresada no es válida. Se muestra el día de hoy."
+                )
+        return timezone.localdate()
+
+    @staticmethod
+    def _a_minutos(intervalo):
+        if intervalo is None:
+            return None
+        return round(intervalo.total_seconds() / 60, 1)
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        fecha = self.get_fecha()
+
+        dia = datetime.timedelta(days=1)
+        inicio_dia = timezone.make_aware(
+            datetime.datetime.combine(fecha, datetime.time.min)
+        )
+        fin_dia = timezone.make_aware(
+            datetime.datetime.combine(fecha + dia, datetime.time.min)
+        )
+
+        viajes = (
+            Viaje.objects
+            .filter(
+                fecha_hora_inicio_programada__gte=inicio_dia,
+                fecha_hora_inicio_programada__lt=fin_dia,
+            )
+            .select_related("bus", "chofer", "recorrido")
+            .order_by("fecha_hora_inicio_programada")
+        )
+
+        duracion = ExpressionWrapper(
+            F("fecha_hora_fin_real") - F("fecha_hora_inicio_real"),
+            output_field=DurationField(),
+        )
+        demora = ExpressionWrapper(
+            F("fecha_hora_inicio_real") - F("fecha_hora_inicio_programada"),
+            output_field=DurationField(),
+        )
+
+        resumen = viajes.aggregate(
+            total=Count("pk"),
+            finalizados=Count("pk", filter=Q(estado="FINALIZADO")),
+            en_curso=Count("pk", filter=Q(estado="EN_CURSO")),
+            programados=Count("pk", filter=Q(estado="PROGRAMADO")),
+            cancelados=Count("pk", filter=Q(estado="CANCELADO")),
+            promedio_duracion=Avg(
+                duracion,
+                filter=Q(
+                    fecha_hora_inicio_real__isnull=False,
+                    fecha_hora_fin_real__isnull=False,
+                ),
+            ),
+            promedio_demora=Avg(
+                demora, filter=Q(fecha_hora_inicio_real__isnull=False),
+            ),
+        )
+        resumen["promedio_duracion"] = self._a_minutos(resumen["promedio_duracion"])
+        resumen["promedio_demora"] = self._a_minutos(resumen["promedio_demora"])
+
+        contexto.update(
+            fecha=fecha,
+            viajes=viajes,
+            resumen=resumen,
+            dia_anterior=(fecha - dia).isoformat(),
+            dia_siguiente=(fecha + dia).isoformat(),
+            es_hoy=(fecha == timezone.localdate()),
+        )
+        return contexto
 
 class ViajeCreateView(StaffRequiredMixin, CreateView):
     model = Viaje

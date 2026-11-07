@@ -32,10 +32,17 @@
             </p>
         </div>
 
-        <a href="{% url 'viaje_create' %}"
-           class="btn btn-success">
-            + Programar viaje
-        </a>
+                <div class="d-flex gap-2">
+            <a href="{% url 'reporte_diario' %}"
+               class="btn btn-outline-primary">
+                Reporte diario
+            </a>
+
+            <a href="{% url 'viaje_create' %}"
+               class="btn btn-success">
+                + Programar viaje
+            </a>
+        </div>
     </div>
 
 <div class="container py-5">
