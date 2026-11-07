@@ -16,6 +16,7 @@ from django.views.generic import (
     TemplateView,
 )
 
+from .forms_atractivos import AtractivoForm, ParadaAtractivoForm
 from .forms_paradas import ParadaForm, RecorridoParadaForm
 from .forms_recorridos import RecorridoForm
 from .forms_reparaciones import ReparacionForm
@@ -23,7 +24,7 @@ from .forms_choferes import ChoferForm
 from .forms import AutobusForm
 from .forms_viajes import ViajeForm
 from .models import (
-    Atractivo, Autobus, Chofer, Parada, Recorrido,
+    Atractivo, Autobus, Chofer, Parada, ParadaAtractivo, Recorrido,
     RecorridoParada, Reparacion, Viaje,
 )
 from django.utils import timezone
@@ -211,6 +212,7 @@ class DashboardView(StaffRequiredMixin, TemplateView):
                 fecha_fin__isnull=True
             ).count(),
             total_paradas=Parada.objects.count(),
+            total_atractivos=Atractivo.objects.count(),
         )
 
         return contexto
@@ -557,5 +559,104 @@ class RecorridoParadaDeleteView(StaffRequiredMixin, DeleteView):
         messages.success(
             self.request,
             "Parada quitada del recorrido correctamente."
+        )
+        return super().form_valid(form)
+
+
+# ---------------------------------------------------------------
+# Gestion de atractivos turisticos (panel administrativo)
+# ---------------------------------------------------------------
+
+class AtractivoListAdminView(StaffRequiredMixin, ListView):
+    model = Atractivo
+    template_name = "admin_panel/atractivo_list.html"
+    context_object_name = "atractivos"
+
+    def get_queryset(self):
+        return Atractivo.objects.all().order_by("nombre")
+
+
+class AtractivoCreateView(StaffRequiredMixin, CreateView):
+    model = Atractivo
+    form_class = AtractivoForm
+    template_name = "admin_panel/atractivo_form.html"
+    success_url = reverse_lazy("atractivo_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Atractivo registrado correctamente."
+        )
+        return super().form_valid(form)
+
+
+class AtractivoUpdateView(StaffRequiredMixin, UpdateView):
+    model = Atractivo
+    form_class = AtractivoForm
+    template_name = "admin_panel/atractivo_form.html"
+    success_url = reverse_lazy("atractivo_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Atractivo actualizado correctamente."
+        )
+        return super().form_valid(form)
+
+
+class ParadaAtractivoCreateView(StaffRequiredMixin, CreateView):
+    model = ParadaAtractivo
+    form_class = ParadaAtractivoForm
+    template_name = "admin_panel/parada_atractivo_form.html"
+    success_url = reverse_lazy("atractivo_admin_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Atractivo asociado a la parada correctamente."
+        )
+        return super().form_valid(form)
+
+
+# Listar asociaciones entre paradas y atractivos
+
+class ParadaAtractivoListView(StaffRequiredMixin, ListView):
+    model = ParadaAtractivo
+    template_name = "admin_panel/parada_atractivo_list.html"
+    context_object_name = "asociaciones"
+
+    def get_queryset(self):
+        return ParadaAtractivo.objects.select_related(
+            "parada", "atractivo"
+        ).order_by("parada__nombre", "atractivo__nombre")
+
+
+# Editar una asociacion existente
+
+class ParadaAtractivoUpdateView(StaffRequiredMixin, UpdateView):
+    model = ParadaAtractivo
+    form_class = ParadaAtractivoForm
+    template_name = "admin_panel/parada_atractivo_form.html"
+    success_url = reverse_lazy("parada_atractivo_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Asociación actualizada correctamente."
+        )
+        return super().form_valid(form)
+
+
+# Quitar una asociacion sin borrar la parada ni el atractivo
+
+class ParadaAtractivoDeleteView(StaffRequiredMixin, DeleteView):
+    model = ParadaAtractivo
+    template_name = "admin_panel/parada_atractivo_confirm_delete.html"
+    success_url = reverse_lazy("parada_atractivo_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Asociación eliminada correctamente."
         )
         return super().form_valid(form)

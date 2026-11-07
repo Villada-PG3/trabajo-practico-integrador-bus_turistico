@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+
+{% block title %}Quitar asociación{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 700px;">
+
+    <h1 class="h3 mb-4">Quitar asociación</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <p>
+                ¿Estás seguro de que querés quitar el atractivo
+                <strong>{{ object.atractivo.nombre }}</strong>
+                de la parada
+                <strong>{{ object.parada.nombre }}</strong>?
+            </p>
+
+            <p class="text-secondary">
+                Esta acción solamente elimina la asociación.
+                La parada y el atractivo seguirán registrados.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-danger">
+                    Confirmar
+                </button>
+
+                <a href="{% url 'parada_atractivo_list' %}"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

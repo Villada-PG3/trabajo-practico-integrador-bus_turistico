@@ -1,0 +1,75 @@
+
+{% extends "base.html" %}
+
+{% block title %}Asociaciones de atractivos{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="h3">Atractivos asociados a paradas</h1>
+            <p class="text-secondary">
+                Administrá los atractivos turísticos de cada parada.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'atractivo_admin_list' %}" class="btn btn-secondary">
+                Volver a atractivos
+            </a>
+
+            <a href="{% url 'parada_atractivo_create' %}" class="btn btn-success">
+                + Nueva asociación
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Parada</th>
+                    <th>Atractivo</th>
+                    <th>Distancia</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for asociacion in asociaciones %}
+                <tr>
+                    <td>{{ asociacion.parada.nombre }}</td>
+                    <td>{{ asociacion.atractivo.nombre }}</td>
+                    <td>
+                        {% if asociacion.distancia_metros is not None %}
+                            {{ asociacion.distancia_metros }} metros
+                        {% else %}
+                            No especificada
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'parada_atractivo_update' asociacion.pk %}"
+                           class="btn btn-outline-primary btn-sm">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'parada_atractivo_delete' asociacion.pk %}"
+                           class="btn btn-outline-danger btn-sm">
+                            Quitar
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-4">
+                        No hay asociaciones registradas.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

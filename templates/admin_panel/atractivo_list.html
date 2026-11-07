@@ -1,0 +1,122 @@
+
+{% extends "base.html" %}
+
+{% block title %}Gestión de atractivos{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver al panel
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-2">Gestión de atractivos</h1>
+            <p class="text-secondary mb-0">
+                Consultá, registrá y editá los atractivos turísticos.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'parada_atractivo_list' %}"
+               class="btn btn-outline-primary">
+                Administrar asociaciones
+            </a>
+
+            <a href="{% url 'parada_atractivo_create' %}"
+               class="btn btn-outline-success">
+                + Asociar a parada
+            </a>
+
+            <a href="{% url 'atractivo_create' %}"
+               class="btn btn-success">
+                + Registrar atractivo
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Calificación</th>
+                            <th>Imagen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for atractivo in atractivos %}
+                            <tr>
+                                <td>{{ atractivo.nombre }}</td>
+
+                                <td>
+                                    {{ atractivo.descripcion|default:"Sin descripción"|truncatechars:80 }}
+                                </td>
+
+                                <td>
+                                    {{ atractivo.calificacion }}/5
+                                </td>
+
+                                <td>
+                                    {% if atractivo.imagen %}
+                                        <a href="{{ atractivo.imagen.url }}"
+                                           target="_blank"
+                                           rel="noopener noreferrer">
+                                            Ver imagen
+                                        </a>
+                                    {% else %}
+                                        Sin imagen
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'atractivo_update' atractivo.pk %}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5"
+                                    class="text-center text-secondary py-4">
+                                    Todavía no hay atractivos registrados.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

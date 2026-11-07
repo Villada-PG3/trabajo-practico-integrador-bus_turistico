@@ -55,4 +55,15 @@ urlpatterns = [
     path('admin-panel/recorridos/paradas/<int:pk>/editar/', views.RecorridoParadaUpdateView.as_view(), name='recorrido_parada_update'),
     path('admin-panel/recorridos/paradas/<int:pk>/eliminar/', views.RecorridoParadaDeleteView.as_view(), name='recorrido_parada_delete'),
 
+    # Gestion de atractivos turisticos
+    path('admin-panel/atractivos/', views.AtractivoListAdminView.as_view(), name='atractivo_admin_list'),
+    path('admin-panel/atractivos/nuevo/', views.AtractivoCreateView.as_view(), name='atractivo_create'),
+    path('admin-panel/atractivos/<int:pk>/editar/', views.AtractivoUpdateView.as_view(), name='atractivo_update'),
+    path('admin-panel/atractivos/asociar-parada/', views.ParadaAtractivoCreateView.as_view(), name='parada_atractivo_create'),
+
+    # Administracion de asociaciones entre paradas y atractivos
+    path('admin-panel/atractivos/asociaciones/', views.ParadaAtractivoListView.as_view(), name='parada_atractivo_list'),
+    path('admin-panel/atractivos/asociaciones/<int:pk>/editar/', views.ParadaAtractivoUpdateView.as_view(), name='parada_atractivo_update'),
+    path('admin-panel/atractivos/asociaciones/<int:pk>/eliminar/', views.ParadaAtractivoDeleteView.as_view(), name='parada_atractivo_delete'),
+
 ]
