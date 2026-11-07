@@ -1,0 +1,83 @@
+
+{% extends "base.html" %}
+
+{% block title %}Asociar atractivo a parada{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}"
+           class="navbar-brand fw-bold text-success">
+            🚌 Panel de Control
+        </a>
+
+        <a href="{% url 'atractivo_admin_list' %}"
+           class="btn btn-outline-light btn-sm">
+            Volver a atractivos
+        </a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 750px;">
+
+    <h1 class="h3 mb-2">Asociar atractivo a parada</h1>
+
+    <p class="text-secondary mb-4">
+        Seleccioná una parada, un atractivo y,
+        si querés, indicá la distancia en metros.
+    </p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}"
+                               class="form-label">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="form-text">
+                                {{ field.help_text }}
+                            </div>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-success">
+                    Asociar atractivo
+                </button>
+
+                <a href="{% url 'atractivo_admin_list' %}"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
