@@ -115,6 +115,12 @@
                                         </button>
                                     </form>
 
+                                    {% elif viaje.estado == "FINALIZADO" %}
+                                    <a href="{% url 'viaje_ticket' viaje.pk %}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Ver ticket
+                                    </a>
+                                        
                                 {% else %}
                                     <span class="text-secondary">
                                         Sin acciones

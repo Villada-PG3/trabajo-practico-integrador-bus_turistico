@@ -311,8 +311,30 @@ class ViajeFinalizarView(StaffRequiredMixin, View):
                 request,
                 "; ".join(error.messages)
             )
+            return redirect("viaje_list")
 
-        return redirect("viaje_list")
+        # Al finalizar el viaje se emite el ticket
+        return redirect("viaje_ticket", pk=viaje.pk)
+
+
+class ViajeTicketView(StaffRequiredMixin, DetailView):
+    """Ticket del viaje: solo se puede ver cuando el viaje ya finalizó."""
+    model = Viaje
+    template_name = "admin_panel/viaje_ticket.html"
+    context_object_name = "viaje"
+
+    def get_queryset(self):
+        return Viaje.objects.select_related("bus", "chofer", "recorrido")
+
+    def get(self, request, *args, **kwargs):
+        viaje = self.get_object()
+        if not viaje.finalizado:
+            messages.error(
+                request,
+                "El ticket solo está disponible cuando el viaje finalizó."
+            )
+            return redirect("viaje_list")
+        return super().get(request, *args, **kwargs)
 
 
 class ViajeCreateView(StaffRequiredMixin, CreateView):
