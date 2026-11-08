@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Dashboard - Bus Turístico{% endblock %}
@@ -13,6 +12,9 @@
         <div class="d-flex align-items-center gap-3">
             <span class="text-light small">
                 Hola, <strong>{{ user.username }}</strong>
+                {% if roles_usuario %}
+                    · {{ roles_usuario|join:", " }}
+                {% endif %}
             </span>
 
             <a href="{% url 'home' %}"
@@ -43,13 +45,12 @@
     </h1>
 
     <p class="text-secondary mb-4">
-        Desde aquí podés gestionar la flota, los choferes,
-        los recorridos, las paradas, los atractivos turísticos,
-        los viajes y las reparaciones.
+        Desde aquí accedés a las secciones habilitadas para tu rol.
     </p>
 
     <div class="row g-4">
 
+        {% if permisos.flota %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'autobus_list' %}"
                class="text-decoration-none">
@@ -64,7 +65,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
+        {% if permisos.flota %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'chofer_list' %}"
                class="text-decoration-none">
@@ -79,7 +82,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
+        {% if permisos.contenido %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'recorrido_admin_list' %}"
                class="text-decoration-none">
@@ -94,7 +99,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
+        {% if permisos.contenido %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'parada_admin_list' %}"
                class="text-decoration-none">
@@ -109,7 +116,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
+        {% if permisos.contenido %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'atractivo_admin_list' %}"
                class="text-decoration-none">
@@ -124,7 +133,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
+        {% if permisos.ver_viajes %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'viaje_list' %}"
                class="text-decoration-none">
@@ -139,7 +150,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
+        {% if permisos.flota %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'reparacion_list' %}"
                class="text-decoration-none">
@@ -156,9 +169,9 @@
                 </div>
             </a>
         </div>
+        {% endif %}
 
-    </div>
-</div>
+        {% if permisos.ver_reporte %}
         <div class="col-6 col-lg-4">
             <a href="{% url 'reporte_diario' %}"
                class="text-decoration-none">
@@ -173,6 +186,10 @@
                 </div>
             </a>
         </div>
+        {% endif %}
+
+    </div>
+</div>
 {% endblock %}
 
 {% block footer %}{% endblock %}
