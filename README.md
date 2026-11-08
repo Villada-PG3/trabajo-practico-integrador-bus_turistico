@@ -28,6 +28,17 @@ Trabajo Práctico Integrador de Programación 2026.
 - **Ticket de viaje:** se emite al finalizar el viaje, con los datos del viaje y la duración en minutos. Se puede imprimir.
 - **Reporte diario:** viajes del día con duración y demora de inicio, y los promedios diarios de ambos valores.
 
+## Roles de usuario
+
+El sistema cuenta con 4 roles de usuario configurados mediante los Grupos de permisos de Django:
+
+| Rol | Descripción y Permisos |
+|---|---|
+| **Administrador** | Superusuario del sistema con acceso total al panel de administración de Django (`/admin/`) y a la gestión global de modelos, usuarios y permisos. |
+| **Gerente de Operaciones** | Acceso al panel de administración. Puede ver, crear, editar y eliminar recorridos, paradas, atractivos, autobuses y reparaciones. Acceso a reportes operativos. |
+| **Encargado de Operaciones** | Acceso al panel para la gestión cotidiana: programar, iniciar y finalizar viajes, asignar choferes y unidades, y registrar reparaciones de autobuses. |
+| **Chofer** | Usuario vinculado a un legajo de chofer. Acceso restringido para consultar la asignación de sus viajes programados y ejecutados. |
+
 ## Requisitos previos
 
 - [Python 3.12+](https://www.python.org/downloads/)
