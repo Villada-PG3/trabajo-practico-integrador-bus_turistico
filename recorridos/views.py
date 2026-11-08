@@ -30,6 +30,7 @@ from .models import (
     Atractivo, Autobus, Chofer, Parada, ParadaAtractivo, Recorrido,
     RecorridoParada, Reparacion, Viaje,
 )
+from .roles import puede, roles_de, viajes_visibles
 from django.utils import timezone
 
 
@@ -57,16 +58,35 @@ class BusquedaMixin:
         return queryset
 
 
-class StaffRequiredMixin(UserPassesTestMixin):
-    """Permite acceder solamente al personal autorizado."""
+class RolRequeridoMixin(UserPassesTestMixin):
+    """
+    Controla el acceso al panel segun el rol del usuario.
+
+    Cada vista se identifica por el nombre de su URL y la matriz
+    PERMISOS (en roles.py) indica que roles pueden entrar.
+    """
 
     login_url = reverse_lazy("admin_login")
 
     def test_func(self):
-        usuario = self.request.user
-        return usuario.is_active and usuario.is_staff
+        nombre_url = self.request.resolver_match.url_name
+        return puede(self.request.user, nombre_url)
 
     def handle_no_permission(self):
+        if roles_de(self.request.user):
+            messages.error(
+                self.request,
+                "No tenés permiso para acceder a esa sección."
+            )
+            return redirect("admin_dashboard")
+
+        if self.request.user.is_authenticated:
+            messages.error(
+                self.request,
+                "Tu usuario no tiene un rol asignado. "
+                "Pedile al administrador que te asigne uno."
+            )
+
         return redirect(self.login_url)
 
 
@@ -165,15 +185,15 @@ class AtractivoDetailView(DetailView):
 # ---------------------------------------------------------------
 
 class PanelAuthenticationForm(AuthenticationForm):
-    """Permite iniciar sesion solamente a usuarios staff."""
+    """Permite iniciar sesion solamente a usuarios con algun rol."""
 
     def confirm_login_allowed(self, user):
         super().confirm_login_allowed(user)
 
-        if not user.is_staff:
+        if not roles_de(user):
             raise ValidationError(
                 "Usuario o contraseña incorrectos.",
-                code="no_staff",
+                code="sin_rol",
             )
 
 
@@ -183,10 +203,10 @@ class PanelLoginView(LoginView):
     next_page = reverse_lazy("admin_dashboard")
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_staff:
-            return redirect("admin_dashboard")
+            if roles_de(request.user):
+                return redirect("admin_dashboard")
 
-        return super().dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
     def form_invalid(self, form):
         messages.error(
@@ -200,7 +220,7 @@ class PanelLogoutView(LogoutView):
     next_page = reverse_lazy("admin_login")
 
 
-class DashboardView(StaffRequiredMixin, TemplateView):
+class DashboardView(RolRequeridoMixin, TemplateView):
     template_name = "admin_panel/dashboard.html"
 
     def get_context_data(self, **kwargs):
@@ -225,7 +245,7 @@ class DashboardView(StaffRequiredMixin, TemplateView):
 # Gestion de autobuses
 # ---------------------------------------------------------------
 
-class AutobusCreateView(StaffRequiredMixin, CreateView):
+class AutobusCreateView(RolRequeridoMixin, CreateView):
     model = Autobus
     form_class = AutobusForm
     template_name = "admin_panel/autobus_form.html"
@@ -239,7 +259,7 @@ class AutobusCreateView(StaffRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AutobusListView(StaffRequiredMixin, ListView):
+class AutobusListView(RolRequeridoMixin, ListView):
     model = Autobus
     template_name = "admin_panel/autobus_list.html"
     context_object_name = "autobuses"
@@ -248,7 +268,7 @@ class AutobusListView(StaffRequiredMixin, ListView):
         return Autobus.objects.all().order_by("numero_unidad")
 
 
-class AutobusUpdateView(StaffRequiredMixin, UpdateView):
+class AutobusUpdateView(RolRequeridoMixin, UpdateView):
     model = Autobus
     form_class = AutobusForm
     template_name = "admin_panel/autobus_form.html"
@@ -267,21 +287,21 @@ class AutobusUpdateView(StaffRequiredMixin, UpdateView):
 # Gestion de viajes
 # ---------------------------------------------------------------
 
-class ViajeListView(StaffRequiredMixin, ListView):
+class ViajeListView(RolRequeridoMixin, ListView):
     model = Viaje
     template_name = "admin_panel/viaje_list.html"
     context_object_name = "viajes"
 
     def get_queryset(self):
-        return Viaje.objects.select_related(
-            "bus", "chofer", "recorrido"
-        ).order_by("-fecha_hora_inicio_programada")
+        return viajes_visibles(self.request.user).order_by(
+            "-fecha_hora_inicio_programada"
+        )
 
 
-class ViajeIniciarView(StaffRequiredMixin, View):
+class ViajeIniciarView(RolRequeridoMixin, View):
 
     def post(self, request, pk):
-        viaje = get_object_or_404(Viaje, pk=pk)
+        viaje = get_object_or_404(viajes_visibles(request.user), pk=pk)
 
         try:
             viaje.iniciar()
@@ -298,10 +318,10 @@ class ViajeIniciarView(StaffRequiredMixin, View):
         return redirect("viaje_list")
 
 
-class ViajeFinalizarView(StaffRequiredMixin, View):
+class ViajeFinalizarView(RolRequeridoMixin, View):
 
     def post(self, request, pk):
-        viaje = get_object_or_404(Viaje, pk=pk)
+        viaje = get_object_or_404(viajes_visibles(request.user), pk=pk)
 
         try:
             viaje.finalizar()
@@ -320,14 +340,14 @@ class ViajeFinalizarView(StaffRequiredMixin, View):
         return redirect("viaje_ticket", pk=viaje.pk)
 
 
-class ViajeTicketView(StaffRequiredMixin, DetailView):
+class ViajeTicketView(RolRequeridoMixin, DetailView):
     """Ticket del viaje: solo se puede ver cuando el viaje ya finalizó."""
     model = Viaje
     template_name = "admin_panel/viaje_ticket.html"
     context_object_name = "viaje"
 
     def get_queryset(self):
-        return Viaje.objects.select_related("bus", "chofer", "recorrido")
+        return viajes_visibles(self.request.user)
 
     def get(self, request, *args, **kwargs):
         viaje = self.get_object()
@@ -339,7 +359,7 @@ class ViajeTicketView(StaffRequiredMixin, DetailView):
             return redirect("viaje_list")
         return super().get(request, *args, **kwargs)
 
-class ReporteDiarioView(StaffRequiredMixin, TemplateView):
+class ReporteDiarioView(RolRequeridoMixin, TemplateView):
     """
     Reporte diario de viajes para el Gerente de Operaciones.
 
@@ -429,7 +449,7 @@ class ReporteDiarioView(StaffRequiredMixin, TemplateView):
         )
         return contexto
 
-class ViajeCreateView(StaffRequiredMixin, CreateView):
+class ViajeCreateView(RolRequeridoMixin, CreateView):
     model = Viaje
     form_class = ViajeForm
     template_name = "admin_panel/viaje_form.html"
@@ -448,7 +468,7 @@ class ViajeCreateView(StaffRequiredMixin, CreateView):
 # Gestion de choferes
 # ---------------------------------------------------------------
 
-class ChoferListView(StaffRequiredMixin, ListView):
+class ChoferListView(RolRequeridoMixin, ListView):
     model = Chofer
     template_name = "admin_panel/chofer_list.html"
     context_object_name = "choferes"
@@ -457,7 +477,7 @@ class ChoferListView(StaffRequiredMixin, ListView):
         return Chofer.objects.all().order_by("apellido", "nombre")
 
 
-class ChoferCreateView(StaffRequiredMixin, CreateView):
+class ChoferCreateView(RolRequeridoMixin, CreateView):
     model = Chofer
     form_class = ChoferForm
     template_name = "admin_panel/chofer_form.html"
@@ -471,7 +491,7 @@ class ChoferCreateView(StaffRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ChoferUpdateView(StaffRequiredMixin, UpdateView):
+class ChoferUpdateView(RolRequeridoMixin, UpdateView):
     model = Chofer
     form_class = ChoferForm
     template_name = "admin_panel/chofer_form.html"
@@ -488,7 +508,7 @@ class ChoferUpdateView(StaffRequiredMixin, UpdateView):
 # Gestion de reparaciones
 # ---------------------------------------------------------------
 
-class ReparacionListView(StaffRequiredMixin, ListView):
+class ReparacionListView(RolRequeridoMixin, ListView):
     model = Reparacion
     template_name = "admin_panel/reparacion_list.html"
     context_object_name = "reparaciones"
@@ -499,7 +519,7 @@ class ReparacionListView(StaffRequiredMixin, ListView):
         ).order_by("-fecha_inicio")
 
 
-class ReparacionCreateView(StaffRequiredMixin, CreateView):
+class ReparacionCreateView(RolRequeridoMixin, CreateView):
     model = Reparacion
     form_class = ReparacionForm
     template_name = "admin_panel/reparacion_form.html"
@@ -512,7 +532,7 @@ class ReparacionCreateView(StaffRequiredMixin, CreateView):
         )
         return super().form_valid(form)
 
-class ReparacionFinalizarView(StaffRequiredMixin, View):
+class ReparacionFinalizarView(RolRequeridoMixin, View):
 
     def post(self, request, pk):
         reparacion = get_object_or_404(Reparacion, pk=pk)
@@ -544,7 +564,7 @@ class ReparacionFinalizarView(StaffRequiredMixin, View):
 # Gestion de recorridos (panel administrativo)
 # ---------------------------------------------------------------
 
-class RecorridoListAdminView(StaffRequiredMixin, ListView):
+class RecorridoListAdminView(RolRequeridoMixin, ListView):
     model = Recorrido
     template_name = "admin_panel/recorrido_list.html"
     context_object_name = "recorridos"
@@ -553,7 +573,7 @@ class RecorridoListAdminView(StaffRequiredMixin, ListView):
         return Recorrido.objects.all().order_by("color")
 
 
-class RecorridoCreateView(StaffRequiredMixin, CreateView):
+class RecorridoCreateView(RolRequeridoMixin, CreateView):
     model = Recorrido
     form_class = RecorridoForm
     template_name = "admin_panel/recorrido_form.html"
@@ -567,7 +587,7 @@ class RecorridoCreateView(StaffRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class RecorridoUpdateView(StaffRequiredMixin, UpdateView):
+class RecorridoUpdateView(RolRequeridoMixin, UpdateView):
     model = Recorrido
     form_class = RecorridoForm
     template_name = "admin_panel/recorrido_form.html"
@@ -585,7 +605,7 @@ class RecorridoUpdateView(StaffRequiredMixin, UpdateView):
 # Gestion de paradas (panel administrativo)
 # ---------------------------------------------------------------
 
-class ParadaListAdminView(StaffRequiredMixin, ListView):
+class ParadaListAdminView(RolRequeridoMixin, ListView):
     model = Parada
     template_name = "admin_panel/parada_list.html"
     context_object_name = "paradas"
@@ -594,7 +614,7 @@ class ParadaListAdminView(StaffRequiredMixin, ListView):
         return Parada.objects.all().order_by("nombre")
 
 
-class ParadaCreateView(StaffRequiredMixin, CreateView):
+class ParadaCreateView(RolRequeridoMixin, CreateView):
     model = Parada
     form_class = ParadaForm
     template_name = "admin_panel/parada_form.html"
@@ -608,7 +628,7 @@ class ParadaCreateView(StaffRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ParadaUpdateView(StaffRequiredMixin, UpdateView):
+class ParadaUpdateView(RolRequeridoMixin, UpdateView):
     model = Parada
     form_class = ParadaForm
     template_name = "admin_panel/parada_form.html"
@@ -622,7 +642,7 @@ class ParadaUpdateView(StaffRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class RecorridoParadaCreateView(StaffRequiredMixin, CreateView):
+class RecorridoParadaCreateView(RolRequeridoMixin, CreateView):
     model = RecorridoParada
     form_class = RecorridoParadaForm
     template_name = "admin_panel/recorrido_parada_form.html"
@@ -639,7 +659,7 @@ class RecorridoParadaCreateView(StaffRequiredMixin, CreateView):
 # Administracion de paradas asignadas a recorridos
 # ---------------------------------------------------------------
 
-class RecorridoParadaListView(StaffRequiredMixin, ListView):
+class RecorridoParadaListView(RolRequeridoMixin, ListView):
     model = RecorridoParada
     template_name = "admin_panel/recorrido_parada_list.html"
     context_object_name = "asignaciones"
@@ -650,7 +670,7 @@ class RecorridoParadaListView(StaffRequiredMixin, ListView):
         ).order_by("recorrido__color", "orden")
 
 
-class RecorridoParadaUpdateView(StaffRequiredMixin, UpdateView):
+class RecorridoParadaUpdateView(RolRequeridoMixin, UpdateView):
     model = RecorridoParada
     form_class = RecorridoParadaForm
     template_name = "admin_panel/recorrido_parada_form.html"
@@ -664,7 +684,7 @@ class RecorridoParadaUpdateView(StaffRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class RecorridoParadaDeleteView(StaffRequiredMixin, DeleteView):
+class RecorridoParadaDeleteView(RolRequeridoMixin, DeleteView):
     model = RecorridoParada
     template_name = "admin_panel/recorrido_parada_confirm_delete.html"
     success_url = reverse_lazy("recorrido_parada_list")
@@ -681,7 +701,7 @@ class RecorridoParadaDeleteView(StaffRequiredMixin, DeleteView):
 # Gestion de atractivos turisticos (panel administrativo)
 # ---------------------------------------------------------------
 
-class AtractivoListAdminView(StaffRequiredMixin, ListView):
+class AtractivoListAdminView(RolRequeridoMixin, ListView):
     model = Atractivo
     template_name = "admin_panel/atractivo_list.html"
     context_object_name = "atractivos"
@@ -690,7 +710,7 @@ class AtractivoListAdminView(StaffRequiredMixin, ListView):
         return Atractivo.objects.all().order_by("nombre")
 
 
-class AtractivoCreateView(StaffRequiredMixin, CreateView):
+class AtractivoCreateView(RolRequeridoMixin, CreateView):
     model = Atractivo
     form_class = AtractivoForm
     template_name = "admin_panel/atractivo_form.html"
@@ -704,7 +724,7 @@ class AtractivoCreateView(StaffRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AtractivoUpdateView(StaffRequiredMixin, UpdateView):
+class AtractivoUpdateView(RolRequeridoMixin, UpdateView):
     model = Atractivo
     form_class = AtractivoForm
     template_name = "admin_panel/atractivo_form.html"
@@ -718,7 +738,7 @@ class AtractivoUpdateView(StaffRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ParadaAtractivoCreateView(StaffRequiredMixin, CreateView):
+class ParadaAtractivoCreateView(RolRequeridoMixin, CreateView):
     model = ParadaAtractivo
     form_class = ParadaAtractivoForm
     template_name = "admin_panel/parada_atractivo_form.html"
@@ -734,7 +754,7 @@ class ParadaAtractivoCreateView(StaffRequiredMixin, CreateView):
 
 # Listar asociaciones entre paradas y atractivos
 
-class ParadaAtractivoListView(StaffRequiredMixin, ListView):
+class ParadaAtractivoListView(RolRequeridoMixin, ListView):
     model = ParadaAtractivo
     template_name = "admin_panel/parada_atractivo_list.html"
     context_object_name = "asociaciones"
@@ -747,7 +767,7 @@ class ParadaAtractivoListView(StaffRequiredMixin, ListView):
 
 # Editar una asociacion existente
 
-class ParadaAtractivoUpdateView(StaffRequiredMixin, UpdateView):
+class ParadaAtractivoUpdateView(RolRequeridoMixin, UpdateView):
     model = ParadaAtractivo
     form_class = ParadaAtractivoForm
     template_name = "admin_panel/parada_atractivo_form.html"
@@ -763,7 +783,7 @@ class ParadaAtractivoUpdateView(StaffRequiredMixin, UpdateView):
 
 # Quitar una asociacion sin borrar la parada ni el atractivo
 
-class ParadaAtractivoDeleteView(StaffRequiredMixin, DeleteView):
+class ParadaAtractivoDeleteView(RolRequeridoMixin, DeleteView):
     model = ParadaAtractivo
     template_name = "admin_panel/parada_atractivo_confirm_delete.html"
     success_url = reverse_lazy("parada_atractivo_list")
