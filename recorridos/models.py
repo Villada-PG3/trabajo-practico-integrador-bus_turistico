@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 
 class Chofer(models.Model):
@@ -10,6 +11,15 @@ class Chofer(models.Model):
     apellido = models.CharField(max_length=100)
     dni = models.CharField(max_length=20, unique=True, null=True, blank=True, verbose_name="DNI / Cédula")
     activo = models.BooleanField(default=True)
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="chofer",
+        verbose_name="Usuario del sistema",
+        help_text="Cuenta con la que este chofer inicia sesión en el panel.",
+    )
 
     @property
     def nombre_completo(self):

@@ -18,7 +18,7 @@ class ParadaAtractivoInline(admin.TabularInline):
 
 @admin.register(Chofer)
 class ChoferAdmin(admin.ModelAdmin):
-    list_display = ("legajo", "nombre", "apellido")
+    list_display = ("legajo", "nombre", "apellido", "dni", "activo", "usuario")
     search_fields = ("nombre", "apellido")
 
 
