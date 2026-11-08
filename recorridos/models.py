@@ -4,6 +4,17 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 
+class ModeloBase(models.Model):
+    creado_en = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
+    actualizado_en = models.DateTimeField(auto_now=True, verbose_name="Fecha de modificación")
+    activo = models.BooleanField(default=True, verbose_name="Estado activo")
+
+    class Meta:
+        abstract = True
+
+    def desactivar(self):
+        self.activo = False
+        self.save(update_fields=["activo", "actualizado_en"])
 
 class Chofer(models.Model):
     legajo = models.AutoField(primary_key=True)
@@ -31,6 +42,7 @@ class Chofer(models.Model):
     class Meta:
         verbose_name = "Chofer"
         verbose_name_plural = "Choferes"
+        ordering = ["apellido", "nombre"]
 
 
 class Autobus(models.Model):

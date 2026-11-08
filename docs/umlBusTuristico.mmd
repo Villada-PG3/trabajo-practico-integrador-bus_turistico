@@ -1,117 +1,129 @@
 classDiagram
 
-    class RECORRIDO_PARADA {
-        int id_recorrido_parada
-        int id_recorrido
-        int id_parada
-        int orden
-        +asignarParada()
-        +cambiarOrden()
+    class ModeloBase {
+        <<Abstract>>
+        +DateTime creado_en
+        +DateTime actualizado_en
+        +boolean activo
+        +desactivar()
     }
 
-    class PARADA_ATRACTIVO {
-        int id_parada_atractivo
-        int id_parada
-        int id_atractivo
-        int distancia_metros
-        +asociarAtractivo()
-        +desasociarAtractivo()
-    }
-
-    class ATRACTIVO {
-        int id_atractivo
-        String nombre
-        String descripcion
-        String imagen
-        int calificacion
-        +actualizarCalificacion()
-        +obtenerCalificacion()
-    }
-
-    class PARADA {
-        int id_parada
-        String nombre
-        String direccion
-        String descripcion
-        String foto
-        +actualizarInformacion()
-        +obtenerAtractivos()
-        +cantidadAtractivos()
-    }
-
-    class RECORRIDO {
-        int id_recorrido
-        String color
-        int frecuencia_minutos
-        Time hora_inicio
-        Time hora_finalizacion
-        int duracion_aproximada
-        +agregarParada()
-        +quitarParada()
-        +obtenerParadas()
-        +calcularDuracion()
-    }
-
-    class VIAJE {
-        int id_viaje
-        DateTime fecha_hora_inicio_programada
-        DateTime fecha_hora_inicio_real
-        DateTime fecha_hora_fin_real
-        str estado
-        int id_bus
-        int legajo_chofer
-        int id_recorrido
-        +iniciarViaje()
-        +finalizarViaje()
-        +calcularDuracion()
-        +calcularDemora()
-    }
-
-    class AUTOBUS {
-        int id_bus
-        String patente
-        int numero_unidad
-        Date fecha_compra
-        String estado
-        +actualizarEstado()
-        +estaDisponible()
-        +asignarViaje()
-        +estaEnReparacion()
+    class USER {
+        +int id
+        +String username
+        +String email
+        +boolean is_staff
     }
 
     class CHOFER {
-        int legajo
-        String nombre
-        String apellido
-        str dni
-        bool activo
-        +iniciarViaje()
-        +finalizarViaje()
-        +obtenerDatos()
-        +esActivo()
+        +int legajo
+        +String nombre
+        +String apellido
+        +String dni
+        +int usuario_id
+        +nombre_completo() String
+    }
+
+    class AUTOBUS {
+        +int id_bus
+        +String patente
+        +int numero_unidad
+        +Date fecha_compra
+        +String estado
+        +en_reparacion() boolean
+    }
+
+    class ATRACTIVO {
+        +int id_atractivo
+        +String nombre
+        +String descripcion
+        +String imagen
+        +int calificacion
+        +calificacion_estrellas() String
+        +estrellas() String
+    }
+
+    class PARADA {
+        +int id_parada
+        +String nombre
+        +String direccion
+        +String descripcion
+        +decimal latitud
+        +decimal longitud
+        +String imagen
+        +cantidad_atractivos() int
+    }
+
+    class RECORRIDO {
+        +int id_recorrido
+        +String color
+        +String color_hex
+        +String descripcion
+        +int frecuencia_minutos
+        +Time hora_inicio
+        +Time hora_fin
+        +int duracion_aproximada
+        +nombre() String
+        +cantidad_paradas() int
+    }
+
+    class RECORRIDO_PARADA {
+        +int id_recorrido_parada
+        +int id_recorrido
+        +int id_parada
+        +int orden
+    }
+
+    class PARADA_ATRACTIVO {
+        +int id_parada_atractivo
+        +int id_parada
+        +int id_atractivo
+        +int distancia_metros
+    }
+
+    class VIAJE {
+        +int id_viaje
+        +DateTime fecha_hora_inicio_programada
+        +DateTime fecha_hora_inicio_real
+        +DateTime fecha_hora_fin_real
+        +String estado
+        +int id_bus
+        +int legajo_chofer
+        +int id_recorrido
+        +duracion_minutos() int
+        +demora_minutos() int
+        +finalizado() boolean
+        +iniciar()
+        +finalizar()
     }
 
     class REPARACION {
-        int id_reparacion
-        int id_bus
-        String descripcion
-        DateTime fecha_inicio
-        DateTime fecha_fin
-        int costo
-        +iniciarReparacion()
-        +finalizarReparacion()
-        +estaActiva()
+        +int id_reparacion
+        +int id_bus
+        +String descripcion
+        +DateTime fecha_inicio
+        +DateTime fecha_fin
+        +decimal costo
     }
 
+    %% HERENCIA DE CLASE BASE ABSTRACTA
+    ModeloBase <|-- CHOFER
+    ModeloBase <|-- AUTOBUS
+    ModeloBase <|-- ATRACTIVO
+    ModeloBase <|-- PARADA
+    ModeloBase <|-- RECORRIDO
+    ModeloBase <|-- RECORRIDO_PARADA
+    ModeloBase <|-- PARADA_ATRACTIVO
+    ModeloBase <|-- VIAJE
+    ModeloBase <|-- REPARACION
 
+    %% RELACIONES ENTRE MODELOS
+    USER "0..1" -- "1" CHOFER : asociado a
     RECORRIDO "1" --> "0..*" RECORRIDO_PARADA : posee
     PARADA "1" --> "0..*" PARADA_ATRACTIVO : tiene
-    
     PARADA "1" --> "0..*" RECORRIDO_PARADA : pertenece
-    ATRACTIVO "1" --> "0..*" PARADA_ATRACTIVO : se encuentra cerca de
-
+    ATRACTIVO "1" --> "0..*" PARADA_ATRACTIVO : cerca de
     RECORRIDO "1" --> "0..*" VIAJE : se realiza en
     CHOFER "1" --> "0..*" VIAJE : conduce
     AUTOBUS "1" --> "0..*" VIAJE : realiza
-
     AUTOBUS "1" --> "0..*" REPARACION : requiere

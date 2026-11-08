@@ -1,70 +1,103 @@
 erDiagram
-    RECORRIDO_PARADA{
-        int id_recorrido_parada PK
-        int id_recorrido FK
-        int id_parada FK
-        int orden
-    }
-    
-    PARADA_ATRACTIVO{
-        int id_parada_atractivo PK
-        int id_parada FK
-        int id_atractivo FK
-        int distancia_metros
-
-    }
-    
-    ATRACTIVO{
-        int id_atractivo PK
-        str nombre
-        str descripcion
-        str imagen
-        int calificacion
-    }
-    
-    PARADA{
-        int id_parada PK
-        str nombre
-        str direccion
-        str descripcion
-        str foto
+    AUTH_USER {
+        int id PK
+        str username
+        str email
+        bool is_staff
     }
 
-    RECORRIDO{
-        int id_recorrido PK
-        str color
-        int frecuencia
-        time hora_inicio
-        time hora_finalizacion
-        int duracion_aproximada
-    }
-
-    VIAJE{
-        int id_viaje PK
-        datetime fecha_hora_inicio_programada
-        datetime fecha_hora_inicio_real
-        datetime fecha_hora_fin_real
-        int duracion_total
-        str estado
-        int id_bus FK
-        int legajo_chofer FK
-        int id_recorrido FK
-    }
-
-    AUTOBUS{
-        int id_bus PK
-        str patente
-        int numero_unidad
-        date fecha_compra
-        bool estado
-    }
-    
-    CHOFER{
+    CHOFER {
         int legajo PK
         str nombre
         str apellido
         str dni
         bool activo
+        int usuario_id FK
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    AUTOBUS {
+        int id_bus PK
+        str patente
+        int numero_unidad
+        date fecha_compra
+        str estado
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    ATRACTIVO {
+        int id_atractivo PK
+        str nombre
+        str descripcion
+        str imagen
+        int calificacion
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    PARADA {
+        int id_parada PK
+        str nombre
+        str direccion
+        str descripcion
+        decimal latitud
+        decimal longitud
+        str imagen
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    RECORRIDO {
+        int id_recorrido PK
+        str color
+        str color_hex
+        str descripcion
+        int frecuencia_minutos
+        time hora_inicio
+        time hora_fin
+        int duracion_aproximada
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    RECORRIDO_PARADA {
+        int id_recorrido_parada PK
+        int id_recorrido FK
+        int id_parada FK
+        int orden
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    PARADA_ATRACTIVO {
+        int id_parada_atractivo PK
+        int id_parada FK
+        int id_atractivo FK
+        int distancia_metros
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
+    }
+
+    VIAJE {
+        int id_viaje PK
+        datetime fecha_hora_inicio_programada
+        datetime fecha_hora_inicio_real
+        datetime fecha_hora_fin_real
+        str estado
+        int id_bus FK
+        int legajo_chofer FK
+        int id_recorrido FK
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
     }
 
     REPARACION {
@@ -73,18 +106,19 @@ erDiagram
         str descripcion
         datetime fecha_inicio
         datetime fecha_fin
-        int costo
+        decimal costo
+        bool activo
+        datetime creado_en
+        datetime actualizado_en
     }
 
-%%RELACIONES:
-
-RECORRIDO ||--o{ RECORRIDO_PARADA : "posee"
-PARADA ||--o{ PARADA_ATRACTIVO : "tiene"
-PARADA ||--o{ RECORRIDO_PARADA : "pertenece"
-ATRACTIVO ||--o{ PARADA_ATRACTIVO : "se encuentra cerca de"
-RECORRIDO ||--o{ VIAJE : "se realiza en"
-CHOFER ||--o{ VIAJE : "conduce"
-AUTOBUS ||--o{ VIAJE : "realiza"
-AUTOBUS ||--o{ REPARACION : "requiere"
-
-
+    %% RELACIONES
+    AUTH_USER ||--o| CHOFER : "vinculado a"
+    RECORRIDO ||--o{ RECORRIDO_PARADA : "posee"
+    PARADA ||--o{ PARADA_ATRACTIVO : "tiene"
+    PARADA ||--o{ RECORRIDO_PARADA : "pertenece"
+    ATRACTIVO ||--o{ PARADA_ATRACTIVO : "se encuentra cerca de"
+    RECORRIDO ||--o{ VIAJE : "se realiza en"
+    CHOFER ||--o{ VIAJE : "conduce"
+    AUTOBUS ||--o{ VIAJE : "realiza"
+    AUTOBUS ||--o{ REPARACION : "requiere"
