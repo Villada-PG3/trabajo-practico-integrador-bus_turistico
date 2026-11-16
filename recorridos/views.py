@@ -59,13 +59,6 @@ class BusquedaMixin:
 
 
 class RolRequeridoMixin(UserPassesTestMixin):
-    """
-    Controla el acceso al panel segun el rol del usuario.
-
-    Cada vista se identifica por el nombre de su URL y la matriz
-    PERMISOS (en roles.py) indica que roles pueden entrar.
-    """
-
     login_url = reverse_lazy("admin_login")
 
     def test_func(self):
@@ -185,8 +178,6 @@ class AtractivoDetailView(DetailView):
 # ---------------------------------------------------------------
 
 class PanelAuthenticationForm(AuthenticationForm):
-    """Permite iniciar sesion solamente a usuarios con algun rol."""
-
     def confirm_login_allowed(self, user):
         super().confirm_login_allowed(user)
 
@@ -360,14 +351,6 @@ class ViajeTicketView(RolRequeridoMixin, DetailView):
         return super().get(request, *args, **kwargs)
 
 class ReporteDiarioView(RolRequeridoMixin, TemplateView):
-    """
-    Reporte diario de viajes para el Gerente de Operaciones.
-
-    Muestra los viajes programados para el dia elegido (?fecha=AAAA-MM-DD,
-    por defecto hoy) con su duracion y la demora de inicio, y los
-    promedios diarios de ambos valores. Los promedios se calculan en la
-    base de datos con una sola consulta.
-    """
     template_name = "admin_panel/reporte_diario.html"
 
     def get_fecha(self):
