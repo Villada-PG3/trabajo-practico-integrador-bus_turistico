@@ -1,67 +1,201 @@
+
 {% extends "base.html" %}
 
-{% block title %}Bus Turístico - Nosotros{% endblock %}
+{% block title %}Sobre nosotros | Bus Turístico{% endblock %}
 
 {% block content %}
-    <header class="bg-bus text-white text-center py-5">
-        <div class="container py-4">
-            <h1 class="display-5 fw-bold mb-3">Sobre Bus Turístico Buenos Aires</h1>
-            <p class="lead mx-auto mb-0" style="max-width: 700px;">
-                Conectamos a turistas y vecinos con la historia, la cultura y los rincones más emblemáticos de la Ciudad Autónoma de Buenos Aires.
-            </p>
-        </div>
-    </header>
 
-    <section class="container py-5">
-        <div class="row align-items-center g-4 mb-5">
-            <div class="col-lg-6">
-                <h2 class="h3 fw-bold text-bus mb-3">Una forma única de recorrer la ciudad</h2>
-                <p class="lead text-secondary">
-                    A través de circuitos diagramados con buses descapotables panorámicos y alta frecuencia de paso, ofrecemos una experiencia ágil, segura e inolvidable.
+<section class="bt-page-hero">
+    <div class="container">
+        <div class="row align-items-end gy-4">
+
+            <div class="col-lg-8">
+                <span class="bt-eyebrow bt-eyebrow-light">
+                    EL PROYECTO
+                </span>
+
+                <h1 class="bt-page-title">
+                    Buenos Aires se vive
+                    <span>en movimiento.</span>
+                </h1>
+            </div>
+
+            <div class="col-lg-4">
+                <p class="bt-page-description">
+                    Conectamos a turistas y vecinos con
+                    la historia, la cultura y los rincones
+                    más emblemáticos de la ciudad.
                 </p>
             </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="bt-section bt-about-section">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+
             <div class="col-lg-6">
-                <div class="card card-hover h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="display-6 mb-3" aria-hidden="true">🚌</div>
-                        <h2 class="h4 fw-bold">Nuestra misión</h2>
-                        <p class="text-secondary mb-0">
-                            Garantizar la eficiencia de cada itinerario, coordinando una flota moderna, choferes profesionales y el control de los tiempos para brindar la mejor atención a cada visitante.
-                        </p>
+                <span class="bt-eyebrow">QUIÉNES SOMOS</span>
+
+                <h2 class="bt-section-title">
+                    Una nueva forma
+                    <span>de recorrer la ciudad.</span>
+                </h2>
+
+                <p class="bt-about-text">
+                    Bus Turístico Buenos Aires es una plataforma
+                    pensada para facilitar la exploración de la ciudad
+                    mediante circuitos turísticos organizados.
+                </p>
+
+                <p class="bt-about-text">
+                    Buscamos conectar los principales atractivos
+                    culturales e históricos a través de recorridos
+                    con paradas estratégicas, ofreciendo información
+                    clara y accesible a cada visitante.
+                </p>
+
+                <a href="{% url 'recorridos_list' %}"
+                   class="btn bt-btn-primary mt-3">
+                    Explorar los recorridos
+                    <span aria-hidden="true">↗</span>
+                </a>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="bt-about-art">
+                    <div class="bt-about-art-head">
+                        <span>BUENOS AIRES</span>
+                        <span>ARGENTINA</span>
+                    </div>
+
+                    <div class="bt-about-art-center">
+                        <span class="bt-about-art-small">
+                            DESCUBRÍ
+                        </span>
+                        <strong>BA.</strong>
+                        <span class="bt-about-art-caption">
+                            MÁS QUE UN DESTINO,
+                            UNA EXPERIENCIA.
+                        </span>
+                    </div>
+
+                    <div class="bt-about-art-bottom">
+                        <span>34°36′ S</span>
+                        <span>58°23′ O</span>
                     </div>
                 </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="bt-about-mission-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-4">
+                <span class="bt-eyebrow">NUESTRO PROPÓSITO</span>
+                <h2 class="bt-section-title">
+                    Nuestra
+                    <span>misión.</span>
+                </h2>
+            </div>
+
+            <div class="col-lg-8">
+                <p class="bt-mission-statement">
+                    Brindar una experiencia turística organizada,
+                    accesible y eficiente, coordinando recorridos,
+                    autobuses, choferes y horarios para que cada
+                    visitante pueda disfrutar de Buenos Aires.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="bt-section">
+    <div class="container">
+
+        <div class="row align-items-end mb-5 gy-3">
+            <div class="col-lg-8">
+                <span class="bt-eyebrow">NUESTRO SERVICIO</span>
+                <h2 class="bt-section-title">
+                    Tres pilares.
+                    <span>Una misma experiencia.</span>
+                </h2>
             </div>
         </div>
 
-        <h2 class="text-center mb-4">Lo que ofrecemos</h2>
         <div class="row g-4">
+
             <div class="col-md-4">
-                <div class="card card-hover h-100 text-center border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="display-6 mb-3" aria-hidden="true">🗺️</div>
-                        <h3 class="h5 fw-bold">Circuitos emblemáticos</h3>
-                        <p class="text-secondary mb-0">Recorridos identificados por colores, con paradas estratégicas en los lugares más destacados de la ciudad.</p>
-                    </div>
+                <div class="bt-value-card">
+                    <span class="bt-value-number">01</span>
+                    <div class="bt-value-icon">↝</div>
+
+                    <h3>Circuitos emblemáticos</h3>
+                    <p>
+                        Recorridos identificados por colores,
+                        con paradas estratégicas en distintos
+                        puntos de la ciudad.
+                    </p>
                 </div>
             </div>
+
             <div class="col-md-4">
-                <div class="card card-hover h-100 text-center border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="display-6 mb-3" aria-hidden="true">🏛️</div>
-                        <h3 class="h5 fw-bold">Atractivos cercanos</h3>
-                        <p class="text-secondary mb-0">Información sobre museos, parques, plazas y monumentos ubicados cerca de cada parada.</p>
-                    </div>
+                <div class="bt-value-card">
+                    <span class="bt-value-number">02</span>
+                    <div class="bt-value-icon">⌖</div>
+
+                    <h3>Atractivos cercanos</h3>
+                    <p>
+                        Información sobre plazas, monumentos,
+                        museos y espacios culturales cercanos
+                        a las paradas.
+                    </p>
                 </div>
             </div>
+
             <div class="col-md-4">
-                <div class="card card-hover h-100 text-center border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="display-6 mb-3" aria-hidden="true">⏱️</div>
-                        <h3 class="h5 fw-bold">Flota y puntualidad</h3>
-                        <p class="text-secondary mb-0">Control operativo de nuestras unidades y choferes para cumplir con las salidas y los itinerarios.</p>
-                    </div>
+                <div class="bt-value-card">
+                    <span class="bt-value-number">03</span>
+                    <div class="bt-value-icon">◷</div>
+
+                    <h3>Gestión del servicio</h3>
+                    <p>
+                        Herramientas para administrar autobuses,
+                        choferes, viajes y reparaciones
+                        desde un mismo sistema.
+                    </p>
                 </div>
             </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
+<section class="bt-about-cta-section">
+    <div class="container">
+        <div class="bt-about-cta">
+            <div>
+                <span class="bt-eyebrow bt-eyebrow-light">
+                    EMPEZÁ A EXPLORAR
+                </span>
+                <h2>Tu próximo recorrido empieza acá.</h2>
+            </div>
+
+            <a href="{% url 'recorridos_list' %}"
+               class="btn bt-btn-primary">
+                Ver recorridos
+                <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

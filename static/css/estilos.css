@@ -1,0 +1,1015 @@
+
+/* =====================================================
+   BUS TURISTICO BUENOS AIRES
+   Identidad visual - Sitio publico
+   ===================================================== */
+
+:root {
+    --bt-navy: #102b3f;
+    --bt-navy-light: #173c51;
+    --bt-teal: #167d8d;
+    --bt-teal-light: #b7dce0;
+    --bt-gold: #f2b84b;
+    --bt-cream: #f6f4ee;
+    --bt-text: #243746;
+    --bt-muted: #667783;
+    --bt-line: #e3e9e9;
+    --bt-white: #ffffff;
+}
+
+body {
+    font-family: "DM Sans", sans-serif;
+    background-color: #f8faf9;
+    color: var(--bt-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Manrope", sans-serif;
+}
+
+a {
+    transition: color .2s ease, background-color .2s ease;
+}
+
+/* Compatibilidad con templates anteriores */
+.bg-bus {
+    background: linear-gradient(135deg, #102b3f, #167d8d);
+}
+
+.text-bus {
+    color: var(--bt-teal);
+}
+
+.card-hover {
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 2rem rgba(16, 43, 63, .12);
+}
+
+/* =====================================================
+   NAVBAR
+   ===================================================== */
+
+.bt-navbar {
+    background: rgba(255, 255, 255, .97);
+    border-bottom: 1px solid var(--bt-line);
+    padding: 16px 0;
+    backdrop-filter: blur(16px);
+    z-index: 1030;
+}
+
+.bt-navbar-brand,
+.bt-footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    font-family: "Manrope", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -.055em;
+    color: var(--bt-navy);
+    text-decoration: none;
+}
+
+.bt-navbar-brand:hover,
+.bt-footer-brand:hover {
+    color: var(--bt-teal);
+}
+
+.bt-brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: var(--bt-navy);
+    color: var(--bt-gold);
+    font-size: 1.2rem;
+    letter-spacing: -.08em;
+}
+
+.bt-brand-dot {
+    color: var(--bt-teal);
+}
+
+.bt-nav-list {
+    gap: 6px;
+}
+
+.bt-navbar .nav-link {
+    position: relative;
+    color: #536471;
+    font-size: .91rem;
+    font-weight: 600;
+    padding: 11px 13px !important;
+    border-radius: 9px;
+}
+
+.bt-navbar .nav-link:hover,
+.bt-navbar .nav-link.active {
+    color: var(--bt-teal);
+    background: #edf6f5;
+}
+
+.bt-nav-access {
+    margin-left: 14px;
+}
+
+.bt-btn-access {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    border-radius: 10px;
+    background: var(--bt-navy);
+    color: white;
+    font-size: .86rem;
+    font-weight: 700;
+    padding: 12px 17px;
+    border: 1px solid var(--bt-navy);
+}
+
+.bt-btn-access:hover {
+    background: var(--bt-teal);
+    border-color: var(--bt-teal);
+    color: white;
+}
+
+.bt-navbar-toggler {
+    border: 1px solid var(--bt-line);
+    padding: 8px 12px;
+}
+
+.bt-navbar-toggler:focus {
+    box-shadow: 0 0 0 .2rem rgba(22, 125, 141, .15);
+}
+
+/* =====================================================
+   BOTONES Y ELEMENTOS COMPARTIDOS
+   ===================================================== */
+
+.bt-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    padding: 15px 23px;
+    min-height: 52px;
+    background: var(--bt-gold);
+    color: var(--bt-navy);
+    border: 1px solid var(--bt-gold);
+    border-radius: 11px;
+    font-weight: 800;
+    font-size: .92rem;
+}
+
+.bt-btn-primary:hover {
+    background: #ffd078;
+    border-color: #ffd078;
+    color: var(--bt-navy);
+    transform: translateY(-2px);
+}
+
+.bt-btn-hero-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 15px 22px;
+    border: 1px solid rgba(255, 255, 255, .35);
+    color: white;
+    border-radius: 11px;
+    font-weight: 700;
+    font-size: .92rem;
+}
+
+.bt-btn-hero-outline:hover {
+    background: white;
+    color: var(--bt-navy);
+}
+
+.bt-section {
+    padding: 105px 0;
+}
+
+.bt-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: .72rem;
+    letter-spacing: .18em;
+    font-weight: 800;
+    color: var(--bt-teal);
+    margin-bottom: 23px;
+}
+
+.bt-eyebrow-light {
+    color: var(--bt-gold);
+}
+
+.bt-eyebrow-line {
+    width: 25px;
+    height: 2px;
+    background: currentColor;
+}
+
+.bt-section-title {
+    font-size: clamp(2.2rem, 4.3vw, 4.15rem);
+    font-weight: 800;
+    color: var(--bt-navy);
+    letter-spacing: -.065em;
+    line-height: 1.13;
+    margin: 0;
+}
+
+.bt-section-title span {
+    color: var(--bt-teal);
+}
+
+.bt-section-lead {
+    color: var(--bt-muted);
+    font-size: 1.05rem;
+    line-height: 1.9;
+}
+
+/* =====================================================
+   HOME - HERO PRINCIPAL
+   ===================================================== */
+
+.bt-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 83% 14%, rgba(34, 137, 149, .23), transparent 33%),
+        linear-gradient(115deg, #102b3f 0%, #123749 65%, #174b57 100%);
+    padding: 105px 0 112px;
+    color: white;
+}
+
+.bt-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .07;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px);
+    background-size: 29px 29px;
+    pointer-events: none;
+}
+
+.bt-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.bt-hero-title {
+    font-size: clamp(3.3rem, 5.9vw, 6.3rem);
+    line-height: 1.055;
+    letter-spacing: -.075em;
+    font-weight: 800;
+    max-width: 710px;
+    margin: 0 0 27px;
+}
+
+.bt-hero-title span {
+    display: block;
+    color: var(--bt-gold);
+}
+
+.bt-hero-description {
+    font-size: 1.07rem;
+    line-height: 1.9;
+    color: #c4d5db;
+    max-width: 520px;
+    margin-bottom: 32px;
+}
+
+.bt-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.bt-hero-footnote {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #a1b8c0;
+    font-size: .69rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    margin-top: 62px;
+}
+
+.bt-footnote-marker {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--bt-gold);
+}
+
+/* =====================================================
+   HOME - ILUSTRACION DE RECORRIDO
+   ===================================================== */
+
+.bt-hero-visual {
+    position: relative;
+    background: #1a4655;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 26px;
+    padding: 24px;
+    box-shadow: 0 30px 65px rgba(0, 0, 0, .22);
+    transform: rotate(1.5deg);
+}
+
+.bt-visual-topline,
+.bt-visual-bottomline {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #b9d1d6;
+    font-size: .65rem;
+    letter-spacing: .12em;
+    font-weight: 700;
+}
+
+.bt-route-art {
+    position: relative;
+    height: 405px;
+    margin: 12px 0;
+    overflow: hidden;
+    border-radius: 17px;
+    background:
+        linear-gradient(30deg, transparent 48%, rgba(255,255,255,.06) 49%, transparent 51%),
+        linear-gradient(150deg, #225364, #143847);
+}
+
+.bt-route-art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size: 43px 43px;
+}
+
+.bt-route-glow {
+    position: absolute;
+    width: 270px;
+    height: 270px;
+    background: rgba(242, 184, 75, .08);
+    border-radius: 50%;
+    filter: blur(35px);
+    top: 55px;
+    right: 20px;
+}
+
+.bt-route-line {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.bt-route-stop {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    color: var(--bt-navy);
+    padding: 9px 12px;
+    border-radius: 10px;
+    box-shadow: 0 7px 18px rgba(0, 0, 0, .16);
+    white-space: nowrap;
+}
+
+.bt-route-number {
+    color: var(--bt-teal);
+    font-size: .7rem;
+    font-weight: 800;
+}
+
+.bt-route-name {
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.bt-route-stop-one {
+    left: 23%;
+    top: 6%;
+}
+
+.bt-route-stop-two {
+    right: 3%;
+    top: 43%;
+}
+
+.bt-route-stop-three {
+    left: 19%;
+    bottom: 2%;
+}
+
+.bt-visual-city {
+    position: absolute;
+    bottom: 48px;
+    left: 20px;
+    opacity: .08;
+}
+
+.bt-city-outline {
+    font-family: "Manrope", sans-serif;
+    font-size: 10rem;
+    font-weight: 800;
+    letter-spacing: -.09em;
+}
+
+.bt-visual-bottomline {
+    padding-top: 10px;
+}
+
+/* =====================================================
+   HOME - TARJETAS
+   ===================================================== */
+
+.bt-intro-section {
+    background: #f8faf9;
+}
+
+.bt-explore-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 385px;
+    padding: 27px;
+    border-radius: 20px;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.bt-explore-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 24px 42px rgba(16, 43, 63, .14);
+}
+
+.bt-explore-card-dark {
+    background: #17384c;
+    color: white;
+}
+
+.bt-explore-card-teal {
+    background: #167d8d;
+    color: white;
+}
+
+.bt-explore-card-gold {
+    background: #f1c36e;
+    color: var(--bt-navy);
+}
+
+.bt-explore-card-dark:hover,
+.bt-explore-card-teal:hover {
+    color: white;
+}
+
+.bt-explore-card-gold:hover {
+    color: var(--bt-navy);
+}
+
+.bt-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bt-card-index {
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+    opacity: .8;
+}
+
+.bt-card-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 1.15rem;
+}
+
+.bt-card-symbol {
+    font-family: "Manrope", sans-serif;
+    font-size: 8rem;
+    font-weight: 800;
+    line-height: 1;
+    opacity: .22;
+    text-align: center;
+    transition: transform .3s ease;
+}
+
+.bt-explore-card:hover .bt-card-symbol {
+    transform: scale(1.13) rotate(-7deg);
+}
+
+.bt-card-bottom h3 {
+    font-weight: 800;
+    font-size: 1.65rem;
+    letter-spacing: -.05em;
+    margin-bottom: 12px;
+}
+
+.bt-card-bottom p {
+    font-size: .9rem;
+    line-height: 1.75;
+    opacity: .83;
+    margin-bottom: 20px;
+}
+
+.bt-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .85rem;
+    font-weight: 800;
+}
+
+/* =====================================================
+   HOME - PANEL DESTACADO
+   ===================================================== */
+
+.bt-feature-section {
+    padding: 0 0 105px;
+}
+
+.bt-feature-panel {
+    background: #e5f1ef;
+    border-radius: 26px;
+    padding: clamp(35px, 6vw, 80px);
+    overflow: hidden;
+}
+
+.bt-feature-title {
+    color: var(--bt-navy);
+    font-size: clamp(2rem, 4vw, 3.7rem);
+    letter-spacing: -.06em;
+    line-height: 1.16;
+    font-weight: 800;
+    margin-bottom: 22px;
+}
+
+.bt-feature-panel p {
+    color: #526c72;
+    line-height: 1.85;
+    max-width: 500px;
+}
+
+.bt-feature-stamp {
+    width: min(310px, 100%);
+    aspect-ratio: 1;
+    margin: auto;
+    border: 2px dashed rgba(22, 125, 141, .35);
+    border-radius: 50%;
+    padding: 18px;
+    transform: rotate(-11deg);
+}
+
+.bt-feature-stamp-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border: 2px solid var(--bt-teal);
+    border-radius: 50%;
+    color: var(--bt-teal);
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    letter-spacing: .11em;
+}
+
+.bt-feature-stamp-inner strong {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: -.065em;
+    line-height: 1.1;
+}
+
+.bt-stamp-star {
+    font-size: 2.4rem;
+    margin-top: 10px;
+}
+
+/* =====================================================
+   NOSOTROS - PORTADA
+   ===================================================== */
+
+.bt-page-hero {
+    padding: 115px 0 100px;
+    background: var(--bt-navy);
+    color: white;
+}
+
+.bt-page-title {
+    font-size: clamp(3rem, 5.5vw, 5.8rem);
+    letter-spacing: -.075em;
+    line-height: 1.08;
+    font-weight: 800;
+    margin: 0;
+}
+
+.bt-page-title span {
+    color: var(--bt-gold);
+}
+
+.bt-page-description {
+    color: #b9cbd2;
+    line-height: 1.9;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.bt-about-text {
+    color: var(--bt-muted);
+    font-size: 1.03rem;
+    line-height: 1.9;
+    margin-top: 25px;
+}
+
+.bt-about-art {
+    position: relative;
+    min-height: 480px;
+    background:
+        radial-gradient(circle at 65% 30%, rgba(242,184,75,.25), transparent 38%),
+        linear-gradient(135deg, #217f8a, #124759);
+    border-radius: 25px;
+    padding: 27px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.bt-about-art::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: .09;
+}
+
+.bt-about-art-head,
+.bt-about-art-bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.bt-about-art-center {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.bt-about-art-small,
+.bt-about-art-caption {
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .2em;
+}
+
+.bt-about-art-center strong {
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    font-size: clamp(7rem, 17vw, 12rem);
+    line-height: 1.1;
+    letter-spacing: -.12em;
+    color: var(--bt-gold);
+}
+
+.bt-about-art-caption {
+    max-width: 210px;
+    line-height: 1.7;
+}
+
+/* =====================================================
+   NOSOTROS - MISION
+   ===================================================== */
+
+.bt-about-mission-section {
+    padding: 90px 0;
+    background: #e8f2f1;
+}
+
+.bt-mission-statement {
+    font-family: "Manrope", sans-serif;
+    font-size: clamp(1.35rem, 2.35vw, 2rem);
+    font-weight: 600;
+    line-height: 1.65;
+    letter-spacing: -.035em;
+    color: var(--bt-navy);
+    margin: 0;
+}
+
+/* =====================================================
+   NOSOTROS - VALORES
+   ===================================================== */
+
+.bt-value-card {
+    position: relative;
+    min-height: 330px;
+    padding: 35px;
+    background: #ffffff;
+    border: 1px solid var(--bt-line);
+    border-radius: 18px;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.bt-value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 35px rgba(16,43,63,.09);
+}
+
+.bt-value-number {
+    color: var(--bt-teal);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.bt-value-icon {
+    font-family: "Manrope", sans-serif;
+    font-size: 4.5rem;
+    color: var(--bt-teal);
+    margin: 25px 0;
+    line-height: 1;
+}
+
+.bt-value-card h3 {
+    color: var(--bt-navy);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -.03em;
+}
+
+.bt-value-card p {
+    color: var(--bt-muted);
+    font-size: .94rem;
+    line-height: 1.8;
+    margin-top: 14px;
+}
+
+/* =====================================================
+   NOSOTROS - LLAMADO A LA ACCION
+   ===================================================== */
+
+.bt-about-cta-section {
+    padding: 0 0 100px;
+}
+
+.bt-about-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 60px;
+    border-radius: 24px;
+    background: var(--bt-navy);
+}
+
+.bt-about-cta h2 {
+    color: white;
+    font-size: clamp(1.8rem, 3.4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.05em;
+    max-width: 550px;
+    margin: 0;
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.bt-footer {
+    background: #102b3f;
+    padding: 75px 0 24px;
+    color: #b6c8cf;
+}
+
+.bt-footer-brand {
+    color: white;
+}
+
+.bt-footer-brand:hover {
+    color: white;
+}
+
+.bt-footer-brand .bt-brand-icon {
+    background: var(--bt-gold);
+    color: var(--bt-navy);
+}
+
+.bt-footer-description {
+    max-width: 355px;
+    font-size: .92rem;
+    line-height: 1.85;
+    color: #a9bdc6;
+}
+
+.bt-footer-title {
+    color: white;
+    font-size: .85rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.bt-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bt-footer-links li + li {
+    margin-top: 12px;
+}
+
+.bt-footer-links a {
+    color: #a9bdc6;
+    text-decoration: none;
+    font-size: .91rem;
+}
+
+.bt-footer-links a:hover {
+    color: var(--bt-gold);
+}
+
+.bt-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    border-top: 1px solid rgba(255,255,255,.13);
+    margin-top: 60px;
+    padding-top: 24px;
+    color: #91aab4;
+    font-size: .77rem;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 991.98px) {
+    .bt-navbar {
+        padding: 12px 0;
+    }
+
+    .bt-nav-list {
+        padding: 20px 0 8px;
+    }
+
+    .bt-nav-access {
+        margin: 12px 0 0;
+    }
+
+    .bt-btn-access {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .bt-hero {
+        padding: 75px 0;
+    }
+
+    .bt-hero-visual {
+        max-width: 650px;
+        margin: auto;
+        transform: none;
+    }
+
+    .bt-section {
+        padding: 75px 0;
+    }
+
+    .bt-feature-section,
+    .bt-about-cta-section {
+        padding-bottom: 75px;
+    }
+
+    .bt-page-hero {
+        padding: 80px 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .bt-navbar-brand {
+        font-size: 1.08rem;
+    }
+
+    .bt-brand-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .bt-hero-title {
+        font-size: 3.15rem;
+    }
+
+    .bt-hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bt-hero-footnote {
+        margin-top: 38px;
+        font-size: .59rem;
+    }
+
+    .bt-hero-visual {
+        padding: 13px;
+        border-radius: 19px;
+    }
+
+    .bt-route-art {
+        height: 320px;
+    }
+
+    .bt-route-stop {
+        padding: 7px;
+    }
+
+    .bt-route-name {
+        font-size: .63rem;
+    }
+
+    .bt-route-stop-one {
+        left: 10%;
+        top: 7%;
+    }
+
+    .bt-route-stop-two {
+        right: 1%;
+        top: 42%;
+    }
+
+    .bt-route-stop-three {
+        left: 8%;
+        bottom: 2%;
+    }
+
+    .bt-visual-topline,
+    .bt-visual-bottomline {
+        font-size: .5rem;
+    }
+
+    .bt-explore-card {
+        min-height: 340px;
+    }
+
+    .bt-feature-panel {
+        padding: 35px 23px;
+    }
+
+    .bt-feature-stamp {
+        width: 240px;
+    }
+
+    .bt-about-art {
+        min-height: 370px;
+    }
+
+    .bt-about-cta {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 35px 25px;
+    }
+
+    .bt-footer-bottom {
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bt-explore-card,
+    .bt-value-card,
+    .bt-card-symbol,
+    .card-hover {
+        transition: none;
+    }
+}
