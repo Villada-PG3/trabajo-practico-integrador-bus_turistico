@@ -1,56 +1,250 @@
+
 {% extends "base.html" %}
 
-{% block title %}Bus Turístico - Inicio{% endblock %}
+{% block title %}Descubrí Buenos Aires | Bus Turístico{% endblock %}
 
 {% block content %}
-    <!-- Hero -->
-    <header class="bg-bus text-white text-center py-5">
-        <div class="container py-4">
-            <h1 class="display-5 fw-bold mb-3">Conocé la Ciudad en Bus</h1>
-            <p class="lead mx-auto mb-4" style="max-width: 600px;">
-                Descubrí los mejores recorridos, paradas estratégicas y puntos de interés de forma práctica y accesible.
-            </p>
-            <a href="{% url 'recorridos_list' %}" class="btn btn-light btn-lg fw-semibold text-bus">Ver recorridos disponibles</a>
+
+<!-- PORTADA PRINCIPAL -->
+<section class="bt-hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <div class="bt-hero-content">
+                    <span class="bt-eyebrow bt-eyebrow-light">
+                        <span class="bt-eyebrow-line"></span>
+                        BUENOS AIRES, ARGENTINA
+                    </span>
+
+                    <h1 class="bt-hero-title">
+                        La ciudad tiene
+                        <span>mucho para contar.</span>
+                    </h1>
+
+                    <p class="bt-hero-description">
+                        Viví Buenos Aires desde otra perspectiva.
+                        Explorá sus recorridos, descubrí paradas
+                        estratégicas y encontrá lugares que hacen
+                        única a nuestra ciudad.
+                    </p>
+
+                    <div class="bt-hero-actions">
+                        <a href="{% url 'recorridos_list' %}"
+                           class="btn bt-btn-primary">
+                            Explorar recorridos
+                            <span aria-hidden="true">↗</span>
+                        </a>
+
+                        <a href="{% url 'nosotros' %}"
+                           class="btn bt-btn-hero-outline">
+                            Conocé el proyecto
+                        </a>
+                    </div>
+
+                    <div class="bt-hero-footnote">
+                        <span class="bt-footnote-marker"></span>
+                        HISTORIA · CULTURA · EXPERIENCIAS
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="bt-hero-visual">
+
+                    <div class="bt-visual-topline">
+                        <span>BUENOS AIRES / EXPLORÁ</span>
+                        <span>01 — 03</span>
+                    </div>
+
+                    <div class="bt-route-art">
+                        <div class="bt-route-glow"></div>
+
+                        <div class="bt-route-stop bt-route-stop-one">
+                            <span class="bt-route-number">01</span>
+                            <span class="bt-route-name">Plaza de Mayo</span>
+                        </div>
+
+                        <div class="bt-route-stop bt-route-stop-two">
+                            <span class="bt-route-number">02</span>
+                            <span class="bt-route-name">Obelisco</span>
+                        </div>
+
+                        <div class="bt-route-stop bt-route-stop-three">
+                            <span class="bt-route-number">03</span>
+                            <span class="bt-route-name">Teatro Colón</span>
+                        </div>
+
+                        <svg class="bt-route-line"
+                             viewBox="0 0 480 380"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg"
+                             aria-hidden="true">
+                            <path d="M98 65 C98 165 375 100 375 200 S110 275 170 345"
+                                  stroke="#ffffff"
+                                  stroke-opacity=".16"
+                                  stroke-width="24"
+                                  stroke-linecap="round"/>
+                            <path d="M98 65 C98 165 375 100 375 200 S110 275 170 345"
+                                  stroke="#F5C66B"
+                                  stroke-width="4"
+                                  stroke-linecap="round"
+                                  stroke-dasharray="7 11"/>
+                            <circle cx="98" cy="65" r="12" fill="#F5C66B" stroke="#ffffff" stroke-width="4"/>
+                            <circle cx="375" cy="200" r="12" fill="#F5C66B" stroke="#ffffff" stroke-width="4"/>
+                            <circle cx="170" cy="345" r="12" fill="#F5C66B" stroke="#ffffff" stroke-width="4"/>
+                        </svg>
+
+                        <div class="bt-visual-city">
+                            <span class="bt-city-outline">BA</span>
+                        </div>
+                    </div>
+
+                    <div class="bt-visual-bottomline">
+                        <span>UNA CIUDAD. INFINITAS HISTORIAS.</span>
+                        <span>34°36′ S · 58°23′ O</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </header>
+    </div>
+</section>
 
-    <!-- Opciones rápidas -->
-    <section class="container py-5">
-        <h2 class="text-center mb-4">¿Qué querés explorar hoy?</h2>
+<!-- SECCIÓN DE INTRODUCCIÓN -->
+<section class="bt-section bt-intro-section">
+    <div class="container">
+        <div class="row align-items-end gy-4">
+            <div class="col-lg-7">
+                <span class="bt-eyebrow">
+                    DESCUBRÍ A TU MANERA
+                </span>
 
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body p-4">
-                        <div class="display-4 mb-3">🗺️</div>
-                        <h3 class="h5">Recorridos</h3>
-                        <p class="text-secondary">Consultá las distintas rutas disponibles, sus duraciones y la frecuencia de los buses.</p>
-                        <a href="{% url 'recorridos_list' %}" class="fw-semibold text-decoration-none">Explorar rutas &rarr;</a>
-                    </div>
-                </div>
+                <h2 class="bt-section-title">
+                    Todo lo que necesitás
+                    <span>para explorar.</span>
+                </h2>
             </div>
 
-            <div class="col-md-4">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body p-4">
-                        <div class="display-4 mb-3">📍</div>
-                        <h3 class="h5">Paradas</h3>
-                        <p class="text-secondary">Encontrá las paradas más cercanas y verificá qué recorridos pasan por ellas.</p>
-                        <a href="{% url 'paradas_list' %}" class="fw-semibold text-decoration-none">Buscar paradas &rarr;</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body p-4">
-                        <div class="display-4 mb-3">🏛️</div>
-                        <h3 class="h5">Atractivos Turísticos</h3>
-                        <p class="text-secondary">Descubrí museos, monumentos y lugares icónicos accesibles desde nuestros recorridos.</p>
-                        <a href="{% url 'atractivos_list' %}" class="fw-semibold text-decoration-none">Ver atractivos &rarr;</a>
-                    </div>
-                </div>
+            <div class="col-lg-5">
+                <p class="bt-section-lead mb-0">
+                    Organizamos la información turística para que
+                    encuentres fácilmente los circuitos, las paradas
+                    y los puntos de interés de Buenos Aires.
+                </p>
             </div>
         </div>
-    </section>
+
+        <div class="row g-4 mt-4">
+
+            <div class="col-md-4">
+                <a href="{% url 'recorridos_list' %}"
+                   class="bt-explore-card bt-explore-card-dark">
+                    <div class="bt-card-top">
+                        <span class="bt-card-index">01 / EXPLORAR</span>
+                        <span class="bt-card-arrow">↗</span>
+                    </div>
+
+                    <div class="bt-card-symbol" aria-hidden="true">↝</div>
+
+                    <div class="bt-card-bottom">
+                        <h3>Recorridos</h3>
+                        <p>
+                            Conocé los circuitos disponibles,
+                            sus horarios y sus paradas.
+                        </p>
+                        <span class="bt-card-link">Ver recorridos <span>→</span></span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{% url 'paradas_list' %}"
+                   class="bt-explore-card bt-explore-card-teal">
+                    <div class="bt-card-top">
+                        <span class="bt-card-index">02 / UBICAR</span>
+                        <span class="bt-card-arrow">↗</span>
+                    </div>
+
+                    <div class="bt-card-symbol" aria-hidden="true">⌖</div>
+
+                    <div class="bt-card-bottom">
+                        <h3>Paradas</h3>
+                        <p>
+                            Encontrá puntos de ascenso y descenso
+                            y descubrí qué hay cerca.
+                        </p>
+                        <span class="bt-card-link">Ver paradas <span>→</span></span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{% url 'atractivos_list' %}"
+                   class="bt-explore-card bt-explore-card-gold">
+                    <div class="bt-card-top">
+                        <span class="bt-card-index">03 / DESCUBRIR</span>
+                        <span class="bt-card-arrow">↗</span>
+                    </div>
+
+                    <div class="bt-card-symbol" aria-hidden="true">✳</div>
+
+                    <div class="bt-card-bottom">
+                        <h3>Atractivos</h3>
+                        <p>
+                            Explorá monumentos, espacios culturales
+                            y lugares emblemáticos.
+                        </p>
+                        <span class="bt-card-link">Ver atractivos <span>→</span></span>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECCIÓN DESTACADA -->
+<section class="bt-feature-section">
+    <div class="container">
+        <div class="bt-feature-panel">
+            <div class="row align-items-center g-4">
+
+                <div class="col-lg-7">
+                    <span class="bt-eyebrow">UNA CIUDAD POR DESCUBRIR</span>
+
+                    <h2 class="bt-feature-title">
+                        Cada parada es el comienzo
+                        de una nueva historia.
+                    </h2>
+
+                    <p>
+                        Desde Plaza de Mayo hasta el Obelisco,
+                        conectá los lugares más reconocidos
+                        de Buenos Aires con nuestros circuitos.
+                    </p>
+
+                    <a href="{% url 'paradas_list' %}"
+                       class="btn bt-btn-primary mt-3">
+                        Conocer las paradas
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="bt-feature-stamp" aria-hidden="true">
+                        <div class="bt-feature-stamp-inner">
+                            <span>BUENOS</span>
+                            <strong>AIRES</strong>
+                            <span>TE ESPERA.</span>
+                            <div class="bt-stamp-star">✳</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

@@ -1,96 +1,154 @@
+
 {% extends "base.html" %}
 
-{% block title %}Recorridos - Bus Turístico{% endblock %}
+{% block title %}Recorridos | Bus Turístico{% endblock %}
 
 {% block content %}
-<div class="bg-bus text-white py-5 mb-4 shadow-sm">
-    <div class="container text-center">
-        <h1 class="fw-bold display-5">Nuestros Recorridos</h1>
-        <p class="lead mb-0">Explorá los barrios más emblemáticos de Buenos Aires a través de nuestras rutas turísticas.</p>
-    </div>
-</div>
 
-<div class="container my-4">
-    <!-- Filtros o Buscador rápido -->
-    <div class="row mb-4">
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-3">
-                    <form method="GET" class="row g-2 align-items-center">
-                        <div class="col-sm-9">
-                            <input type="text" name="q" class="form-control" placeholder="Buscar por nombre de recorrido o barrio..." value="{{ request.GET.q|default:'' }}">
-                        </div>
-                        <div class="col-sm-3">
-                            <button type="submit" class="btn btn-primary w-100 fw-semibold">Buscar</button>
-                        </div>
-                    </form>
-                </div>
+<section class="bt-catalog-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="bt-catalog-breadcrumb">
+            <a href="{% url 'home' %}">Inicio</a>
+            <span>/</span>
+            <span>Recorridos</span>
+        </nav>
+
+        <div class="row align-items-end g-4">
+            <div class="col-lg-8">
+                <span class="bt-eyebrow bt-eyebrow-light">
+                    EXPLORÁ BUENOS AIRES
+                </span>
+                <h1 class="bt-catalog-title">
+                    Un recorrido.
+                    <span>Mil historias.</span>
+                </h1>
+            </div>
+
+            <div class="col-lg-4">
+                <p class="bt-catalog-description">
+                    Conocé nuestros circuitos turísticos, sus horarios
+                    y las paradas que conectan los lugares más
+                    representativos de la ciudad.
+                </p>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Lista de Tarjetas de Recorridos -->
-    <div class="row g-4">
-        {% for recorrido in recorridos %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm card-hover">
-                    <!-- Cabecera dinámica con el color del recorrido -->
-                    <div class="card-header py-3 text-white fw-bold d-flex justify-content-between align-items-center" 
-                         style="background-color: {{ recorrido.color_hex|default:'#2563eb' }};">
-                        <span class="fs-5">{{ recorrido.nombre }}</span>
-                        <span class="badge bg-light text-dark fs-6 shadow-sm">🚌 {{ recorrido.frecuencia_minutos }} min</span>
-                    </div>
-                    
-                    <div class="card-body d-flex flex-column">
-                        <p class="card-text text-muted small mb-3">
-                            {{ recorrido.descripcion|truncatewords:20|default:"Recorrido turístico panorámico por los principales puntos de interés." }}
-                        </p>
+<section class="bt-catalog-section">
+    <div class="container">
 
-                        <!-- Tiempos de operación -->
-                        <div class="bg-light p-2 rounded mb-3 border">
-                            <div class="row text-center small">
-                                <div class="col-6 border-end">
-                                    <span class="text-secondary d-block">Hora Inicio</span>
-                                    <strong class="text-dark">{{ recorrido.hora_inicio|time:"H:i" }} hs</strong>
+        <div class="bt-catalog-toolbar">
+            <div>
+                <span class="bt-eyebrow mb-2">ELEGÍ TU EXPERIENCIA</span>
+                <h2 class="bt-catalog-heading">Circuitos disponibles</h2>
+            </div>
+
+            <form method="get" class="bt-search-form" role="search">
+                <label for="buscar-recorrido" class="visually-hidden">
+                    Buscar recorridos
+                </label>
+                <input
+                    id="buscar-recorrido"
+                    type="search"
+                    name="q"
+                    value="{{ request.GET.q|default:'' }}"
+                    placeholder="Buscar recorridos o barrios..."
+                    class="form-control"
+                >
+                <button type="submit" class="btn bt-search-button">
+                    Buscar
+                </button>
+            </form>
+        </div>
+
+        <div class="row g-4">
+            {% for recorrido in recorridos %}
+                <div class="col-md-6 col-xl-4">
+                    <article class="bt-route-card h-100">
+
+                        <div class="bt-route-card-banner"
+                             style="--route-color: {{ recorrido.color_hex|default:'#167d8d' }};">
+                            <span class="bt-route-card-label">
+                                CIRCUITO TURÍSTICO
+                            </span>
+                            <span class="bt-route-card-number">
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+                            <h3>{{ recorrido.nombre }}</h3>
+                        </div>
+
+                        <div class="bt-route-card-body">
+                            <p class="bt-route-card-description">
+                                {{ recorrido.descripcion|default:"Recorrido turístico panorámico por Buenos Aires."|truncatewords:23 }}
+                            </p>
+
+                            <div class="bt-route-card-stats">
+                                <div>
+                                    <span>FRECUENCIA</span>
+                                    <strong>{{ recorrido.frecuencia_minutos }} min</strong>
                                 </div>
-                                <div class="col-6">
-                                    <span class="text-secondary d-block">Hora Fin</span>
-                                    <strong class="text-dark">{{ recorrido.hora_fin|time:"H:i" }} hs</strong>
+                                <div>
+                                    <span>DURACIÓN</span>
+                                    <strong>{{ recorrido.duracion_aproximada }} min</strong>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Detalle de Paradas principales -->
-                        <div class="mt-auto">
-                            <h6 class="fw-semibold text-secondary small mb-2">Paradas principales:</h6>
-                            <ul class="list-unstyled small mb-3">
+                            <div class="bt-route-card-hours">
+                                <span>Horario del circuito</span>
+                                <strong>
+                                    {{ recorrido.hora_inicio|time:"H:i" }}
+                                    —
+                                    {{ recorrido.hora_fin|time:"H:i" }}
+                                </strong>
+                            </div>
+
+                            <div class="bt-route-card-stops">
+                                <span class="bt-card-small-label">
+                                    ALGUNAS PARADAS
+                                </span>
+
                                 {% for parada_recorrido in recorrido.paradas_asociadas.all|slice:":4" %}
-                                    <li class="text-truncate mb-1">
-                                        <span class="badge bg-secondary rounded-pill me-1">{{ parada_recorrido.orden }}</span> 
-                                        {{ parada_recorrido.parada.nombre }}
-                                    </li>
+                                    <div class="bt-route-preview-stop">
+                                        <span class="bt-stop-order">
+                                            {{ parada_recorrido.orden }}
+                                        </span>
+                                        <span>{{ parada_recorrido.parada.nombre }}</span>
+                                    </div>
                                 {% empty %}
-                                    <li class="text-muted fst-italic">Sin paradas asignadas</li>
+                                    <p class="text-secondary small mb-0">
+                                        Sin paradas asignadas.
+                                    </p>
                                 {% endfor %}
-                            </ul>
+                            </div>
 
-                            <a href="{% url 'recorrido_detail' recorrido.pk %}" class="btn btn-outline-primary w-100 fw-semibold">
-                                Ver Circuito Completo &rarr;
+                            <a href="{% url 'recorrido_detail' recorrido.pk %}"
+                               class="bt-catalog-link">
+                                Explorar circuito
+                                <span aria-hidden="true">↗</span>
                             </a>
                         </div>
+                    </article>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="bt-empty-state">
+                        <span aria-hidden="true">↝</span>
+                        <h3>No encontramos recorridos</h3>
+                        <p>
+                            Probá con otra búsqueda o consultá
+                            nuevamente más adelante.
+                        </p>
+                        <a href="{% url 'recorridos_list' %}"
+                           class="btn bt-btn-primary">
+                            Ver todos
+                        </a>
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <!-- Estado vacío cuando no hay datos registrados aún -->
-            <div class="col-12 text-center py-5">
-                <div class="p-5 bg-white rounded shadow-sm">
-                    <span class="display-1 text-muted">🗺️</span>
-                    <h3 class="mt-3 fw-bold">No se encontraron recorridos</h3>
-                    <p class="text-secondary">En este momento no hay rutas registradas o la búsqueda no arrojó resultados.</p>
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+
     </div>
-</div>
+</section>
+
 {% endblock %}

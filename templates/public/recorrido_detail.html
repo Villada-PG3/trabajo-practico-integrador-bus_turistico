@@ -1,72 +1,131 @@
+
 {% extends "base.html" %}
 
-{% block title %}{{ recorrido.nombre }} - Bus Turístico{% endblock %}
+{% block title %}{{ recorrido.nombre }} | Bus Turístico{% endblock %}
 
 {% block content %}
-<!-- Cabecera con el color característico del recorrido -->
-<div class="py-5 text-white shadow-sm mb-4" style="background-color: {{ recorrido.color_hex|default:'#2563eb' }};">
-    <div class="container text-center">
-        <h1 class="display-4 fw-bold text-uppercase">{{ recorrido.nombre }}</h1>
-        <p class="lead mb-0">Circuito turístico panorámico</p>
+
+<section class="bt-catalog-hero bt-detail-hero">
+    <div class="container">
+
+        <nav aria-label="breadcrumb" class="bt-catalog-breadcrumb">
+            <a href="{% url 'home' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'recorridos_list' %}">Recorridos</a>
+            <span>/</span>
+            <span>{{ recorrido.nombre }}</span>
+        </nav>
+
+        <span class="bt-eyebrow bt-eyebrow-light">
+            CIRCUITO TURÍSTICO
+        </span>
+
+        <div class="bt-detail-title-row">
+            <h1 class="bt-catalog-title mb-0">
+                {{ recorrido.nombre }}
+            </h1>
+
+            <span class="bt-detail-color-tag"
+                  style="--route-color: {{ recorrido.color_hex|default:'#167d8d' }};">
+                {{ recorrido.nombre }}
+            </span>
+        </div>
+
+        <p class="bt-catalog-description mt-4">
+            {{ recorrido.descripcion|default:"Descubrí los lugares más representativos de Buenos Aires a través de este circuito." }}
+        </p>
     </div>
-</div>
+</section>
 
-<div class="container my-5">
-    <!-- Migas de pan / Volver -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'recorridos_list' %}">Recorridos</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ recorrido.nombre }}</li>
-        </ol>
-    </nav>
+<section class="bt-catalog-section">
+    <div class="container">
 
-    <!-- Ficha Informativa Horarios y Frecuencia -->
-    <div class="card border-0 shadow-sm mb-5">
-        <div class="card-body p-4">
-            <div class="row text-center g-3">
-                <div class="col-md-4 border-end">
-                    <span class="text-secondary small d-block">FRECUENCIA DE SALIDA</span>
-                    <strong class="fs-4 text-dark">Cada {{ recorrido.frecuencia_minutos }} min</strong>
-                </div>
-                <div class="col-md-4 border-end">
-                    <span class="text-secondary small d-block">PRIMERA SALIDA (INICIO)</span>
-                    <strong class="fs-4 text-dark">{{ recorrido.hora_inicio|time:"H:i" }} hs</strong>
-                </div>
-                <div class="col-md-4">
-                    <span class="text-secondary small d-block">ÚLTIMA LLEGADA (FIN)</span>
-                    <strong class="fs-4 text-dark">{{ recorrido.hora_fin|time:"H:i" }} hs</strong>
-                </div>
+        <div class="bt-route-info-panel">
+            <div class="bt-route-info-item">
+                <span>FRECUENCIA</span>
+                <strong>Cada {{ recorrido.frecuencia_minutos }} min</strong>
+            </div>
+            <div class="bt-route-info-item">
+                <span>PRIMERA SALIDA</span>
+                <strong>{{ recorrido.hora_inicio|time:"H:i" }} hs</strong>
+            </div>
+            <div class="bt-route-info-item">
+                <span>HORARIO DE FIN</span>
+                <strong>{{ recorrido.hora_fin|time:"H:i" }} hs</strong>
+            </div>
+            <div class="bt-route-info-item">
+                <span>DURACIÓN APROX.</span>
+                <strong>{{ recorrido.duracion_aproximada }} min</strong>
             </div>
         </div>
-    </div>
 
-    <!-- Trazado de Paradas (Línea de tiempo / Circuito) -->
-    <h3 class="fw-bold mb-4 text-dark">📍 Circuito y Paradas del Recorrido</h3>
+        <div class="row g-5 mt-4">
 
-    <div class="list-group shadow-sm border-0">
-        {% for parada_asociada in recorrido.paradas_asociadas.all %}
-            <a href="{% url 'parada_detail' parada_asociada.parada.pk %}" 
-               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3 border-start border-4"
-               style="border-left-color: {{ recorrido.color_hex|default:'#2563eb' }} !important;">
-                
-                <div class="d-flex align-items-center gap-3">
-                    <span class="badge rounded-circle bg-dark text-white p-3 fs-6" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
-                        {{ parada_asociada.orden }}
+            <div class="col-lg-4">
+                <div class="bt-detail-aside">
+                    <span class="bt-eyebrow">
+                        TU RECORRIDO
                     </span>
-                    <div>
-                        <h5 class="mb-1 fw-bold text-dark">{{ parada_asociada.parada.nombre }}</h5>
-                        <small class="text-muted">📍 {{ parada_asociada.parada.direccion }}</small>
-                    </div>
-                </div>
+                    <h2 class="bt-catalog-heading">
+                        Cada parada,
+                        una experiencia.
+                    </h2>
+                    <p>
+                        Explorá las paradas de este circuito
+                        y descubrí qué lugares podés visitar
+                        durante tu recorrido.
+                    </p>
 
-                <span class="btn btn-sm btn-outline-primary fw-semibold">Ver Parada &rarr;</span>
-            </a>
-        {% empty %}
-            <div class="list-group-item text-center py-4 text-muted">
-                Este recorrido aún no tiene paradas asignadas en el circuito.
+                    <a href="{% url 'recorridos_list' %}"
+                       class="bt-text-back">
+                        ← Volver a recorridos
+                    </a>
+                </div>
             </div>
-        {% endfor %}
+
+            <div class="col-lg-8">
+                <div class="bt-itinerary"
+                     style="--route-color: {{ recorrido.color_hex|default:'#167d8d' }};">
+
+                    {% for parada_asociada in recorrido.paradas_asociadas.all %}
+                        <article class="bt-itinerary-item">
+                            <span class="bt-itinerary-marker">
+                                {{ parada_asociada.orden }}
+                            </span>
+
+                            <div class="bt-itinerary-card">
+                                <span class="bt-card-small-label">
+                                    PARADA {{ parada_asociada.orden }}
+                                </span>
+
+                                <h3>{{ parada_asociada.parada.nombre }}</h3>
+
+                                <p class="bt-itinerary-address">
+                                    {{ parada_asociada.parada.direccion }}
+                                </p>
+
+                                <a href="{% url 'parada_detail' parada_asociada.parada.pk %}"
+                                   class="bt-catalog-link">
+                                    Conocer esta parada
+                                    <span aria-hidden="true">↗</span>
+                                </a>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <div class="bt-empty-state">
+                            <h3>Sin paradas asignadas</h3>
+                            <p>
+                                Este circuito todavía no tiene
+                                paradas registradas.
+                            </p>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
+</section>
+
 {% endblock %}
