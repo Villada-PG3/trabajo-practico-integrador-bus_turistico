@@ -1817,3 +1817,61 @@ a {
         transition: none;
     }
 }
+
+/* =====================================================
+   DETALLE DE ATRACTIVO TURISTICO
+   ===================================================== */
+
+.bt-attraction-detail-rating {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 13px;
+    margin-top: 25px;
+}
+
+.bt-attraction-detail-rating .bt-rating {
+    font-size: 1rem;
+    padding: 10px 15px;
+}
+
+.bt-attraction-detail-rating > span:last-child {
+    color: var(--bt-muted);
+    font-size: .87rem;
+    font-weight: 600;
+}
+
+.bt-nearby-intro {
+    color: var(--bt-muted);
+    line-height: 1.8;
+    margin: 15px 0 0;
+    max-width: 600px;
+}
+
+.bt-nearby-address {
+    color: var(--bt-muted);
+    font-size: .87rem;
+    margin: 9px 0 0;
+    line-height: 1.6;
+}
+
+.bt-nearby-card > div:first-child {
+    min-width: 0;
+}
+
+.bt-nearby-card h3,
+.bt-nearby-address {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+    .bt-attraction-detail-rating {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .bt-nearby-card {
+        gap: 12px;
+    }
+}
