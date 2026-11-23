@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}
@@ -116,6 +115,27 @@
                         {% endif %}
                     {% endfor %}
 
+                    <datalist id="lista-colores">
+                        <option value="Rojo">
+                        <option value="Azul">
+                        <option value="Azul Marino">
+                        <option value="Celeste">
+                        <option value="Verde">
+                        <option value="Verde Oscuro">
+                        <option value="Amarillo">
+                        <option value="Naranja">
+                        <option value="Violeta">
+                        <option value="Morado">
+                        <option value="Rosa">
+                        <option value="Fucsia">
+                        <option value="Turquesa">
+                        <option value="Bordó">
+                        <option value="Marrón">
+                        <option value="Gris">
+                        <option value="Negro">
+                        <option value="Dorado">
+                    </datalist>
+
                     <div class="bt-operation-form-footer">
                         <a href="{% url 'recorrido_admin_list' %}"
                            class="btn bt-operation-secondary">
@@ -136,6 +156,70 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputColor = document.getElementById("id_color");
+        const inputHex = document.getElementById("id_color_hex");
+
+        const coloresBase = {
+            "Rojo": "#dc2626",
+            "Azul": "#2563eb",
+            "Azul Marino": "#1e3a8a",
+            "Celeste": "#0ea5e9",
+            "Verde": "#16a34a",
+            "Verde Oscuro": "#14532d",
+            "Amarillo": "#eab308",
+            "Naranja": "#ea580c",
+            "Violeta": "#7c3aed",
+            "Morado": "#6b21a8",
+            "Rosa": "#ec4899",
+            "Fucsia": "#d946ef",
+            "Turquesa": "#14b8a6",
+            "Bordó": "#881337",
+            "Marrón": "#78350f",
+            "Gris": "#4b5563",
+            "Negro": "#111827",
+            "Dorado": "#ca8a04"
+        };
+
+        if (inputColor && inputHex) {
+            inputColor.addEventListener("input", function () {
+                const escrito = inputColor.value.trim().toLowerCase();
+                for (const [nombre, hex] of Object.entries(coloresBase)) {
+                    if (nombre.toLowerCase() === escrito) {
+                        inputHex.value = hex;
+                        break;
+                    }
+                }
+            });
+
+            inputHex.addEventListener("input", function () {
+                if (inputColor.value.trim() !== "") return;
+                const hex = inputHex.value.replace("#", "");
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+
+                let masCercano = "";
+                let menorDist = Infinity;
+
+                for (const [nombre, refHex] of Object.entries(coloresBase)) {
+                    const clean = refHex.replace("#", "");
+                    const rr = parseInt(clean.substring(0, 2), 16);
+                    const gg = parseInt(clean.substring(2, 4), 16);
+                    const bb = parseInt(clean.substring(4, 6), 16);
+                    const dist = (r - rr) ** 2 + (g - gg) ** 2 + (b - bb) ** 2;
+                    if (dist < menorDist) {
+                        menorDist = dist;
+                        masCercano = nombre;
+                    }
+                }
+                inputColor.value = masCercano;
+            });
+        }
+    });
+</script>
 {% endblock %}
 
 {% block footer %}{% endblock %}

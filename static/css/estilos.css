@@ -1299,6 +1299,25 @@ a {
 
 .bt-detail-hero {
     padding-bottom: 95px;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(255, 255, 255, .16), transparent 36%),
+        linear-gradient(135deg, rgba(0, 0, 0, .08), rgba(0, 0, 0, .28)),
+        var(--route-color, var(--bt-navy));
+}
+
+.bt-detail-hero .bt-eyebrow-light {
+    color: rgba(255, 255, 255, .92);
+}
+
+.bt-detail-hero .bt-catalog-breadcrumb,
+.bt-detail-hero .bt-catalog-breadcrumb a,
+.bt-detail-hero .bt-catalog-description {
+    color: rgba(255, 255, 255, .88);
+}
+
+.bt-detail-hero .bt-catalog-breadcrumb a:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 .bt-detail-title-row {
@@ -1312,7 +1331,8 @@ a {
     display: inline-flex;
     align-items: center;
     padding: 10px 16px;
-    background: var(--route-color);
+    background: rgba(0, 0, 0, .2);
+    border: 1px solid rgba(255, 255, 255, .32);
     border-radius: 8px;
     color: white;
     font-size: .77rem;
