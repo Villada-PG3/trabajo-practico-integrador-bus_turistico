@@ -1,60 +1,66 @@
 
 {% extends "base.html" %}
 
-{% block title %}Paradas asignadas{% endblock %}
+{% block title %}Paradas asignadas | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
 
         <a href="{% url 'recorrido_admin_list' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver a recorridos
+           class="btn bt-admin-nav-button">
+            ← Volver a recorridos
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-2">Paradas asignadas</h1>
-            <p class="text-secondary mb-0">
-                Consultá y administrá las paradas de cada recorrido.
-            </p>
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">CONFIGURACIÓN DE CIRCUITOS</span>
+                <h1>Paradas asignadas</h1>
+                <p>
+                    Organizá las paradas que forman parte de
+                    cada recorrido turístico y su orden.
+                </p>
+            </div>
+
+            <a href="{% url 'recorrido_parada_create' %}"
+               class="btn bt-admin-primary">
+                + Asignar parada
+            </a>
         </div>
 
-        <a href="{% url 'recorrido_parada_create' %}"
-           class="btn btn-success">
-            + Asignar parada
-        </a>
-    </div>
+        <div class="bt-admin-table-card">
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">ORGANIZACIÓN DE RUTAS</span>
+                    <h2>Asignaciones registradas</h2>
+                </div>
+
+                <span class="bt-admin-table-caption">
+                    RECORRIDOS Y PARADAS
+                </span>
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <div class="card shadow-sm">
-        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table bt-admin-table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Recorrido</th>
-                            <th>Orden</th>
-                            <th>Parada</th>
-                            <th>Dirección</th>
-                            <th>Acciones</th>
+                            <th scope="col">Recorrido</th>
+                            <th scope="col">Orden</th>
+                            <th scope="col">Parada</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
 
@@ -62,37 +68,55 @@
                         {% for asignacion in asignaciones %}
                             <tr>
                                 <td>
-                                    <span class="badge"
-                                          style="background-color: {{ asignacion.recorrido.color_hex }};">
+                                    <span class="bt-gestion-route"
+                                          style="--route-color: {{ asignacion.recorrido.color_hex|default:'#167d8d' }};">
+                                        <span class="bt-gestion-route-dot"></span>
                                         {{ asignacion.recorrido.color }}
                                     </span>
                                 </td>
 
-                                <td>{{ asignacion.orden }}</td>
-
-                                <td>{{ asignacion.parada.nombre }}</td>
-
-                                <td>{{ asignacion.parada.direccion }}</td>
+                                <td>
+                                    <span class="bt-tourism-order">
+                                        {{ asignacion.orden }}
+                                    </span>
+                                </td>
 
                                 <td>
-                                    <div class="d-flex gap-2">
+                                    <strong class="bt-admin-table-primary">
+                                        {{ asignacion.parada.nombre }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ asignacion.parada.direccion }}
+                                </td>
+
+                                <td>
+                                    <div class="bt-gestion-row-actions">
                                         <a href="{% url 'recorrido_parada_update' asignacion.pk %}"
-                                           class="btn btn-outline-primary btn-sm">
+                                           class="btn bt-admin-action">
                                             Editar
                                         </a>
 
                                         <a href="{% url 'recorrido_parada_delete' asignacion.pk %}"
-                                           class="btn btn-outline-danger btn-sm">
+                                           class="btn bt-tourism-remove">
                                             Quitar
                                         </a>
                                     </div>
                                 </td>
                             </tr>
+
                         {% empty %}
                             <tr>
-                                <td colspan="5"
-                                    class="text-center text-secondary py-4">
-                                    Todavía no hay paradas asignadas a recorridos.
+                                <td colspan="5">
+                                    <div class="bt-admin-empty">
+                                        <span aria-hidden="true">⌖</span>
+                                        <h3>Sin paradas asignadas</h3>
+                                        <p>
+                                            Todavía no hay paradas asociadas
+                                            a los recorridos turísticos.
+                                        </p>
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -100,9 +124,9 @@
                 </table>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

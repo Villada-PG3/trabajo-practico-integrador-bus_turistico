@@ -1,112 +1,136 @@
 
 {% extends "base.html" %}
 
-{% block title %}Gestión de atractivos{% endblock %}
+{% block title %}Gestión de atractivos | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
 
-        <a href="{% url 'admin_dashboard' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al panel
+        <a href="{% url 'admin_dashboard' %}" class="btn bt-admin-nav-button">
+            ← Volver al panel
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-2">Gestión de atractivos</h1>
-            <p class="text-secondary mb-0">
-                Consultá, registrá y editá los atractivos turísticos.
-            </p>
-        </div>
-
-        <div class="d-flex gap-2 flex-wrap">
-            <a href="{% url 'parada_atractivo_list' %}"
-               class="btn btn-outline-primary">
-                Administrar asociaciones
-            </a>
-
-            <a href="{% url 'parada_atractivo_create' %}"
-               class="btn btn-outline-success">
-                + Asociar a parada
-            </a>
-
-            <a href="{% url 'atractivo_create' %}"
-               class="btn btn-success">
-                + Registrar atractivo
-            </a>
-        </div>
-    </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">GESTIÓN TURÍSTICA</span>
+                <h1>Atractivos turísticos</h1>
+                <p>
+                    Administrá los lugares de interés,
+                    su información y sus asociaciones con paradas.
+                </p>
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-gestion-actions">
+                <a href="{% url 'parada_atractivo_list' %}"
+                   class="btn bt-operation-secondary">
+                    Administrar asociaciones
+                </a>
+
+                <a href="{% url 'parada_atractivo_create' %}"
+                   class="btn bt-operation-secondary">
+                    + Asociar a parada
+                </a>
+
+                <a href="{% url 'atractivo_create' %}"
+                   class="btn bt-admin-primary">
+                    + Registrar atractivo
+                </a>
+            </div>
+        </div>
+
+        <div class="bt-admin-table-card">
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">PATRIMONIO TURÍSTICO</span>
+                    <h2>Atractivos registrados</h2>
+                </div>
+
+                <span class="bt-admin-table-caption">
+                    LUGARES DE INTERÉS
+                </span>
+            </div>
+
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table bt-admin-table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Calificación</th>
-                            <th>Imagen</th>
-                            <th>Acciones</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Calificación</th>
+                            <th scope="col">Imagen</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for atractivo in atractivos %}
                             <tr>
-                                <td>{{ atractivo.nombre }}</td>
-
                                 <td>
+                                    <strong class="bt-admin-table-primary">
+                                        {{ atractivo.nombre }}
+                                    </strong>
+                                </td>
+
+                                <td class="bt-admin-description">
                                     {{ atractivo.descripcion|default:"Sin descripción"|truncatechars:80 }}
                                 </td>
 
                                 <td>
-                                    {{ atractivo.calificacion }}/5
+                                    <span class="bt-tourism-rating">
+                                        <span aria-hidden="true">★</span>
+                                        {{ atractivo.calificacion }}/5
+                                    </span>
                                 </td>
 
                                 <td>
                                     {% if atractivo.imagen %}
                                         <a href="{{ atractivo.imagen.url }}"
                                            target="_blank"
-                                           rel="noopener noreferrer">
-                                            Ver imagen
+                                           rel="noopener noreferrer"
+                                           class="bt-gestion-image-link"
+                                           aria-label="Ver imagen de {{ atractivo.nombre }}">
+                                            <img src="{{ atractivo.imagen.url }}"
+                                                 alt="{{ atractivo.nombre }}"
+                                                 loading="lazy">
                                         </a>
                                     {% else %}
-                                        Sin imagen
+                                        <span class="bt-gestion-no-image">
+                                            Sin imagen
+                                        </span>
                                     {% endif %}
                                 </td>
 
                                 <td>
                                     <a href="{% url 'atractivo_update' atractivo.pk %}"
-                                       class="btn btn-outline-primary btn-sm">
-                                        Editar
+                                       class="btn bt-admin-action">
+                                        Editar →
                                     </a>
                                 </td>
                             </tr>
+
                         {% empty %}
                             <tr>
-                                <td colspan="5"
-                                    class="text-center text-secondary py-4">
-                                    Todavía no hay atractivos registrados.
+                                <td colspan="5">
+                                    <div class="bt-admin-empty">
+                                        <span aria-hidden="true">✳</span>
+                                        <h3>Sin atractivos registrados</h3>
+                                        <p>
+                                            Todavía no hay lugares de interés
+                                            cargados en el sistema.
+                                        </p>
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -114,9 +138,9 @@
                 </table>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}
