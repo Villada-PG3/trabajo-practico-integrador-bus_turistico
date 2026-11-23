@@ -1,76 +1,123 @@
 
 {% extends "base.html" %}
 
-{% block title %}Registrar reparación{% endblock %}
+{% block title %}Registrar reparación | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'reparacion_list' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al listado
+        <a href="{% url 'reparacion_list' %}" class="btn bt-admin-nav-button">
+            ← Volver a reparaciones
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width: 700px;">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <h1 class="h3 mb-2">Registrar nueva reparación</h1>
+        <div class="bt-operation-form-layout">
 
-    <p class="text-secondary mb-4">
-        Completá los datos del autobús que necesita reparación.
-    </p>
+            <nav aria-label="breadcrumb" class="bt-operation-breadcrumb">
+                <a href="{% url 'admin_dashboard' %}">Panel</a>
+                <span>/</span>
+                <a href="{% url 'reparacion_list' %}">Reparaciones</a>
+                <span>/</span>
+                <span>Registrar</span>
+            </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-operation-form-heading">
+                <span class="bt-admin-eyebrow">MANTENIMIENTO DE FLOTA</span>
+                <h1>Registrar reparación</h1>
+                <p>
+                    Registrá los datos de la unidad y el trabajo
+                    de mantenimiento correspondiente.
+                </p>
+            </div>
 
-            <form method="post">
-                {% csrf_token %}
+            <div class="bt-operation-form-card">
 
-                {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}"
-                               class="form-label">
-                            {{ field.label }}
-                        </label>
+                <div class="bt-operation-form-header">
+                    <span class="bt-operation-form-step">01</span>
 
-                        {{ field }}
+                    <div>
+                        <h2>Datos de la reparación</h2>
+                        <p>
+                            Completá la información solicitada
+                            para registrar el mantenimiento.
+                        </p>
+                    </div>
+                </div>
 
-                        {% for error in field.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ error }}
+                <form method="post" class="bt-operation-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-0">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        {% if field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <div class="bt-operation-field">
+                                <label for="{{ field.id_for_label }}"
+                                       class="bt-admin-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="bt-required">*</span>
+                                    {% endif %}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <div class="form-text">
+                                        {{ field.help_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-2">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="bt-operation-form-footer">
+                        <a href="{% url 'reparacion_list' %}"
+                           class="btn bt-operation-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit"
+                                class="btn bt-admin-primary">
+                            Registrar reparación →
+                        </button>
                     </div>
-                {% endfor %}
+                </form>
 
-                {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {{ error }}
-                    </div>
-                {% endfor %}
+            </div>
 
-                <button type="submit" class="btn btn-success">
-                    Registrar reparación
-                </button>
-
-                <a href="{% url 'reparacion_list' %}"
-                   class="btn btn-secondary">
-                    Cancelar
-                </a>
-            </form>
+            <p class="bt-operation-form-note">
+                Los datos se registrarán en el historial
+                de mantenimiento de la flota.
+            </p>
 
         </div>
     </div>
-
-</div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

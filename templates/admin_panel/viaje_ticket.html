@@ -1,108 +1,146 @@
+
 {% extends "base.html" %}
 
-{% block title %}Ticket del viaje {{ viaje.pk }}{% endblock %}
-
-{% block extra_head %}
-<style>
-    .ticket {
-        max-width: 380px;
-        margin: 0 auto;
-        background: #fff;
-        border: 2px dashed #94a3b8;
-        border-radius: 12px;
-        padding: 1.5rem;
-        font-family: "Courier New", Courier, monospace;
-    }
-    .ticket hr { border-top: 2px dashed #94a3b8; opacity: 1; }
-    .ticket .fila { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; }
-    .ticket .etiqueta { color: #475569; }
-    .ticket .valor { font-weight: 700; text-align: right; }
-
-    @media print {
-        .no-print, .alert { display: none !important; }
-        body { background: #fff !important; }
-        .ticket { border: 1px solid #000; box-shadow: none; }
-    }
-</style>
-{% endblock %}
+{% block title %}Ticket del viaje {{ viaje.pk }} | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm no-print">
+<nav class="navbar bt-admin-navbar bt-no-print">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}" class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-        <a href="{% url 'viaje_list' %}" class="btn btn-outline-light btn-sm">
-            Volver a viajes
+        <a href="{% url 'viaje_list' %}" class="btn bt-admin-nav-button">
+            ← Volver a viajes
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page bt-ticket-page">
+    <div class="container">
 
-    <div class="ticket shadow-sm">
-        <div class="text-center">
-            <div class="fs-1" aria-hidden="true">🚌</div>
-            <h1 class="h5 fw-bold mb-0">BUS TURÍSTICO</h1>
-            <div class="small text-secondary">Ticket de viaje</div>
+        <div class="bt-ticket-page-heading bt-no-print">
+            <span class="bt-admin-eyebrow">COMPROBANTE OPERATIVO</span>
+            <h1>Ticket de viaje</h1>
+            <p>
+                Resumen del viaje finalizado y sus datos de operación.
+            </p>
         </div>
 
-        <hr>
+        <article class="bt-ticket">
 
-        <div class="fila">
-            <span class="etiqueta">Viaje N°</span>
-            <span class="valor">{{ viaje.pk }}</span>
-        </div>
-        <div class="fila">
-            <span class="etiqueta">Recorrido</span>
-            <span class="valor">{{ viaje.recorrido.nombre }}</span>
-        </div>
-        <div class="fila">
-            <span class="etiqueta">Unidad</span>
-            <span class="valor">{{ viaje.bus.numero_unidad }} ({{ viaje.bus.patente }})</span>
+            <header class="bt-ticket-header">
+                <span class="bt-ticket-logo">B.</span>
+
+                <div>
+                    <span class="bt-ticket-brand">BUS TURÍSTICO</span>
+                    <span class="bt-ticket-brand-subtitle">
+                        BUENOS AIRES · ARGENTINA
+                    </span>
+                </div>
+            </header>
+
+            <div class="bt-ticket-title">
+                <span>COMPROBANTE DE VIAJE</span>
+                <h2>Viaje #{{ viaje.pk }}</h2>
+                <span class="bt-ticket-completed">FINALIZADO</span>
+            </div>
+
+            <div class="bt-ticket-divider"></div>
+
+            <div class="bt-ticket-section">
+                <h3>INFORMACIÓN DEL SERVICIO</h3>
+
+                <div class="bt-ticket-row">
+                    <span>Recorrido</span>
+                    <strong>{{ viaje.recorrido.nombre }}</strong>
+                </div>
+
+                <div class="bt-ticket-row">
+                    <span>Unidad</span>
+                    <strong>
+                        {{ viaje.bus.numero_unidad }}
+                        ({{ viaje.bus.patente }})
+                    </strong>
+                </div>
+            </div>
+
+            <div class="bt-ticket-divider"></div>
+
+            <div class="bt-ticket-section">
+                <h3>PERSONAL ASIGNADO</h3>
+
+                <div class="bt-ticket-row">
+                    <span>Legajo</span>
+                    <strong>{{ viaje.chofer.legajo }}</strong>
+                </div>
+
+                <div class="bt-ticket-row">
+                    <span>Chofer</span>
+                    <strong>{{ viaje.chofer.nombre_completo }}</strong>
+                </div>
+            </div>
+
+            <div class="bt-ticket-divider"></div>
+
+            <div class="bt-ticket-section">
+                <h3>REGISTRO DE HORARIOS</h3>
+
+                <div class="bt-ticket-row">
+                    <span>Inicio real</span>
+                    <strong>
+                        {{ viaje.fecha_hora_inicio_real|date:"d/m/Y H:i" }}
+                    </strong>
+                </div>
+
+                <div class="bt-ticket-row">
+                    <span>Finalización</span>
+                    <strong>
+                        {{ viaje.fecha_hora_fin_real|date:"d/m/Y H:i" }}
+                    </strong>
+                </div>
+
+                <div class="bt-ticket-row">
+                    <span>Duración total</span>
+                    <strong>
+                        {% if viaje.duracion_minutos is not None %}
+                            {{ viaje.duracion_minutos }} min
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="bt-ticket-divider"></div>
+
+            <footer class="bt-ticket-footer">
+                <strong>Una ciudad. Infinitas historias.</strong>
+                <p>
+                    Bus Turístico Buenos Aires
+                </p>
+                <span>REGISTRO OPERATIVO · VIAJE #{{ viaje.pk }}</span>
+            </footer>
+
+        </article>
+
+        <div class="bt-ticket-actions bt-no-print">
+            <button type="button"
+                    class="btn bt-admin-primary"
+                    onclick="window.print()">
+                Imprimir ticket
+            </button>
+
+            <a href="{% url 'viaje_list' %}"
+               class="btn bt-operation-secondary">
+                Volver a viajes
+            </a>
         </div>
 
-        <hr>
-
-        <div class="fila">
-            <span class="etiqueta">Legajo</span>
-            <span class="valor">{{ viaje.chofer.legajo }}</span>
-        </div>
-        <div class="fila">
-            <span class="etiqueta">Chofer</span>
-            <span class="valor">{{ viaje.chofer.nombre_completo }}</span>
-        </div>
-
-        <hr>
-
-        <div class="fila">
-            <span class="etiqueta">Inicio real</span>
-            <span class="valor">{{ viaje.fecha_hora_inicio_real|date:"d/m/Y H:i" }}</span>
-        </div>
-        <div class="fila">
-            <span class="etiqueta">Fin real</span>
-            <span class="valor">{{ viaje.fecha_hora_fin_real|date:"d/m/Y H:i" }}</span>
-        </div>
-        <div class="fila">
-            <span class="etiqueta">Duración</span>
-            <span class="valor">
-                {% if viaje.duracion_minutos is not None %}{{ viaje.duracion_minutos }} min{% else %}-{% endif %}
-            </span>
-        </div>
-
-        <hr>
-
-        <p class="text-center small text-secondary mb-0">¡Gracias por viajar con nosotros!</p>
     </div>
-
-    <div class="text-center mt-4 no-print">
-        <button type="button" class="btn btn-primary" onclick="window.print()">🖨️ Imprimir ticket</button>
-        <a href="{% url 'viaje_list' %}" class="btn btn-outline-secondary">Volver a viajes</a>
-    </div>
-
-</div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

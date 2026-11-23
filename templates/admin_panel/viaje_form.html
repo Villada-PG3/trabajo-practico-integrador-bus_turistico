@@ -1,79 +1,122 @@
 
 {% extends "base.html" %}
 
-{% block title %}Programar viaje{% endblock %}
+{% block title %}Programar viaje | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'viaje_list' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al listado
+        <a href="{% url 'viaje_list' %}" class="btn bt-admin-nav-button">
+            ← Volver a viajes
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width: 700px;">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <h1 class="h3 mb-2">Programar nuevo viaje</h1>
+        <div class="bt-operation-form-layout">
 
-    <p class="text-secondary mb-4">
-        Seleccioná el recorrido, el autobús, el chofer
-        y la fecha y hora programada.
-    </p>
+            <nav aria-label="breadcrumb" class="bt-operation-breadcrumb">
+                <a href="{% url 'admin_dashboard' %}">Panel</a>
+                <span>/</span>
+                <a href="{% url 'viaje_list' %}">Viajes</a>
+                <span>/</span>
+                <span>Programar</span>
+            </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-operation-form-heading">
+                <span class="bt-admin-eyebrow">PLANIFICACIÓN OPERATIVA</span>
+                <h1>Programar nuevo viaje</h1>
+                <p>
+                    Seleccioná el circuito turístico, el autobús,
+                    el chofer y la fecha y hora de salida.
+                </p>
+            </div>
 
-            <form method="post">
-                {% csrf_token %}
+            <div class="bt-operation-form-card">
 
-                {% for field in form %}
-                    <div class="mb-3">
-                        {{ field.label_tag }}
-                        {{ field }}
+                <div class="bt-operation-form-header">
+                    <span class="bt-operation-form-step">01</span>
 
-                        {% if field.help_text %}
-                            <div class="form-text">
-                                {{ field.help_text }}
+                    <div>
+                        <h2>Información del viaje</h2>
+                        <p>
+                            Completá los datos para registrar
+                            la nueva salida.
+                        </p>
+                    </div>
+                </div>
+
+                <form method="post" class="bt-operation-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-0">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        {% if field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <div class="bt-operation-field">
+                                <label for="{{ field.id_for_label }}"
+                                       class="bt-admin-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="bt-required">*</span>
+                                    {% endif %}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <div class="form-text">
+                                        {{ field.help_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-2">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
                             </div>
                         {% endif %}
+                    {% endfor %}
 
-                        {% for error in field.errors %}
-                            <div class="text-danger small">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
+                    <div class="bt-operation-form-footer">
+                        <a href="{% url 'viaje_list' %}"
+                           class="btn bt-operation-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit"
+                                class="btn bt-admin-primary">
+                            Programar viaje →
+                        </button>
                     </div>
-                {% endfor %}
+                </form>
+            </div>
 
-                {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-
-                <button type="submit" class="btn btn-success">
-                    Programar viaje
-                </button>
-
-                <a href="{% url 'viaje_list' %}"
-                   class="btn btn-secondary">
-                    Cancelar
-                </a>
-            </form>
-
+            <p class="bt-operation-form-note">
+                La disponibilidad de los autobuses y choferes se
+                verifica según las validaciones del sistema.
+            </p>
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

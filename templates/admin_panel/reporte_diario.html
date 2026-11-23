@@ -1,202 +1,260 @@
+
 {% extends "base.html" %}
 
-{% block title %}Reporte diario de viajes{% endblock %}
-
-{% block extra_head %}
-<style>
-    @media print {
-        .no-print, .alert { display: none !important; }
-        body { background: #fff !important; }
-    }
-</style>
-{% endblock %}
+{% block title %}Reporte diario | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm no-print">
+<nav class="navbar bt-admin-navbar bt-no-print">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al panel
+        <a href="{% url 'admin_dashboard' %}" class="btn bt-admin-nav-button">
+            ← Volver al panel
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page bt-report-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-        <div>
-            <h1 class="h3 mb-1">Reporte diario de viajes</h1>
-            <p class="text-secondary mb-0">
-                Viajes programados para el
-                <strong>{{ fecha|date:"d/m/Y" }}</strong>
-                {% if es_hoy %}(hoy){% endif %}.
-            </p>
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">ANÁLISIS OPERATIVO</span>
+                <h1>Reporte diario</h1>
+                <p>
+                    Actividad de viajes correspondiente al
+                    <strong>{{ fecha|date:"d/m/Y" }}</strong>
+                    {% if es_hoy %}· Hoy{% endif %}
+                </p>
+            </div>
+
+            <button type="button"
+                    class="btn bt-operation-secondary bt-no-print"
+                    onclick="window.print()">
+                Imprimir reporte
+            </button>
         </div>
 
-        <button type="button"
-                class="btn btn-outline-secondary no-print"
-                onclick="window.print()">
-            🖨️ Imprimir
-        </button>
-    </div>
+        <!-- Filtro por fecha -->
+        <div class="bt-report-filter bt-no-print">
+            <form method="get" class="bt-report-filter-form">
 
-    <!-- Selector de fecha -->
-    <div class="card shadow-sm mb-4 no-print">
-        <div class="card-body">
-            <form method="get" class="row g-2 align-items-end">
-                <div class="col-sm-4 col-md-3">
-                    <label for="fecha" class="form-label mb-1">Fecha</label>
+                <div class="bt-report-date-input">
+                    <label for="fecha" class="bt-admin-label">
+                        Seleccionar fecha
+                    </label>
                     <input type="date"
                            id="fecha"
                            name="fecha"
                            value="{{ fecha|date:'Y-m-d' }}"
-                           class="form-control">
+                           class="form-control bt-admin-input">
                 </div>
 
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">
-                        Ver reporte
-                    </button>
-                </div>
+                <button type="submit" class="btn bt-admin-primary">
+                    Consultar
+                </button>
 
-                <div class="col-auto ms-auto d-flex gap-2">
+                <div class="bt-report-date-actions">
                     <a href="?fecha={{ dia_anterior }}"
-                       class="btn btn-outline-secondary">
-                        &larr; Día anterior
+                       class="btn bt-operation-secondary">
+                        ← Anterior
                     </a>
+
                     <a href="{% url 'reporte_diario' %}"
-                       class="btn btn-outline-secondary">
+                       class="btn bt-operation-secondary">
                         Hoy
                     </a>
+
                     <a href="?fecha={{ dia_siguiente }}"
-                       class="btn btn-outline-secondary">
-                        Día siguiente &rarr;
+                       class="btn bt-operation-secondary">
+                        Siguiente →
                     </a>
                 </div>
             </form>
         </div>
-    </div>
 
-    <!-- Resumen y promedios -->
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-lg-3">
-            <div class="card shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="text-secondary small">Viajes del día</div>
-                    <div class="display-6 fw-bold">{{ resumen.total }}</div>
-                    <div class="small text-secondary">
-                        {{ resumen.finalizados }} finalizados ·
-                        {{ resumen.en_curso }} en curso ·
-                        {{ resumen.programados }} programados ·
-                        {{ resumen.cancelados }} cancelados
+        <!-- Indicadores -->
+        <div class="row g-4 mb-5">
+
+            <div class="col-md-6 col-xl-3">
+                <article class="bt-report-stat">
+                    <span class="bt-admin-eyebrow">ACTIVIDAD</span>
+                    <h2>Viajes del día</h2>
+
+                    <strong class="bt-report-stat-value">
+                        {{ resumen.total }}
+                    </strong>
+
+                    <div class="bt-report-stat-detail">
+                        <span>{{ resumen.finalizados }} finalizados</span>
+                        <span>{{ resumen.en_curso }} en curso</span>
+                        <span>{{ resumen.programados }} programados</span>
+                        <span>{{ resumen.cancelados }} cancelados</span>
                     </div>
-                </div>
+                </article>
             </div>
-        </div>
 
-        <div class="col-6 col-lg-3">
-            <div class="card shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="text-secondary small">Duración promedio</div>
-                    <div class="display-6 fw-bold">
+            <div class="col-md-6 col-xl-3">
+                <article class="bt-report-stat">
+                    <span class="bt-admin-eyebrow">RENDIMIENTO</span>
+                    <h2>Duración promedio</h2>
+
+                    <strong class="bt-report-stat-value">
                         {% if resumen.promedio_duracion is not None %}
-                            {{ resumen.promedio_duracion }} <small class="fs-6">min</small>
-                        {% else %}-{% endif %}
-                    </div>
-                    <div class="small text-secondary">Viajes finalizados</div>
-                </div>
-            </div>
-        </div>
+                            {{ resumen.promedio_duracion }}
+                            <small>min</small>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
 
-        <div class="col-6 col-lg-3">
-            <div class="card shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="text-secondary small">Demora promedio de inicio</div>
-                    <div class="display-6 fw-bold">
+                    <p>Calculada sobre los viajes finalizados.</p>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="bt-report-stat">
+                    <span class="bt-admin-eyebrow">PUNTUALIDAD</span>
+                    <h2>Demora promedio</h2>
+
+                    <strong class="bt-report-stat-value">
                         {% if resumen.promedio_demora is not None %}
-                            {{ resumen.promedio_demora }} <small class="fs-6">min</small>
-                        {% else %}-{% endif %}
-                    </div>
-                    <div class="small text-secondary">Viajes iniciados</div>
-                </div>
+                            {{ resumen.promedio_demora }}
+                            <small>min</small>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+
+                    <p>Calculada sobre los viajes iniciados.</p>
+                </article>
             </div>
+
+            <div class="col-md-6 col-xl-3">
+                <article class="bt-report-stat bt-report-stat-note">
+                    <span class="bt-admin-eyebrow">GUÍA DEL REPORTE</span>
+                    <h2>Cómo interpretar</h2>
+
+                    <p>
+                        La demora representa la diferencia
+                        entre el inicio real y el programado.
+                    </p>
+
+                    <p>
+                        Un valor negativo indica que el viaje
+                        salió antes de lo previsto.
+                    </p>
+                </article>
+            </div>
+
         </div>
 
-        <div class="col-6 col-lg-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body small text-secondary">
-                    <strong class="text-dark">Cómo leer el reporte</strong><br>
-                    La demora es la diferencia entre el inicio real y el
-                    programado. Un valor negativo indica que el viaje
-                    salió antes de lo previsto.
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- Tabla de detalle -->
+        <div class="bt-admin-table-card">
 
-    <!-- Detalle de viajes -->
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">
+                        REGISTRO OPERATIVO
+                    </span>
+                    <h2>Detalle de viajes</h2>
+                </div>
+
+                <span class="bt-admin-table-caption">
+                    {{ fecha|date:"d/m/Y" }}
+                </span>
+            </div>
+
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-dark">
+                <table class="table bt-admin-table align-middle mb-0">
+                    <thead>
                         <tr>
-                            <th>Viaje</th>
-                            <th>Recorrido</th>
-                            <th>Unidad</th>
-                            <th>Chofer</th>
-                            <th>Programado</th>
-                            <th>Inicio real</th>
-                            <th>Fin real</th>
-                            <th class="text-end">Duración (min)</th>
-                            <th class="text-end">Demora (min)</th>
+                            <th scope="col">Viaje</th>
+                            <th scope="col">Recorrido</th>
+                            <th scope="col">Unidad</th>
+                            <th scope="col">Chofer</th>
+                            <th scope="col">Programado</th>
+                            <th scope="col">Inicio real</th>
+                            <th scope="col">Fin real</th>
+                            <th scope="col" class="text-end">Duración (min)</th>
+                            <th scope="col" class="text-end">Demora (min)</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for viaje in viajes %}
-                        <tr>
-                            <td>{{ viaje.pk }}</td>
-                            <td>{{ viaje.recorrido.nombre }}</td>
-                            <td>{{ viaje.bus.numero_unidad }}</td>
-                            <td>{{ viaje.chofer.nombre_completo }}</td>
-                            <td>{{ viaje.fecha_hora_inicio_programada|date:"H:i" }}</td>
-                            <td>{{ viaje.fecha_hora_inicio_real|date:"H:i"|default:"-" }}</td>
-                            <td>{{ viaje.fecha_hora_fin_real|date:"H:i"|default:"-" }}</td>
-                            <td class="text-end">
-                                {% if viaje.duracion_minutos is not None %}{{ viaje.duracion_minutos }}{% else %}-{% endif %}
-                            </td>
-                            <td class="text-end">
-                                {% if viaje.demora_minutos is None %}
-                                    -
-                                {% elif viaje.demora_minutos > 0 %}
-                                    <span class="text-danger fw-semibold">+{{ viaje.demora_minutos }}</span>
-                                {% else %}
-                                    <span class="text-success fw-semibold">{{ viaje.demora_minutos }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <strong class="bt-admin-table-primary">
+                                        #{{ viaje.pk }}
+                                    </strong>
+                                </td>
+
+                                <td>{{ viaje.recorrido.nombre }}</td>
+                                <td>{{ viaje.bus.numero_unidad }}</td>
+                                <td>{{ viaje.chofer.nombre_completo }}</td>
+
+                                <td>
+                                    {{ viaje.fecha_hora_inicio_programada|date:"H:i" }}
+                                </td>
+
+                                <td>
+                                    {{ viaje.fecha_hora_inicio_real|date:"H:i"|default:"-" }}
+                                </td>
+
+                                <td>
+                                    {{ viaje.fecha_hora_fin_real|date:"H:i"|default:"-" }}
+                                </td>
+
+                                <td class="text-end">
+                                    {% if viaje.duracion_minutos is not None %}
+                                        {{ viaje.duracion_minutos }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+
+                                <td class="text-end">
+                                    {% if viaje.demora_minutos is None %}
+                                        -
+                                    {% elif viaje.demora_minutos > 0 %}
+                                        <span class="bt-report-delay">
+                                            +{{ viaje.demora_minutos }}
+                                        </span>
+                                    {% else %}
+                                        <span class="bt-report-early">
+                                            {{ viaje.demora_minutos }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
                         {% empty %}
-                        <tr>
-                            <td colspan="9" class="text-center text-secondary py-4">
-                                No hay viajes programados para esta fecha.
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="9">
+                                    <div class="bt-admin-empty">
+                                        <span aria-hidden="true">▥</span>
+                                        <h3>Sin viajes para esta fecha</h3>
+                                        <p>
+                                            No hay viajes programados
+                                            para el día seleccionado.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
+
                 </table>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

@@ -1,160 +1,191 @@
+
 {% extends "base.html" %}
 
-{% block title %}Gestión de Viajes{% endblock %}
+{% block title %}Gestión de viajes | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al panel
+        <a href="{% url 'admin_dashboard' %}" class="btn bt-admin-nav-button">
+            ← Volver al panel
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-2">Gestión de viajes</h1>
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">CENTRO DE OPERACIONES</span>
+                <h1>Gestión de viajes</h1>
+                <p>
+                    Consultá los viajes registrados{% if permisos.operar_viajes %},
+                    iniciá y finalizá los viajes asignados{% endif %}.
+                </p>
+            </div>
 
-            <p class="text-secondary mb-0">
-                Desde aquí podés consultar los viajes registrados{% if permisos.operar_viajes %},
-                iniciarlos y finalizarlos{% endif %}.
-            </p>
+            <div class="bt-operation-actions">
+                {% if permisos.ver_reporte %}
+                    <a href="{% url 'reporte_diario' %}"
+                       class="btn bt-operation-secondary">
+                        Ver reporte diario
+                    </a>
+                {% endif %}
+
+                {% if permisos.programar_viajes %}
+                    <a href="{% url 'viaje_create' %}"
+                       class="btn bt-admin-primary">
+                        + Programar viaje
+                    </a>
+                {% endif %}
+            </div>
         </div>
 
-        <div class="d-flex gap-2">
-            {% if permisos.ver_reporte %}
-            <a href="{% url 'reporte_diario' %}"
-               class="btn btn-outline-primary">
-                Reporte diario
-            </a>
-            {% endif %}
+        <div class="bt-admin-table-card">
 
-            {% if permisos.programar_viajes %}
-            <a href="{% url 'viaje_create' %}"
-               class="btn btn-success">
-                + Programar viaje
-            </a>
-            {% endif %}
-        </div>
-    </div>
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">SEGUIMIENTO OPERATIVO</span>
+                    <h2>Viajes registrados</h2>
+                </div>
+                <span class="bt-admin-table-caption">
+                    CONTROL DE SALIDAS
+                </span>
+            </div>
 
-<div class="container py-5">
-
-    <div class="card shadow-sm">
-        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle">
-
-                    <thead class="table-dark">
+                <table class="table bt-admin-table align-middle mb-0">
+                    <thead>
                         <tr>
-                            <th>Viaje</th>
-                            <th>Recorrido</th>
-                            <th>Autobús</th>
-                            <th>Chofer</th>
-                            <th>Inicio programado</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th scope="col">Viaje</th>
+                            <th scope="col">Recorrido</th>
+                            <th scope="col">Autobús</th>
+                            <th scope="col">Chofer</th>
+                            <th scope="col">Inicio programado</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for viaje in viajes %}
-                        <tr>
-                            <td>{{ viaje.pk }}</td>
-
-                            <td>{{ viaje.recorrido }}</td>
-
-                            <td>{{ viaje.bus }}</td>
-
-                            <td>{{ viaje.chofer }}</td>
-
-                            <td>
-                                {{ viaje.fecha_hora_inicio_programada|date:"d/m/Y H:i" }}
-                            </td>
-
-                            <td>
-                                {% if viaje.estado == "PROGRAMADO" %}
-                                    <span class="badge bg-secondary">
-                                        Programado
+                            <tr>
+                                <td>
+                                    <span class="bt-admin-unit">
+                                        #{{ viaje.pk }}
                                     </span>
-                                {% elif viaje.estado == "EN_CURSO" %}
-                                    <span class="badge bg-primary">
-                                        En curso
-                                    </span>
-                                {% elif viaje.estado == "FINALIZADO" %}
-                                    <span class="badge bg-success">
-                                        Finalizado
-                                    </span>
-                                {% elif viaje.estado == "CANCELADO" %}
-                                    <span class="badge bg-danger">
-                                        Cancelado
-                                    </span>
-                                {% endif %}
-                            </td>
+                                </td>
 
-                            <td>
-                                {% if viaje.estado == "PROGRAMADO" and permisos.operar_viajes %}
-                                    <form method="post"
-                                          action="{% url 'viaje_iniciar' viaje.pk %}">
-                                        {% csrf_token %}
+                                <td>
+                                    <strong class="bt-admin-table-primary">
+                                        {{ viaje.recorrido }}
+                                    </strong>
+                                </td>
 
-                                        <button type="submit"
-                                                class="btn btn-success btn-sm">
-                                            Iniciar
-                                        </button>
-                                    </form>
+                                <td>{{ viaje.bus }}</td>
 
-                                {% elif viaje.estado == "EN_CURSO" and permisos.operar_viajes %}
-                                    <form method="post"
-                                          action="{% url 'viaje_finalizar' viaje.pk %}">
-                                        {% csrf_token %}
+                                <td>{{ viaje.chofer }}</td>
 
-                                        <button type="submit"
-                                                class="btn btn-primary btn-sm">
-                                            Finalizar
-                                        </button>
-                                    </form>
+                                <td>
+                                    {{ viaje.fecha_hora_inicio_programada|date:"d/m/Y H:i" }}
+                                </td>
 
-                                {% elif viaje.estado == "FINALIZADO" %}
-                                    <a href="{% url 'viaje_ticket' viaje.pk %}"
-                                       class="btn btn-outline-primary btn-sm">
-                                        Ver ticket
-                                    </a>
+                                <td>
+                                    {% if viaje.estado == "PROGRAMADO" %}
+                                        <span class="bt-status bt-status-neutral">
+                                            <span class="bt-status-dot"></span>
+                                            Programado
+                                        </span>
 
-                                {% else %}
-                                    <span class="text-secondary">
-                                        Sin acciones
-                                    </span>
-                                {% endif %}
-                            </td>
-                        </tr>
+                                    {% elif viaje.estado == "EN_CURSO" %}
+                                        <span class="bt-status bt-status-info">
+                                            <span class="bt-status-dot"></span>
+                                            En curso
+                                        </span>
 
+                                    {% elif viaje.estado == "FINALIZADO" %}
+                                        <span class="bt-status bt-status-success">
+                                            <span class="bt-status-dot"></span>
+                                            Finalizado
+                                        </span>
+
+                                    {% elif viaje.estado == "CANCELADO" %}
+                                        <span class="bt-status bt-status-danger">
+                                            <span class="bt-status-dot"></span>
+                                            Cancelado
+                                        </span>
+
+                                    {% else %}
+                                        <span class="bt-status bt-status-neutral">
+                                            {{ viaje.estado }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if viaje.estado == "PROGRAMADO" and permisos.operar_viajes %}
+                                        <form method="post"
+                                              action="{% url 'viaje_iniciar' viaje.pk %}"
+                                              class="m-0">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                    class="btn bt-admin-action bt-admin-action-success">
+                                                Iniciar viaje
+                                            </button>
+                                        </form>
+
+                                    {% elif viaje.estado == "EN_CURSO" and permisos.operar_viajes %}
+                                        <form method="post"
+                                              action="{% url 'viaje_finalizar' viaje.pk %}"
+                                              class="m-0">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                    class="btn bt-admin-action">
+                                                Finalizar viaje
+                                            </button>
+                                        </form>
+
+                                    {% elif viaje.estado == "FINALIZADO" %}
+                                        <a href="{% url 'viaje_ticket' viaje.pk %}"
+                                           class="btn bt-admin-action">
+                                            Ver ticket →
+                                        </a>
+
+                                    {% else %}
+                                        <span class="text-secondary small">
+                                            Sin acciones
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% empty %}
-                        <tr>
-                            <td colspan="7"
-                                class="text-center text-secondary py-4">
-                                Todavía no hay viajes registrados.
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="7">
+                                    <div class="bt-admin-empty">
+                                        <span aria-hidden="true">◷</span>
+                                        <h3>No hay viajes registrados</h3>
+                                        <p>
+                                            Todavía no hay viajes disponibles
+                                            para consultar.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
-
                 </table>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}
