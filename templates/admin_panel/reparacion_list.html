@@ -1,136 +1,148 @@
 
 {% extends "base.html" %}
 
-{% block title %}Gestión de reparaciones{% endblock %}
+{% block title %}Gestión de reparaciones | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al panel
+        <a href="{% url 'admin_dashboard' %}" class="btn bt-admin-nav-button">
+            ← Volver al panel
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-2">Gestión de reparaciones</h1>
-            <p class="text-secondary mb-0">
-                Consultá las reparaciones registradas y su estado.
-            </p>
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">MANTENIMIENTO DE FLOTA</span>
+                <h1>Reparaciones</h1>
+                <p>
+                    Controlá las reparaciones registradas,
+                    sus costos y su estado de finalización.
+                </p>
+            </div>
+
+            <a href="{% url 'reparacion_create' %}" class="btn bt-admin-primary">
+                + Registrar reparación
+            </a>
         </div>
 
-        <a href="{% url 'reparacion_create' %}"
-           class="btn btn-success">
-            + Registrar reparación
-        </a>
-    </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
+        <div class="bt-admin-table-card">
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">SEGUIMIENTO DE UNIDADES</span>
+                    <h2>Historial de reparaciones</h2>
+                </div>
+                <span class="bt-admin-table-caption">CONTROL DE MANTENIMIENTO</span>
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <div class="card shadow-sm">
-        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table bt-admin-table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Autobús</th>
-                            <th>Descripción</th>
-                            <th>Fecha de inicio</th>
-                            <th>Fecha de finalización</th>
-                            <th>Costo</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th scope="col">Autobús</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Inicio</th>
+                            <th scope="col">Finalización</th>
+                            <th scope="col">Costo</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for reparacion in reparaciones %}
-                            <tr>
-                                <td>{{ reparacion.bus }}</td>
+                        <tr>
+                            <td>
+                                <strong class="bt-admin-table-primary">
+                                    {{ reparacion.bus }}
+                                </strong>
+                            </td>
 
-                                <td>{{ reparacion.descripcion }}</td>
+                            <td class="bt-admin-description">
+                                {{ reparacion.descripcion }}
+                            </td>
 
-                                <td>
-                                    {{ reparacion.fecha_inicio|date:"d/m/Y H:i" }}
-                                </td>
+                            <td>
+                                {{ reparacion.fecha_inicio|date:"d/m/Y H:i" }}
+                            </td>
 
-                                <td>
-                                    {% if reparacion.fecha_fin %}
-                                        {{ reparacion.fecha_fin|date:"d/m/Y H:i" }}
-                                    {% else %}
-                                        Pendiente
-                                    {% endif %}
-                                </td>
+                            <td>
+                                {% if reparacion.fecha_fin %}
+                                    {{ reparacion.fecha_fin|date:"d/m/Y H:i" }}
+                                {% else %}
+                                    <span class="text-secondary">Pendiente</span>
+                                {% endif %}
+                            </td>
 
-                                <td>
-                                    {% if reparacion.costo != None %}
-                                        ${{ reparacion.costo }}
-                                    {% else %}
-                                        Sin definir
-                                    {% endif %}
-                                </td>
+                            <td>
+                                {% if reparacion.costo != None %}
+                                    <strong>${{ reparacion.costo }}</strong>
+                                {% else %}
+                                    <span class="text-secondary">Sin definir</span>
+                                {% endif %}
+                            </td>
 
-                                <td>
-                                    {% if reparacion.fecha_fin %}
-                                        <span class="badge bg-success">
-                                            Finalizada
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-warning text-dark">
-                                            En reparación
-                                        </span>
-                                    {% endif %}
-                                </td>
+                            <td>
+                                {% if reparacion.fecha_fin %}
+                                    <span class="bt-status bt-status-success">
+                                        <span class="bt-status-dot"></span>
+                                        Finalizada
+                                    </span>
+                                {% else %}
+                                    <span class="bt-status bt-status-warning">
+                                        <span class="bt-status-dot"></span>
+                                        En reparación
+                                    </span>
+                                {% endif %}
+                            </td>
 
-                                <td>
-                                    {% if not reparacion.fecha_fin %}
-                                        <form method="post"
-                                              action="{% url 'reparacion_finalizar' reparacion.pk %}">
-                                            {% csrf_token %}
+                            <td>
+                                {% if not reparacion.fecha_fin %}
+                                    <form method="post"
+                                          action="{% url 'reparacion_finalizar' reparacion.pk %}"
+                                          class="m-0">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                                class="btn bt-admin-action bt-admin-action-success">
+                                            Finalizar
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-secondary small">
+                                        Sin acciones
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
 
-                                            <button type="submit"
-                                                    class="btn btn-outline-success btn-sm">
-                                                Finalizar reparación
-                                            </button>
-                                        </form>
-                                    {% else %}
-                                        <span class="text-secondary">
-                                            Sin acciones
-                                        </span>
-                                    {% endif %}
-                                </td>
-                            </tr>
                         {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center text-secondary py-4">
-                                    Todavía no hay reparaciones registradas.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="bt-admin-empty">
+                                    <span aria-hidden="true">⚙</span>
+                                    <h3>Sin reparaciones registradas</h3>
+                                    <p>No hay trabajos de mantenimiento cargados.</p>
+                                </div>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

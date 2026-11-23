@@ -1,73 +1,90 @@
 
 {% extends "base.html" %}
 
-{% block title %}Listado de Autobuses{% endblock %}
+{% block title %}Gestión de autobuses | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'admin_dashboard' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al panel
+        <a href="{% url 'admin_dashboard' %}" class="btn bt-admin-nav-button">
+            ← Volver al panel
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Listado de autobuses</h1>
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">GESTIÓN DE FLOTA</span>
+                <h1>Autobuses</h1>
+                <p>Consultá las unidades registradas y su estado operativo.</p>
+            </div>
 
-        <a href="{% url 'autobus_create' %}"
-           class="btn btn-success">
-            + Registrar autobús
-        </a>
-    </div>
+            <a href="{% url 'autobus_create' %}" class="btn bt-admin-primary">
+                + Registrar autobús
+            </a>
+        </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+        <div class="bt-admin-table-card">
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">REGISTRO DE UNIDADES</span>
+                    <h2>Flota registrada</h2>
+                </div>
+                <span class="bt-admin-table-caption">CONTROL DE VEHÍCULOS</span>
+            </div>
 
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
+                <table class="table bt-admin-table align-middle mb-0">
+                    <thead>
                         <tr>
-                            <th>Unidad</th>
-                            <th>Patente</th>
-                            <th>Fecha de compra</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th scope="col">Unidad</th>
+                            <th scope="col">Patente</th>
+                            <th scope="col">Fecha de compra</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for autobus in autobuses %}
                         <tr>
-                            <td>{{ autobus.numero_unidad }}</td>
-
-                            <td>{{ autobus.patente }}</td>
-
                             <td>
-                                {{ autobus.fecha_compra|date:"d/m/Y" }}
+                                <span class="bt-admin-unit">
+                                    N.º {{ autobus.numero_unidad }}
+                                </span>
                             </td>
 
                             <td>
+                                <span class="bt-admin-plate">
+                                    {{ autobus.patente }}
+                                </span>
+                            </td>
+
+                            <td>{{ autobus.fecha_compra|date:"d/m/Y" }}</td>
+
+                            <td>
                                 {% if autobus.estado == "OPERATIVO" %}
-                                    <span class="badge bg-success">
+                                    <span class="bt-status bt-status-success">
+                                        <span class="bt-status-dot"></span>
                                         {{ autobus.get_estado_display }}
                                     </span>
                                 {% elif autobus.estado == "EN_REPARACION" %}
-                                    <span class="badge bg-warning text-dark">
+                                    <span class="bt-status bt-status-warning">
+                                        <span class="bt-status-dot"></span>
                                         {{ autobus.get_estado_display }}
                                     </span>
                                 {% else %}
-                                    <span class="badge bg-danger">
+                                    <span class="bt-status bt-status-danger">
+                                        <span class="bt-status-dot"></span>
                                         {{ autobus.get_estado_display }}
                                     </span>
                                 {% endif %}
@@ -75,28 +92,30 @@
 
                             <td>
                                 <a href="{% url 'autobus_update' autobus.pk %}"
-                                   class="btn btn-primary btn-sm">
-                                    Editar
+                                   class="btn bt-admin-action">
+                                    Editar →
                                 </a>
                             </td>
                         </tr>
 
                         {% empty %}
                         <tr>
-                            <td colspan="5"
-                                class="text-center text-secondary py-4">
-                                Todavía no hay autobuses registrados.
+                            <td colspan="5">
+                                <div class="bt-admin-empty">
+                                    <span aria-hidden="true">🚌</span>
+                                    <h3>Sin autobuses registrados</h3>
+                                    <p>Todavía no hay unidades cargadas en el sistema.</p>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-
         </div>
-    </div>
 
-</div>
+    </div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

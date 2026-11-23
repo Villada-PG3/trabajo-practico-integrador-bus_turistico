@@ -1,34 +1,31 @@
+
 {% extends "base.html" %}
 
-{% block title %}Dashboard - Bus Turístico{% endblock %}
+{% block title %}Panel de control | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar navbar-expand-lg bt-admin-navbar">
     <div class="container">
-        <span class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
-        </span>
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
+        </a>
 
-        <div class="d-flex align-items-center gap-3">
-            <span class="text-light small">
-                Hola, <strong>{{ user.username }}</strong>
+        <div class="bt-admin-nav-actions">
+            <span class="bt-admin-user">
+                {{ user.username }}
                 {% if roles_usuario %}
-                    · {{ roles_usuario|join:", " }}
+                    <small>{{ roles_usuario|join:", " }}</small>
                 {% endif %}
             </span>
 
-            <a href="{% url 'home' %}"
-               class="btn btn-outline-light btn-sm">
+            <a href="{% url 'home' %}" class="btn bt-admin-nav-button">
                 Sitio público
             </a>
 
-            <form method="post"
-                  action="{% url 'admin_logout' %}"
-                  class="m-0">
+            <form method="post" action="{% url 'admin_logout' %}" class="m-0">
                 {% csrf_token %}
-
-                <button type="submit"
-                        class="btn btn-danger btn-sm">
+                <button type="submit" class="btn bt-admin-logout">
                     Cerrar sesión
                 </button>
             </form>
@@ -38,157 +35,183 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="bt-admin-page">
 
-    <h1 class="h3 mb-1">
-        ¡Sesión iniciada correctamente!
-    </h1>
+    <section class="bt-dashboard-hero">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-8">
+                    <span class="bt-admin-eyebrow bt-admin-eyebrow-light">
+                        CENTRO DE OPERACIONES
+                    </span>
 
-    <p class="text-secondary mb-4">
-        Desde aquí accedés a las secciones habilitadas para tu rol.
-    </p>
+                    <h1>Bienvenido al panel, {{ user.username }}.</h1>
 
-    <div class="row g-4">
+                    <p>
+                        Gestioná los recursos y consultá la información
+                        del Bus Turístico desde un solo lugar.
+                    </p>
+                </div>
 
-        {% if permisos.flota %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'autobus_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">🚌</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ total_buses }}
-                        </div>
-                        <div class="text-secondary">Autobuses</div>
+                <div class="col-lg-4">
+                    <div class="bt-dashboard-hero-mark">
+                        <span>BT.</span>
+                        <small>GESTIÓN TURÍSTICA</small>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-        {% endif %}
+    </section>
 
-        {% if permisos.flota %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'chofer_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">🧑‍✈️</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ total_choferes }}
-                        </div>
-                        <div class="text-secondary">Choferes</div>
-                    </div>
+    <section class="bt-admin-content">
+        <div class="container">
+
+            <div class="bt-admin-section-heading">
+                <div>
+                    <span class="bt-admin-eyebrow">TU ESPACIO DE TRABAJO</span>
+                    <h2>Módulos disponibles</h2>
+                    <p>
+                        Estas son las herramientas habilitadas
+                        para tu usuario.
+                    </p>
                 </div>
-            </a>
-        </div>
-        {% endif %}
+            </div>
 
-        {% if permisos.contenido %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'recorrido_admin_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">🗺️</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ total_recorridos }}
+            <div class="row g-4">
+
+                {% if permisos.flota %}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'autobus_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">🚌</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
                         </div>
-                        <div class="text-secondary">Recorridos</div>
-                    </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">FLOTA</span>
+                            <strong class="bt-dashboard-card-value">{{ total_buses }}</strong>
+                            <h3>Autobuses</h3>
+                            <p>Consultá y administrá las unidades del servicio.</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        {% endif %}
 
-        {% if permisos.contenido %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'parada_admin_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">📍</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ total_paradas }}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'chofer_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">👤</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
                         </div>
-                        <div class="text-secondary">Paradas</div>
-                    </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">PERSONAL</span>
+                            <strong class="bt-dashboard-card-value">{{ total_choferes }}</strong>
+                            <h3>Choferes</h3>
+                            <p>Gestioná la información de los conductores.</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        {% endif %}
+                {% endif %}
 
-        {% if permisos.contenido %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'atractivo_admin_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">🏛️</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ total_atractivos }}
+                {% if permisos.contenido %}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'recorrido_admin_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">↝</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
                         </div>
-                        <div class="text-secondary">Atractivos</div>
-                    </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">CIRCUITOS</span>
+                            <strong class="bt-dashboard-card-value">{{ total_recorridos }}</strong>
+                            <h3>Recorridos</h3>
+                            <p>Administrá los circuitos turísticos disponibles.</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        {% endif %}
 
-        {% if permisos.ver_viajes %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'viaje_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">🕒</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ total_viajes }}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'parada_admin_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">⌖</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
                         </div>
-                        <div class="text-secondary">Viajes</div>
-                    </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">UBICACIONES</span>
+                            <strong class="bt-dashboard-card-value">{{ total_paradas }}</strong>
+                            <h3>Paradas</h3>
+                            <p>Consultá y gestioná los puntos del recorrido.</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        {% endif %}
 
-        {% if permisos.flota %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'reparacion_list' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">🔧</div>
-                        <div class="display-6 fw-bold text-dark">
-                            {{ reparaciones_abiertas }}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'atractivo_admin_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">✳</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
                         </div>
-                        <div class="text-secondary">
-                            Reparaciones en curso
+                        <div>
+                            <span class="bt-dashboard-card-label">TURISMO</span>
+                            <strong class="bt-dashboard-card-value">{{ total_atractivos }}</strong>
+                            <h3>Atractivos</h3>
+                            <p>Gestioná los lugares de interés turístico.</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        {% endif %}
+                {% endif %}
 
-        {% if permisos.ver_reporte %}
-        <div class="col-6 col-lg-4">
-            <a href="{% url 'reporte_diario' %}"
-               class="text-decoration-none">
-                <div class="card card-hover h-100 text-center">
-                    <div class="card-body">
-                        <div class="display-6">📊</div>
-                        <div class="display-6 fw-bold text-dark">Hoy</div>
-                        <div class="text-secondary">
-                            Reporte diario de viajes
+                {% if permisos.ver_viajes %}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'viaje_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">◷</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
                         </div>
-                    </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">OPERACIONES</span>
+                            <strong class="bt-dashboard-card-value">{{ total_viajes }}</strong>
+                            <h3>Viajes</h3>
+                            <p>Consultá los viajes y su información operativa.</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        {% endif %}
+                {% endif %}
 
-    </div>
+                {% if permisos.flota %}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'reparacion_list' %}" class="bt-dashboard-card">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">⚙</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
+                        </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">MANTENIMIENTO</span>
+                            <strong class="bt-dashboard-card-value">{{ reparaciones_abiertas }}</strong>
+                            <h3>Reparaciones abiertas</h3>
+                            <p>Supervisá el mantenimiento de las unidades.</p>
+                        </div>
+                    </a>
+                </div>
+                {% endif %}
+
+                {% if permisos.ver_reporte %}
+                <div class="col-md-6 col-xl-4">
+                    <a href="{% url 'reporte_diario' %}" class="bt-dashboard-card bt-dashboard-card-featured">
+                        <div class="bt-dashboard-card-top">
+                            <span class="bt-dashboard-card-icon">▥</span>
+                            <span class="bt-dashboard-card-arrow">↗</span>
+                        </div>
+                        <div>
+                            <span class="bt-dashboard-card-label">ESTADÍSTICAS</span>
+                            <strong class="bt-dashboard-card-value bt-dashboard-card-today">Hoy</strong>
+                            <h3>Reporte diario</h3>
+                            <p>Accedé al informe de actividad y resultados.</p>
+                        </div>
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
 </div>
 {% endblock %}
 

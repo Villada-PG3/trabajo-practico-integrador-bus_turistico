@@ -1875,3 +1875,757 @@ a {
         gap: 12px;
     }
 }
+
+
+/* =====================================================
+   PANEL ADMINISTRATIVO - BUS TURISTICO
+   Login, dashboard, flota, choferes y reparaciones
+   ===================================================== */
+
+.bt-admin-page {
+    min-height: 80vh;
+    background: #f3f6f7;
+}
+
+.bt-admin-content {
+    padding-top: 65px;
+    padding-bottom: 100px;
+}
+
+.bt-admin-eyebrow {
+    display: inline-block;
+    color: var(--bt-teal);
+    font-size: .7rem;
+    letter-spacing: .15em;
+    font-weight: 800;
+    margin-bottom: 13px;
+}
+
+.bt-admin-eyebrow-light {
+    color: var(--bt-gold);
+}
+
+.bt-admin-primary {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    background: var(--bt-teal);
+    color: white;
+    border: 1px solid var(--bt-teal);
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: .87rem;
+    padding: 13px 21px;
+    min-height: 47px;
+}
+
+.bt-admin-primary:hover {
+    background: var(--bt-navy);
+    border-color: var(--bt-navy);
+    color: white;
+}
+
+/* =====================================================
+   NAVEGACION ADMINISTRATIVA
+   ===================================================== */
+
+.bt-admin-navbar {
+    background: var(--bt-navy);
+    padding: 17px 0;
+}
+
+.bt-admin-navbar > .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.bt-admin-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.bt-admin-brand:hover {
+    color: var(--bt-gold);
+}
+
+.bt-admin-brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--bt-gold);
+    color: var(--bt-navy);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.bt-admin-nav-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.bt-admin-user {
+    color: white;
+    font-weight: 800;
+    font-size: .85rem;
+    margin-right: 9px;
+}
+
+.bt-admin-user small {
+    display: block;
+    color: #b5cad1;
+    font-size: .7rem;
+    font-weight: 500;
+    margin-top: 3px;
+}
+
+.bt-admin-nav-button,
+.bt-admin-logout {
+    color: white;
+    border: 1px solid rgba(255,255,255,.28);
+    border-radius: 8px;
+    font-size: .81rem;
+    font-weight: 700;
+    padding: 9px 14px;
+}
+
+.bt-admin-nav-button:hover {
+    color: var(--bt-navy);
+    background: white;
+}
+
+.bt-admin-logout {
+    background: rgba(255,255,255,.08);
+}
+
+.bt-admin-logout:hover {
+    background: #a33c40;
+    border-color: #a33c40;
+    color: white;
+}
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+.bt-admin-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: #eaf0ef;
+    padding: 30px 0;
+}
+
+.bt-login-layout {
+    min-height: 670px;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 28px 65px rgba(16,43,63,.14);
+}
+
+.bt-login-presentation {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 670px;
+    padding: clamp(30px, 5vw, 65px);
+    background:
+        radial-gradient(circle at 75% 75%, rgba(22,125,141,.38), transparent 43%),
+        linear-gradient(145deg, #102b3f, #18485a);
+    color: white;
+}
+
+.bt-login-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    font-family: "Manrope", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.bt-login-brand:hover {
+    color: white;
+}
+
+.bt-login-brand .bt-brand-icon {
+    background: var(--bt-gold);
+    color: var(--bt-navy);
+}
+
+.bt-login-intro h1 {
+    font-size: clamp(2.5rem, 4vw, 4.4rem);
+    line-height: 1.12;
+    letter-spacing: -.065em;
+    font-weight: 800;
+    margin-bottom: 23px;
+}
+
+.bt-login-intro h1 span {
+    display: block;
+    color: var(--bt-gold);
+}
+
+.bt-login-intro p {
+    color: #c1d2d8;
+    line-height: 1.85;
+    font-size: 1rem;
+    max-width: 410px;
+}
+
+.bt-login-presentation-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    color: #b4cbd2;
+    font-size: .61rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+}
+
+.bt-login-form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 670px;
+    padding: 45px;
+}
+
+.bt-login-form-inner {
+    width: 100%;
+    max-width: 390px;
+}
+
+.bt-login-form-inner h2 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--bt-navy);
+    letter-spacing: -.055em;
+    margin-bottom: 15px;
+}
+
+.bt-login-subtitle {
+    font-size: .92rem;
+    color: var(--bt-muted);
+    line-height: 1.8;
+    margin-bottom: 36px;
+}
+
+.bt-admin-label {
+    color: var(--bt-navy);
+    font-size: .87rem;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.bt-admin-input {
+    border: 1px solid #dce5e5;
+    background: #f8faf9;
+    padding: 15px 17px;
+    border-radius: 10px;
+    font-size: .94rem;
+}
+
+.bt-admin-input:focus {
+    border-color: var(--bt-teal);
+    box-shadow: 0 0 0 .2rem rgba(22,125,141,.12);
+}
+
+.bt-login-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 17px;
+    border-top: 1px solid var(--bt-line);
+    padding-top: 28px;
+    margin-top: 37px;
+    text-align: center;
+}
+
+.bt-login-bottom a {
+    color: var(--bt-teal);
+    font-size: .88rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.bt-login-bottom span {
+    color: var(--bt-muted);
+    font-size: .74rem;
+}
+
+/* =====================================================
+   DASHBOARD
+   ===================================================== */
+
+.bt-dashboard-hero {
+    padding: 75px 0;
+    background:
+        radial-gradient(circle at 85% 20%, rgba(22,125,141,.3), transparent 35%),
+        var(--bt-navy);
+    color: white;
+}
+
+.bt-dashboard-hero h1 {
+    font-size: clamp(2.2rem, 4.5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -.06em;
+    margin: 0 0 20px;
+}
+
+.bt-dashboard-hero p {
+    color: #bdd0d6;
+    line-height: 1.85;
+    max-width: 630px;
+    margin: 0;
+}
+
+.bt-dashboard-hero-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: min(240px, 100%);
+    aspect-ratio: 1;
+    border: 2px solid rgba(255,255,255,.17);
+    border-radius: 50%;
+    margin: auto;
+    transform: rotate(-8deg);
+}
+
+.bt-dashboard-hero-mark > span {
+    color: var(--bt-gold);
+    font-family: "Manrope", sans-serif;
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: -.1em;
+    line-height: 1;
+}
+
+.bt-dashboard-hero-mark small {
+    color: #bad0d7;
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    margin-top: 14px;
+}
+
+.bt-admin-section-heading {
+    margin-bottom: 35px;
+}
+
+.bt-admin-section-heading h2,
+.bt-admin-table-header h2 {
+    color: var(--bt-navy);
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: -.055em;
+    margin: 0 0 12px;
+}
+
+.bt-admin-section-heading p {
+    color: var(--bt-muted);
+    margin: 0;
+}
+
+.bt-dashboard-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 28px;
+    min-height: 285px;
+    padding: 29px;
+    background: white;
+    border: 1px solid var(--bt-line);
+    border-radius: 18px;
+    text-decoration: none;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.bt-dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 35px rgba(16,43,63,.10);
+}
+
+.bt-dashboard-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.bt-dashboard-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    background: #e5f1ef;
+    color: var(--bt-teal);
+    font-size: 1.65rem;
+}
+
+.bt-dashboard-card-arrow {
+    color: var(--bt-teal);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.bt-dashboard-card-label {
+    display: block;
+    font-size: .66rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    color: var(--bt-teal);
+    margin-bottom: 10px;
+}
+
+.bt-dashboard-card-value {
+    display: block;
+    color: var(--bt-navy);
+    font-family: "Manrope", sans-serif;
+    font-size: 2.7rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.07em;
+    margin-bottom: 12px;
+}
+
+.bt-dashboard-card h3 {
+    color: var(--bt-navy);
+    font-size: 1.18rem;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.bt-dashboard-card p {
+    color: var(--bt-muted);
+    font-size: .87rem;
+    line-height: 1.65;
+    margin: 0;
+}
+
+.bt-dashboard-card-featured {
+    background: #e5f1ef;
+}
+
+.bt-dashboard-card-today {
+    font-size: 2rem;
+}
+
+/* =====================================================
+   ENCABEZADOS DE LISTADOS
+   ===================================================== */
+
+.bt-admin-page-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-bottom: 38px;
+}
+
+.bt-admin-page-heading h1 {
+    font-size: clamp(2.1rem, 4vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -.065em;
+    color: var(--bt-navy);
+    margin: 0 0 12px;
+}
+
+.bt-admin-page-heading p {
+    color: var(--bt-muted);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* =====================================================
+   TABLAS ADMINISTRATIVAS
+   ===================================================== */
+
+.bt-admin-table-card {
+    background: white;
+    border: 1px solid var(--bt-line);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(16,43,63,.035);
+}
+
+.bt-admin-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 28px 30px;
+    border-bottom: 1px solid var(--bt-line);
+}
+
+.bt-admin-table-header h2 {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.bt-admin-table-caption {
+    color: #91a3a9;
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.bt-admin-table {
+    min-width: 680px;
+    --bs-table-bg: transparent;
+}
+
+.bt-admin-table thead th {
+    background: #f5f8f8;
+    color: #607681;
+    border-bottom: 1px solid var(--bt-line);
+    padding: 18px 22px;
+    font-size: .69rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.bt-admin-table tbody td {
+    padding: 21px 22px;
+    border-bottom: 1px solid #edf1f1;
+    font-size: .88rem;
+    color: var(--bt-text);
+    vertical-align: middle;
+}
+
+.bt-admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.bt-admin-table tbody tr:hover td {
+    background: #f8fbfa;
+}
+
+.bt-admin-table-primary,
+.bt-admin-unit {
+    color: var(--bt-navy);
+    font-weight: 800;
+}
+
+.bt-admin-plate {
+    display: inline-block;
+    background: #edf3f3;
+    color: var(--bt-navy);
+    padding: 7px 11px;
+    border-radius: 7px;
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .035em;
+}
+
+.bt-admin-description {
+    max-width: 280px;
+    min-width: 190px;
+    overflow-wrap: anywhere;
+}
+
+.bt-admin-action {
+    padding: 9px 14px;
+    background: #eaf4f3;
+    color: var(--bt-teal);
+    border: 1px solid #d4e9e7;
+    border-radius: 8px;
+    font-size: .81rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.bt-admin-action:hover {
+    background: var(--bt-teal);
+    color: white;
+    border-color: var(--bt-teal);
+}
+
+.bt-admin-action-success {
+    background: #e5f5e9;
+    color: #237545;
+    border-color: #cce9d4;
+}
+
+.bt-admin-action-success:hover {
+    background: #237545;
+    color: white;
+    border-color: #237545;
+}
+
+/* =====================================================
+   ESTADOS DE AUTOBUSES, CHOFERES Y REPARACIONES
+   ===================================================== */
+
+.bt-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 11px;
+    border-radius: 8px;
+    font-size: .75rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.bt-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.bt-status-success {
+    background: #e5f5e9;
+    color: #247545;
+}
+
+.bt-status-warning {
+    background: #fff1d4;
+    color: #8b6010;
+}
+
+.bt-status-danger {
+    background: #fde9e9;
+    color: #ac3434;
+}
+
+.bt-status-neutral {
+    background: #edf0f2;
+    color: #657680;
+}
+
+/* =====================================================
+   ESTADOS SIN REGISTROS
+   ===================================================== */
+
+.bt-admin-empty {
+    text-align: center;
+    padding: 55px 25px;
+}
+
+.bt-admin-empty > span {
+    display: block;
+    font-size: 3.7rem;
+    margin-bottom: 16px;
+}
+
+.bt-admin-empty h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--bt-navy);
+}
+
+.bt-admin-empty p {
+    color: var(--bt-muted);
+    font-size: .88rem;
+    margin: 12px 0 0;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 991.98px) {
+    .bt-login-layout,
+    .bt-login-presentation,
+    .bt-login-form-panel {
+        min-height: auto;
+    }
+
+    .bt-login-presentation {
+        gap: 45px;
+    }
+
+    .bt-login-form-panel {
+        padding: 65px 35px;
+    }
+
+    .bt-dashboard-hero-mark {
+        display: none;
+    }
+
+    .bt-admin-content {
+        padding-top: 50px;
+        padding-bottom: 75px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .bt-admin-navbar > .container {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .bt-admin-nav-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .bt-admin-user {
+        width: 100%;
+    }
+
+    .bt-login-presentation {
+        padding: 30px;
+    }
+
+    .bt-login-presentation-footer {
+        flex-direction: column;
+    }
+
+    .bt-login-form-panel {
+        padding: 45px 25px;
+    }
+
+    .bt-dashboard-hero {
+        padding: 55px 0;
+    }
+
+    .bt-admin-page-heading {
+        align-items: stretch;
+    }
+
+    .bt-admin-page-heading > .btn {
+        width: 100%;
+    }
+
+    .bt-dashboard-card {
+        min-height: 260px;
+    }
+
+    .bt-admin-table-header {
+        padding: 23px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bt-dashboard-card {
+        transition: none;
+    }
+}
