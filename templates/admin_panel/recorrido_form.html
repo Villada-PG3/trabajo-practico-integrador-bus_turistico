@@ -3,92 +3,139 @@
 
 {% block title %}
     {% if object %}Editar recorrido{% else %}Registrar recorrido{% endif %}
+    | Bus Turístico
 {% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
-
-        <a href="{% url 'recorrido_admin_list' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al listado
+        <a href="{% url 'recorrido_admin_list' %}" class="btn bt-admin-nav-button">
+            ← Volver a recorridos
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width: 750px;">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
+        <div class="bt-operation-form-layout">
 
-    {% if object %}
-        <h1 class="h3 mb-2">Editar recorrido</h1>
-        <p class="text-secondary mb-4">
-            Modificá los datos del recorrido seleccionado.
-        </p>
-    {% else %}
-        <h1 class="h3 mb-2">Registrar nuevo recorrido</h1>
-        <p class="text-secondary mb-4">
-            Completá los datos para registrar un nuevo recorrido turístico.
-        </p>
-    {% endif %}
+            <nav class="bt-operation-breadcrumb" aria-label="breadcrumb">
+                <a href="{% url 'admin_dashboard' %}">Panel</a>
+                <span>/</span>
+                <a href="{% url 'recorrido_admin_list' %}">Recorridos</a>
+                <span>/</span>
+                <span>{% if object %}Editar{% else %}Registrar{% endif %}</span>
+            </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-operation-form-heading">
+                <span class="bt-admin-eyebrow">CONFIGURACIÓN TURÍSTICA</span>
 
-            <form method="post">
-                {% csrf_token %}
+                {% if object %}
+                    <h1>Editar recorrido</h1>
+                    <p>
+                        Actualizá la información y las características
+                        del circuito seleccionado.
+                    </p>
+                {% else %}
+                    <h1>Registrar recorrido</h1>
+                    <p>
+                        Definí los datos necesarios para incorporar
+                        un nuevo circuito turístico.
+                    </p>
+                {% endif %}
+            </div>
 
-                {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}"
-                               class="form-label">
-                            {{ field.label }}
-                        </label>
+            <div class="bt-operation-form-card">
+                <div class="bt-operation-form-header">
+                    <span class="bt-operation-form-step">01</span>
+                    <div>
+                        <h2>Datos del circuito</h2>
+                        <p>
+                            Información general, horarios y
+                            características del recorrido.
+                        </p>
+                    </div>
+                </div>
 
-                        {{ field }}
+                <form method="post" class="bt-operation-form">
+                    {% csrf_token %}
 
-                        {% if field.help_text %}
-                            <div class="form-text">
-                                {{ field.help_text }}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        {% if field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <div class="bt-operation-field">
+                                {% if field.field.widget.input_type == "checkbox" %}
+                                    <div class="bt-admin-checkbox-field">
+                                        <div class="form-check">
+                                            {{ field }}
+                                            <label class="form-check-label"
+                                                   for="{{ field.id_for_label }}">
+                                                {{ field.label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <label for="{{ field.id_for_label }}"
+                                           class="bt-admin-label">
+                                        {{ field.label }}
+                                        {% if field.field.required %}
+                                            <span class="bt-required">*</span>
+                                        {% endif %}
+                                    </label>
+
+                                    {{ field }}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <div class="form-text">
+                                        {{ field.help_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-2">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
                             </div>
                         {% endif %}
+                    {% endfor %}
 
-                        {% for error in field.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
+                    <div class="bt-operation-form-footer">
+                        <a href="{% url 'recorrido_admin_list' %}"
+                           class="btn bt-operation-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="btn bt-admin-primary">
+                            {% if object %}
+                                Guardar cambios →
+                            {% else %}
+                                Registrar recorrido →
+                            {% endif %}
+                        </button>
                     </div>
-                {% endfor %}
-
-                {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-
-                <button type="submit" class="btn btn-success">
-                    {% if object %}
-                        Guardar cambios
-                    {% else %}
-                        Registrar recorrido
-                    {% endif %}
-                </button>
-
-                <a href="{% url 'recorrido_admin_list' %}"
-                   class="btn btn-secondary">
-                    Cancelar
-                </a>
-            </form>
+                </form>
+            </div>
 
         </div>
     </div>
-
-</div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}

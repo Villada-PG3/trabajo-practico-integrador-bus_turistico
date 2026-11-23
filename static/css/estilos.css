@@ -3245,3 +3245,198 @@ a {
         transition: none;
     }
 }
+
+
+
+/* =====================================================
+   GESTION ADMINISTRATIVA
+   Autobuses, choferes, recorridos y paradas
+   ===================================================== */
+
+/* Acciones de las pantallas de gestion */
+
+.bt-gestion-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bt-gestion-row-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bt-gestion-action-view {
+    background: #f5f7f8;
+    color: var(--bt-navy);
+    border-color: #e0e7e9;
+}
+
+.bt-gestion-action-view:hover {
+    background: var(--bt-navy);
+    border-color: var(--bt-navy);
+    color: white;
+}
+
+/* Identificacion visual de los recorridos */
+
+.bt-gestion-route {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 12px;
+    background: #f2f6f6;
+    border: 1px solid var(--bt-line);
+    border-radius: 9px;
+    color: var(--bt-navy);
+    font-size: .82rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.bt-gestion-route-dot {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    background: var(--route-color);
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, .1);
+}
+
+/* Miniaturas de las paradas */
+
+.bt-gestion-image-link {
+    display: inline-block;
+    width: 90px;
+    height: 64px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid var(--bt-line);
+    background: #e5efef;
+}
+
+.bt-gestion-image-link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .25s ease;
+}
+
+.bt-gestion-image-link:hover img {
+    transform: scale(1.08);
+}
+
+.bt-gestion-no-image {
+    display: inline-block;
+    padding: 9px 11px;
+    border-radius: 7px;
+    background: #edf0f2;
+    color: #657680;
+    font-size: .76rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Campos checkbox de los formularios */
+
+.bt-admin-checkbox-field {
+    padding: 16px 18px;
+    background: #f1f7f6;
+    border: 1px solid #dae8e7;
+    border-radius: 11px;
+}
+
+.bt-admin-checkbox-field .form-check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 24px;
+    padding-left: 0;
+    margin: 0;
+}
+
+.bt-admin-checkbox-field input[type="checkbox"] {
+    position: static;
+    float: none;
+    flex-shrink: 0;
+    width: 19px;
+    height: 19px;
+    margin: 0;
+    accent-color: var(--bt-teal);
+    cursor: pointer;
+}
+
+.bt-admin-checkbox-field .form-check-label {
+    color: var(--bt-navy);
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Mejora de los controles de formulario */
+
+.bt-operation-field select {
+    cursor: pointer;
+}
+
+.bt-operation-field input[type="date"],
+.bt-operation-field input[type="time"],
+.bt-operation-field input[type="datetime-local"] {
+    color-scheme: light;
+}
+
+.bt-operation-field input[type="color"] {
+    min-height: 50px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.bt-operation-field input[type="file"] {
+    padding: 11px;
+    background: white;
+}
+
+.bt-operation-field input[type="file"]::file-selector-button {
+    background: #e5f1ef;
+    border: 0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-right: 12px;
+    color: var(--bt-teal);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* Adaptacion a pantallas pequeñas */
+
+@media (max-width: 767.98px) {
+    .bt-gestion-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .bt-gestion-actions .btn {
+        flex: 1 1 auto;
+    }
+
+    .bt-gestion-row-actions {
+        flex-wrap: nowrap;
+    }
+
+    .bt-gestion-image-link {
+        width: 75px;
+        height: 55px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bt-gestion-image-link img {
+        transition: none;
+    }
+}
