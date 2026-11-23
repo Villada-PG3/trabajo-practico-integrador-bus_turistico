@@ -1,43 +1,89 @@
 
 {% extends "base.html" %}
 
-{% block title %}Quitar asociación{% endblock %}
+{% block title %}Quitar asociación | Bus Turístico{% endblock %}
+
+{% block navbar %}
+<nav class="navbar bt-admin-navbar">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
+        </a>
+
+        <a href="{% url 'parada_atractivo_list' %}"
+           class="btn bt-admin-nav-button">
+            ← Volver a asociaciones
+        </a>
+    </div>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width: 700px;">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
+        <div class="bt-confirm-layout">
 
-    <h1 class="h3 mb-4">Quitar asociación</h1>
+            <nav class="bt-operation-breadcrumb" aria-label="breadcrumb">
+                <a href="{% url 'admin_dashboard' %}">Panel</a>
+                <span>/</span>
+                <a href="{% url 'parada_atractivo_list' %}">Asociaciones</a>
+                <span>/</span>
+                <span>Quitar asociación</span>
+            </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-confirm-card">
 
-            <p>
-                ¿Estás seguro de que querés quitar el atractivo
-                <strong>{{ object.atractivo.nombre }}</strong>
-                de la parada
-                <strong>{{ object.parada.nombre }}</strong>?
-            </p>
+                <div class="bt-confirm-icon" aria-hidden="true">!</div>
 
-            <p class="text-secondary">
-                Esta acción solamente elimina la asociación.
-                La parada y el atractivo seguirán registrados.
-            </p>
+                <span class="bt-admin-eyebrow">CONFIRMACIÓN REQUERIDA</span>
 
-            <form method="post">
-                {% csrf_token %}
+                <h1>¿Quitar esta asociación?</h1>
 
-                <button type="submit" class="btn btn-danger">
-                    Confirmar
-                </button>
+                <p class="bt-confirm-intro">
+                    Estás por desvincular un atractivo turístico
+                    de una de las paradas del servicio.
+                </p>
 
-                <a href="{% url 'parada_atractivo_list' %}"
-                   class="btn btn-secondary">
-                    Cancelar
-                </a>
-            </form>
+                <div class="bt-confirm-details">
+                    <div class="bt-confirm-detail-row">
+                        <span>Atractivo turístico</span>
+                        <strong>{{ object.atractivo.nombre }}</strong>
+                    </div>
 
+                    <div class="bt-confirm-detail-row">
+                        <span>Parada</span>
+                        <strong>{{ object.parada.nombre }}</strong>
+                    </div>
+                </div>
+
+                <div class="bt-confirm-notice">
+                    <strong>¿Qué sucede al confirmar?</strong>
+                    <p>
+                        Solamente se eliminará la asociación.
+                        Tanto la parada como el atractivo
+                        seguirán registrados y disponibles
+                        dentro del sistema.
+                    </p>
+                </div>
+
+                <form method="post" class="bt-confirm-actions">
+                    {% csrf_token %}
+
+                    <a href="{% url 'parada_atractivo_list' %}"
+                       class="btn bt-operation-secondary">
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="btn bt-confirm-danger">
+                        Sí, quitar asociación
+                    </button>
+                </form>
+
+            </div>
         </div>
     </div>
-
-</div>
+</section>
 {% endblock %}
+
+{% block footer %}{% endblock %}

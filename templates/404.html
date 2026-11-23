@@ -1,20 +1,61 @@
+
 {% extends "base.html" %}
 
-{% block title %}Página no encontrada - Bus Turístico{% endblock %}
+{% block title %}Página no encontrada | Bus Turístico{% endblock %}
 
 {% block content %}
-<div class="container py-5 text-center">
-    <div class="display-1 mb-2" aria-hidden="true">🚌</div>
-    <h1 class="display-1 fw-bold text-bus">404</h1>
-    <h2 class="h3 mb-3">¡Uy! Este bus no pasa por acá</h2>
-    <p class="text-secondary mx-auto mb-4" style="max-width: 520px;">
-        La página que buscás no existe, fue movida o el enlace es incorrecto.
-        Podés volver al inicio o explorar nuestros recorridos.
-    </p>
-    <div class="d-flex flex-wrap justify-content-center gap-2">
-        <a href="{% url 'home' %}" class="btn btn-primary fw-semibold">Volver al inicio</a>
-        <a href="{% url 'recorridos_list' %}" class="btn btn-outline-primary fw-semibold">Ver recorridos</a>
-        <a href="{% url 'paradas_list' %}" class="btn btn-outline-primary fw-semibold">Ver paradas</a>
+<section class="bt-error-page">
+    <div class="container">
+        <div class="bt-error-layout">
+
+            <div class="bt-error-visual" aria-hidden="true">
+                <div class="bt-error-circle bt-error-circle-one"></div>
+                <div class="bt-error-circle bt-error-circle-two"></div>
+
+                <span class="bt-error-number">404</span>
+
+                <div class="bt-error-bus">
+                    <span>🚌</span>
+                </div>
+
+                <div class="bt-error-road"></div>
+            </div>
+
+            <div class="bt-error-content">
+                <span class="bt-admin-eyebrow">RUTA NO ENCONTRADA</span>
+
+                <h1>Este bus no pasa por acá.</h1>
+
+                <p>
+                    Parece que llegaste a una parada que no existe.
+                    La página que buscás pudo haber cambiado
+                    de dirección o ya no está disponible.
+                </p>
+
+                <p>
+                    No te preocupes: todavía quedan muchos
+                    lugares de Buenos Aires por descubrir.
+                </p>
+
+                <div class="bt-error-actions">
+                    <a href="{% url 'home' %}"
+                       class="btn bt-admin-primary">
+                        Volver al inicio
+                    </a>
+
+                    <a href="{% url 'recorridos_list' %}"
+                       class="btn bt-operation-secondary">
+                        Explorar recorridos
+                    </a>
+
+                    <a href="{% url 'paradas_list' %}"
+                       class="bt-error-link">
+                        Ver paradas →
+                    </a>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}

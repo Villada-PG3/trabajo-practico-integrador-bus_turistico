@@ -1,75 +1,138 @@
 
 {% extends "base.html" %}
 
-{% block title %}Asociaciones de atractivos{% endblock %}
+{% block title %}Asociaciones de atractivos | Bus Turístico{% endblock %}
+
+{% block navbar %}
+<nav class="navbar bt-admin-navbar">
+    <div class="container">
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
+        </a>
+
+        <a href="{% url 'atractivo_admin_list' %}"
+           class="btn bt-admin-nav-button">
+            ← Volver a atractivos
+        </a>
+    </div>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
 
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h1 class="h3">Atractivos asociados a paradas</h1>
-            <p class="text-secondary">
-                Administrá los atractivos turísticos de cada parada.
-            </p>
+        <div class="bt-admin-page-heading">
+            <div>
+                <span class="bt-admin-eyebrow">GESTIÓN DE ASOCIACIONES</span>
+
+                <h1>Atractivos asociados</h1>
+
+                <p>
+                    Administrá los atractivos turísticos cercanos
+                    a cada parada y sus distancias.
+                </p>
+            </div>
+
+            <div class="bt-gestion-actions">
+                <a href="{% url 'atractivo_admin_list' %}"
+                   class="btn bt-operation-secondary">
+                    Volver a atractivos
+                </a>
+
+                <a href="{% url 'parada_atractivo_create' %}"
+                   class="btn bt-admin-primary">
+                    + Nueva asociación
+                </a>
+            </div>
         </div>
 
-        <div class="d-flex gap-2">
-            <a href="{% url 'atractivo_admin_list' %}" class="btn btn-secondary">
-                Volver a atractivos
-            </a>
+        <div class="bt-admin-table-card">
 
-            <a href="{% url 'parada_atractivo_create' %}" class="btn btn-success">
-                + Nueva asociación
-            </a>
+            <div class="bt-admin-table-header">
+                <div>
+                    <span class="bt-admin-eyebrow">RELACIONES TURÍSTICAS</span>
+                    <h2>Asociaciones registradas</h2>
+                </div>
+
+                <span class="bt-admin-table-caption">
+                    PARADAS Y ATRACTIVOS
+                </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table bt-admin-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Parada</th>
+                            <th scope="col">Atractivo</th>
+                            <th scope="col">Distancia</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for asociacion in asociaciones %}
+                            <tr>
+                                <td>
+                                    <strong class="bt-admin-table-primary">
+                                        {{ asociacion.parada.nombre }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ asociacion.atractivo.nombre }}
+                                </td>
+
+                                <td>
+                                    {% if asociacion.distancia_metros is not None %}
+                                        <span class="bt-association-distance">
+                                            {{ asociacion.distancia_metros }} m
+                                        </span>
+                                    {% else %}
+                                        <span class="bt-gestion-no-image">
+                                            No especificada
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <div class="bt-gestion-row-actions">
+                                        <a href="{% url 'parada_atractivo_update' asociacion.pk %}"
+                                           class="btn bt-admin-action">
+                                            Editar
+                                        </a>
+
+                                        <a href="{% url 'parada_atractivo_delete' asociacion.pk %}"
+                                           class="btn bt-tourism-remove">
+                                            Quitar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">
+                                    <div class="bt-admin-empty">
+                                        <span aria-hidden="true">✳</span>
+                                        <h3>Sin asociaciones registradas</h3>
+                                        <p>
+                                            Todavía no hay atractivos
+                                            asociados a las paradas turísticas.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
-
-    <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>Parada</th>
-                    <th>Atractivo</th>
-                    <th>Distancia</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for asociacion in asociaciones %}
-                <tr>
-                    <td>{{ asociacion.parada.nombre }}</td>
-                    <td>{{ asociacion.atractivo.nombre }}</td>
-                    <td>
-                        {% if asociacion.distancia_metros is not None %}
-                            {{ asociacion.distancia_metros }} metros
-                        {% else %}
-                            No especificada
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'parada_atractivo_update' asociacion.pk %}"
-                           class="btn btn-outline-primary btn-sm">
-                            Editar
-                        </a>
-
-                        <a href="{% url 'parada_atractivo_delete' asociacion.pk %}"
-                           class="btn btn-outline-danger btn-sm">
-                            Quitar
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center py-4">
-                        No hay asociaciones registradas.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-</div>
+</section>
 {% endblock %}
+
+{% block footer %}{% endblock %}

@@ -1,63 +1,87 @@
 
 {% extends "base.html" %}
 
-{% block title %}Quitar parada del recorrido{% endblock %}
+{% block title %}Quitar parada del recorrido | Bus Turístico{% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-dark bg-dark shadow-sm">
+<nav class="navbar bt-admin-navbar">
     <div class="container">
-        <a href="{% url 'admin_dashboard' %}"
-           class="navbar-brand fw-bold text-success">
-            🚌 Panel de Control
+        <a href="{% url 'admin_dashboard' %}" class="bt-admin-brand">
+            <span class="bt-admin-brand-icon">B.</span>
+            <span>Panel de Control</span>
         </a>
 
         <a href="{% url 'recorrido_parada_list' %}"
-           class="btn btn-outline-light btn-sm">
-            Volver al listado
+           class="btn bt-admin-nav-button">
+            ← Volver a asignaciones
         </a>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width: 650px;">
+<section class="bt-admin-page">
+    <div class="container bt-admin-content">
+        <div class="bt-confirm-layout">
 
-    <h1 class="h3 mb-3">Quitar parada del recorrido</h1>
+            <nav class="bt-operation-breadcrumb" aria-label="breadcrumb">
+                <a href="{% url 'admin_dashboard' %}">Panel</a>
+                <span>/</span>
+                <a href="{% url 'recorrido_parada_list' %}">Paradas asignadas</a>
+                <span>/</span>
+                <span>Quitar asignación</span>
+            </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+            <div class="bt-confirm-card">
+                <div class="bt-confirm-icon" aria-hidden="true">!</div>
 
-            <p>
-                ¿Estás seguro de que querés quitar
-                <strong>{{ object.parada.nombre }}</strong>
-                del recorrido
-                <strong>{{ object.recorrido.color }}</strong>?
-            </p>
+                <span class="bt-admin-eyebrow">CONFIRMACIÓN REQUERIDA</span>
 
-            <p class="text-secondary">
-                Esta acción solo elimina la asignación.
-                La parada seguirá registrada y podrá utilizarse
-                en otros recorridos.
-            </p>
+                <h1>¿Quitar esta parada del recorrido?</h1>
 
-            <form method="post">
-                {% csrf_token %}
+                <p class="bt-confirm-intro">
+                    Estás por eliminar la asignación de una parada
+                    dentro de un circuito turístico.
+                </p>
 
-                <button type="submit"
-                        class="btn btn-danger">
-                    Sí, quitar parada
-                </button>
+                <div class="bt-confirm-details">
+                    <div class="bt-confirm-detail-row">
+                        <span>Parada</span>
+                        <strong>{{ object.parada.nombre }}</strong>
+                    </div>
 
-                <a href="{% url 'recorrido_parada_list' %}"
-                   class="btn btn-secondary">
-                    Cancelar
-                </a>
-            </form>
+                    <div class="bt-confirm-detail-row">
+                        <span>Recorrido</span>
+                        <strong>{{ object.recorrido.color }}</strong>
+                    </div>
+                </div>
+
+                <div class="bt-confirm-notice">
+                    <strong>¿Qué sucede al confirmar?</strong>
+                    <p>
+                        Solamente se eliminará esta asignación.
+                        La parada seguirá registrada en el sistema
+                        y podrá utilizarse en otros recorridos.
+                    </p>
+                </div>
+
+                <form method="post" class="bt-confirm-actions">
+                    {% csrf_token %}
+
+                    <a href="{% url 'recorrido_parada_list' %}"
+                       class="btn bt-operation-secondary">
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="btn bt-confirm-danger">
+                        Sí, quitar parada
+                    </button>
+                </form>
+            </div>
 
         </div>
     </div>
-
-</div>
+</section>
 {% endblock %}
 
 {% block footer %}{% endblock %}
